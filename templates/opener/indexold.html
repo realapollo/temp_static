@@ -1,0 +1,333 @@
+{% extends 'template/base.html' %}
+{% block title %}AI Proctor{% endblock %}
+{% block home_active %}active{% endblock %}
+{% block nav_color %}rgb(255, 255, 255){% endblock %}
+{#{% block nav_font_color %}navbar-dark{% endblock %}#}
+{% load static %}
+{% block header-to-add-style %}
+    <script src="https://kit.fontawesome.com/125d2443b9.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Merienda+One&display=swap" rel="stylesheet"> 
+{#    <style>#}
+{#        body{#}
+{#            background: url("{% static 'home/images/home.png' %}") no-repeat center center fixed;#}
+{#            -webkit-background-size: cover;#}
+{#            -moz-background-size: cover;#}
+{#            -o-background-size: cover;#}
+{#            background-size: cover;#}
+{#        }#}
+{#    </style>#}
+{% endblock %}
+{% block style_sheet_toadd %}
+    <link rel="stylesheet" type="text/css" href="{% static 'home/home_style.css' %}"/>
+{% endblock %}
+{% block body %}
+ <header id="home-section">
+        <div class="dark-overlay">
+            <div class="home-inner  text-center">
+                <br>
+                <p class="display-2 text-left" style="font-family: 'Merienda One', cursive; margin-left: 310px;"><strong>AI Proctor</strong></p>
+                <br>
+                <p class="lead text-left" style="font-family: 'Merienda One', cursive; margin-left: 200px; font-size: 25px"><strong>A Proctoring System Powered by Artificial Intelligence!</strong></p>
+
+
+            </div>
+        </div>
+</header>
+
+<section id="about-head-section">
+{#    <div class="container">#}
+        <div class="row">
+            <div class="col-md-4">
+                <img src="{% static 'home/images/ai2.png' %}" alt="" class="img-fluid  ">
+            </div>
+
+            <div class="col-md-8 text-center py-5">
+                <h1 class="display-4 font-weight-bold">
+                    The AI-Proctor: A Necessary Ingredient for Credible Online Certificates!
+                </h1>
+                <p class="lead" >
+                    The AI-Proctor system ensures the credibility of the exam results, which is important to keep the
+                    value of courses’ certificates. It ensures that any dishonest behavior by any student during the
+                    exam is reported. In case of detection of suspicious activities, a real time report is sent to the
+                    instructor in a very intuitive dashboard that shows what’s happening on the student’s site. At the
+                    end of the exam, detailed reports for the suspicious activities and cheating attempts of every
+                    student is sent to the instructor, in addition to a summary report for the whole class.<br>
+                    The AI-Proctor system is empowered by Artificial Intelligent algorithms to make the proctoring
+                    process easier than ever. The system gives the instructor an unprecedented proctoring experience
+                    and gives the student a super easy interface to start and end the exam.
+                </p>
+            </div>
+        </div>
+{#    </div>#}
+</section>
+
+
+<section id="app-head-section" class="bg-light text-muted py-5 ">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-6 my-auto">
+                <h3>Real-Time Monitoring</h3>
+                <p class="text-justify">
+                    During the exam, the instructor will be notified with any suspicious activity from the exam
+                    takers. <br>
+                    The instructor then can after confirming that this suspicious activity is not permitted, he/she
+                    can send a notification to the exam taker, or remove him/her from the exam permanently.
+                </p>
+            </div>
+            <div class="col-md-6">
+                <img src="{% static 'home/images/real-time.jpeg' %}" alt="" class="img-fluid mb-3 rounded ">
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="app-head-section" class="bg-light text-muted py-5 ">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <img src="{% static 'home/images/tabs.png' %}" alt="" class="img-fluid mb-3 rounded ">
+            </div>
+            <div class="col-md-6 my-auto">
+                <h3>Tabs monitoring</h3>
+                <p class="text-justify">
+                    While taking the exam if the student opened any other tab the AI Proctor will notify the instructor
+                    in real-time with the number of tabs currently opened, their URLs and a screen-shot. When the exam
+                    end the instructor can download the full detailed detections of the opened tabs, URLs, the time they
+                    were opened in and a video of that detected action.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="app-head-section" class="bg-light text-muted py-5 ">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-6 my-auto">
+                <h3>Foreground Program</h3>
+                <p class="text-justify">
+                    If the exam taker opens or alt-tab already opened program over the Chrome browser the instructor
+                    will be notified immediately with the Program in the foreground and a screen-shot. When the exam
+                    end the instructor can download the full detailed detections of the opened Programs, the time they
+                    were opened in and a video of that detected action.
+                </p>
+            </div>
+            <div class="col-md-6">
+                <img src="{% static 'home/images/prog.png' %}" alt="" class="img-fluid mb-3 rounded ">
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<section id="app-head-section" class="bg-light text-muted py-5 ">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <img src="{% static 'home/images/streem.png' %}" alt="" class="img-fluid mb-3 rounded ">
+            </div>
+            <div class="col-md-6 my-auto">
+                <h3>Stream</h3>
+                <p class="text-justify">
+                    The instructor can open any online student's camera and share his/her screen with low frame rate so
+                    it will not affect the internet connection for either the instructor or the exam taker.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="app-head-section" class="bg-light text-muted py-5 ">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-6 my-auto">
+                <h3>Works even with Internet disconnections</h3>
+                <p class="text-justify">
+                    If the Internet is disconnected at a certain student's place, the system caches all cheating events
+                    and sends them to the instructor once the connection is restored. Cheating events are encrypted and
+                    stored until Internet is retrieved. Advanced techniques are used to verify no fraud activities are
+                    done by offline students.
+
+                </p>
+            </div>
+            <div class="col-md-6">
+                <img src="{% static 'home/images/disconn.png' %}" alt="" class="img-fluid mb-3 rounded ">
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="two-topic-head-section"  class="bg-light py-5 " >
+    <div class="container">
+        <div class="row">
+            <div class="offset-md-1 col-md-3">
+                <div class="card text-center border-primary mb-resp ">
+                    <div class="card-body">
+                        <h3 style="color: #3292a6; ">Exam URL Safe</h3>
+                        <p class="text-muted">
+                            The exam page is opened automatically through the AI Proctoring system in incognito mode and in full screen.
+                            if the exam taker try to change from full screen to see the exam URL it will re-change the mode to full screen.
+
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="offset-md-1 col-md-3 " id="card2">
+                <div class="card text-center  mb-resp  " style="background: #3292a6 ;">
+                    <div class="card-body">
+                        <h3 class="text-white">Face verification</h3>
+                        <p class="text-white">
+                            The AI-Proctor opens the exam only after facial verification. The student uploads his
+                            picture during registration, and it is used in all his exams to make sure he doesn't
+                            leave the examination place.
+
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="offset-md-1 col-md-3">
+                <div class="card text-center border-primary mb-resp ">
+                    <div class="card-body">
+                        <h3 style="color: #3292a6; ">Presence Detection</h3>
+                        <p class="text-muted">
+                            If there was another person near the exam taker (in the cam range), the instructor will be
+                            notified. if the exam taker leave from the cam range of view the instructor will be notified.
+
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</section>
+
+
+<section id="benefit-topic-head-section"  class="  py-5 ">
+    <div class="container">
+        <div class="row">
+            <div class=" col ">
+
+                <h1 class="text-center pb-3  " style="color: #3292a6">
+                    What are the main benefits of using the system?
+                </h1>
+                <div class="d-flex">
+                    <div class="px-4 pb-2 align-self-start">
+                        <i class="fas fa-check fa-sx"></i>
+                    </div>
+                    <div class="px-4 pb-2 text-white align-self-end">
+                        The AI-Proctor can be configured to work with any examination or quizzes portal.
+                    </div>
+                </div>
+                <div class="d-flex">
+                    <div class="px-4 pb-2 align-self-start">
+                        <i class="fas fa-check fa-sx"></i>
+                    </div>
+                    <div class="px-4 pb-2 text-white align-self-end">
+                        No need for any special hardware to proctoring. You only need the already used cam for Zoom.
+                    </div>
+                </div>
+                <div class="d-flex">
+                    <div class="px-4 pb-2 align-self-start">
+                        <i class="fas fa-check fa-sx"></i>
+                    </div>
+                    <div class="px-4 pb-2 text-white align-self-end">
+                        The students are also allowed to access “ a white list” of websites and programs that the
+                        instructor can configure.
+                    </div>
+                </div>
+                <div class="d-flex">
+                    <div class="px-4 pb-2 align-self-start">
+                        <i class="fas fa-check fa-sx"></i>
+                    </div>
+                    <div class="px-4 pb-2 text-white align-self-end">
+                        The date and time of exam are shown at the students' browser add-on.
+                    </div>
+                </div>
+                <div class="d-flex">
+                    <div class="px-4 pb-2 align-self-start">
+                        <i class="fas fa-check fa-sx"></i>
+                    </div>
+                    <div class="px-4 pb-2 text-white align-self-end">
+                        The system reminds the student 5 mins before the exam ends
+                    </div>
+                </div>
+                <div class="d-flex">
+                    <div class="px-4 pb-2 align-self-start">
+                        <i class="fas fa-check fa-sx"></i>
+                    </div>
+                    <div class="px-4 pb-2 text-white align-self-end">
+                        When the exam ends, the browser automatically closes and detailed cheating videos are sent
+                        to the instructor.
+                    </div>
+                </div>
+                <div class="d-flex">
+                    <div class="px-4 pb-2 align-self-start">
+                        <i class="fas fa-check fa-sx"></i>
+                    </div>
+                    <div class="px-4 pb-2 text-white align-self-end">
+                        No arguments needed after the exam. since hard evidence will be in the instructor hand of the
+                        suspicious behaviour and time recorded and documented.
+                    </div>
+                </div>
+                <div class="d-flex">
+                    <div class="px-4 pb-2  align-self-start">
+                        <i class="fas fa-check fa-sx"></i>
+                    </div>
+                    <div class="px-4 pb-2 text-white align-self-end">
+                        The exam can scale since most of the proctoring will be thought our system and Zoom will be
+                        used to notify the exam taker only or to confirm  the alarming behaviour.
+                    </div>
+                </div>
+                <div class="d-flex">
+                    <div class="px-4 pb-2  align-self-start">
+                        <i class="fas fa-check fa-sx"></i>
+                    </div>
+                    <div class="px-4 pb-2 text-white align-self-end">
+                        The system consists of a browser add-on to monitor browser activity, and an application to
+                        monitor out of browser activities.
+                    </div>
+                </div>
+                <div class="d-flex">
+                    <div class="px-4 pb-2  align-self-start">
+                        <i class="fas fa-check fa-sx"></i>
+                    </div>
+                    <div class="px-4 pb-2 text-white align-self-end">
+                        Instructor adds students to a class easily by their emails
+                    </div>
+                </div>
+                <div class="d-flex">
+                    <div class="px-4 pb-2  align-self-start">
+                        <i class="fas fa-check fa-sx"></i>
+                    </div>
+                    <div class="px-4 pb-2 text-white align-self-end">
+                        When the exam starts, the system closes all browser widows and opens the exam's URL in
+                        full-screen mode.
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<footer id="main-footer" class="bg-dark">
+    <div class="container">
+        <div class="row">
+            <div class=" col text-center py-4 mb-0  ">
+                <h3>To try the application, please send to <a href = "mailto: info@techibees.com">info@techibees.com</a></h3>
+            </div>
+        </div>
+    </div>
+</footer> 
+
+{% endblock %}
+

@@ -1,0 +1,620 @@
+{% extends 'template/base.html' %}
+{% block title %}Instructor Events{% endblock %}
+{% block home_active %}active{% endblock %}
+{% block nav_color %}#12b3bd;{% endblock %}
+{% block nav_font_color %}navbar-dark{% endblock %}
+{% load static %}
+{% block body %}
+    <div class="container  py-3 ">
+
+        <div>
+            <form class="form-horizontal" role="form" action="{% url 'classes:delete_class'%}" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <input type="hidden" name="subject" id="subject" value="{{ class_name }}">
+                    <input type="hidden" name="class_id" id="class_id" value="{{ class_id }}">
+
+                </div>
+
+                <div class="form-group ">
+                    <!-- <button type="submit"  class="btn  btn-lg alert-danger "data-toggle="modal"  data-target="#exampleModal">Delete Class</button> -->
+
+                    <button type="button" class="btn  btn-lg btn-block alert-danger " data-toggle="modal"
+                        data-target="#exampleModal">
+                        Delete Class
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Delete Class</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    Are you sure you want to delete "{{ class_name }}" class? This is an irreversible action
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancle</button>
+                                    <button type="submit" class="btn btn-primary">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
+
+
+        <div>
+            <form class="form-horizontal" role="form" action="{% url 'classes:delete_students'%}" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <input type="hidden" name="subject" id="subject" value="{{ class_name }}">
+                    <input type="hidden" name="class_id" id="class_id" value="{{ class_id }}">
+
+                </div>
+
+                <div class="form-group ">
+                    <!-- <button type="submit"  class="btn  btn-lg alert-danger "data-toggle="modal"  data-target="#exampleModal">Delete Class</button> -->
+
+
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog"
+                        aria-labelledby="exampleModalLabel1" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel1">Delete Class</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    Are you sure you want to remove all students in "{{ class_name }}" class? This is an
+                                    irreversible action
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancle</button>
+                                    <button type="submit" class="btn btn-primary">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
+        <form class="form-horizontal" role="form" action="{% url 'classes:remove_student'%}" method="post">
+            {% csrf_token %}
+
+            <input type="hidden" name="student_id" id="student_id">
+            <input type="hidden" name="class_id" id="student_remove_class_id">
+
+            <div class="form-group   pb-1">
+                <!-- <button type="submit"  class="btn  btn-lg alert-danger "data-toggle="modal"  data-target="#exampleModal">Delete Class</button> -->
+
+                <button id="remove_student_button" type="button" class="close " aria-label="Close" data-toggle="modal"
+                    data-target="#exampleModal3"></button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel3"
+                    aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel3">Remove Student</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                Are you sure you want to remove this student? you can reinsert him/her later.
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancle</button>
+                                <button type="submit" class="btn btn-primary">Remove</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </form>
+
+
+
+        <div class="d-flex justify-content-center btn-group btn-group-toggle ">
+            <button type="button" id="statistic_option" class="btn btn-secondary btn-lg active"
+                onclick="statistic_fun();">Events</button>
+            <button type="button" id="download_option" class="btn btn-secondary btn-lg" onclick="download_fun();">Students
+                List</button>
+        </div>
+
+        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="false">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="content-section">
+                        <br><br><br>
+                        <legend class="border-bottom mb-4">
+                            {{ class_name }} Class List of Events:
+                        </legend>
+                        <div class="container">
+                            {% if have_students %}
+                                <div class="float-right">
+                                    <button class="btn btn-outline-info" onclick="display_adder()">
+                                        Add New Event
+                                    </button>
+                                </div>
+
+
+                                <div id="event_adder"
+                                    class="  justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
+                                    style="display: none ;">
+                                    <div class="container border  shadow-lg  my-5 pb-3 rounded"
+                                        style="background-color: rgb(254, 253, 255); max-width: 700px;">
+                                        <div class="container-fluid pt-3">
+                                            <form class="form-horizontal" role="form" action="{% url 'classes:add_event'%}"
+                                                method="post" enctype="multipart/form-data">
+                                                {% csrf_token %}
+                                                <button type="button" class="close" aria-label="Close" onclick="close_adder()">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                                <br>
+                                                <div class="form-group d-inline">
+                                                    <input type="hidden" name="class_id" id="class_id" value="{{ class_id }}">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="event_name"> Event Name:</label>
+                                                    <input class="form-control" id="event_name" name="event_name" type="text"
+                                                        required>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="event_info"> Event info:</label>
+                                                    <input class="form-control" id="event_info" name="event_info" type="text"
+                                                        required>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="event_info"> Event URL:</label>
+                                                    <input class="form-control" id="event_url" name="event_url" type="text"
+                                                        required>
+                                                </div>
+
+
+                                                <div class="form-group">
+                                                    <label for="picker1"> Event schedule:</label>
+                                                    <div class="container">
+                                                        <div class="row justify-content-md-center">
+                                                            <div class="col-sm-12 col-lg-6">
+                                                                <div class="input-group mb-3">
+                                                                    <div class="input-group-prepend">
+                                                                        <span class="input-group-text" id="basic-addon1">
+                                                                            From
+                                                                        </span>
+                                                                    </div>
+                                                                    <input type="text" class="form-control" id="picker1" name="picker1" autocomplete="off" required/>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-sm-12 col-lg-6">
+                                                                <div class="input-group mb-3">
+                                                                    <div class="input-group-prepend">
+                                                                        <span class="input-group-text" id="basic-addon2">
+                                                                            To
+                                                                        </span>
+                                                                    </div>
+                                                                    <input type="text" id="picker2" class="form-control" name="picker2" autocomplete="off" required/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="allowed_programs">Allowed Programs</label>
+                                                    <textarea class="form-control" id="allowed_programs" name="allowed_programs" rows="3"></textarea>
+
+                                                </div>
+
+
+                                                <div class="form-group">
+                                                    <label for="allowed_pages">Allowed Websites</label>
+                                                    <textarea class="form-control" id="allowed_pages" name="allowed_pages" rows="3"></textarea>
+
+                                                </div>
+
+
+
+
+
+
+                                                <div class="form-group">
+                                                    <button type="submit" class="btn  btn-lg btn-block bg-dark text-white">ADD
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            {% endif %}
+
+
+
+
+                            <br>
+                            <br>
+                            <br>
+
+                            <ul class="list-group list-group-flush">
+                                {% for class in ordered_events_list %}
+                                    <div class="row">
+                                        {% for cl in class %}
+                                        <div class="col-sm">
+                                            <form method="post" enctype="multipart/form-data"
+                                                action="{% url 'classes:show_single_events'%}">
+                                                {% csrf_token %}
+                                                <div class="form-group d-inline">
+                                                    <input type="hidden" name="event_id" id="event_id" value="{{ cl.id }}">
+                                                    <input type="hidden" name="class_id" id="class_id" value="{{ class_id }}">
+                                                </div>
+                                                <button type="submit" class="btn btn-info  btn-block py-4"
+                                                    style="margin-bottom:4px;white-space: normal;">{{ cl.event_name }}</button>
+                                            </form>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                {% endfor %}
+                            </ul>
+
+
+                        </div>
+
+
+
+
+
+                    </div>
+                </div>
+
+                <div class="carousel-item">
+                    <br>
+                    <br>
+                    <br>
+
+                    <div class="container row">
+                        <button type="button" id="statistic_option" class="col-sm btn btn-outline-success   m-1"
+                            onclick="display_single_student_adder();">Add Single Student</button>
+
+                        
+                            <div class="col">
+                                <button type="button" id="statistic_option" class="col-sm btn btn-outline-success   m-1"
+                                onclick="display_student_adder();">Add Students From Excel File</button>
+                                <a href="{% url 'classes:download_template'%}" type="button" class="col-sm btn btn-outline-info m-1">Use This Template</a>
+     
+                            </div>
+    
+    
+                        
+                        <button type="button" id="download_option" class="col-sm btn btn-outline-primary  m-1"
+                            onclick="display_student_replace();">Replace All Students Using Excel File</button>
+                        <button type="button" id="download_option" class="col-sm btn btn-outline-danger   m-1"
+                            data-toggle="modal" data-target="#exampleModal1">Remove All Students</button>
+
+                    </div>
+
+
+                    <div id="student_adder"
+                        class="  justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
+                        style="display: none ;">
+                        <div class="container border  shadow-lg  my-5 pb-3 rounded"
+                            style="background-color: rgb(254, 253, 255); max-width: 700px;">
+                            <div class="container-fluid pt-3">
+                                <form class="form-horizontal" role="form" action="{% url 'classes:add_students'%}"
+                                    method="post" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <button type="button" class="close" aria-label="Close" onclick="close_student_adder()">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    <br>
+                                    <div class="form-group d-inline">
+                                        <input type="hidden" name="class_id" id="class_id" value="{{ class_id }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-10">
+                                                <label for="exam_document"> Select The Students' Excel Sheet:</label>
+                                            </div>
+
+                                        </div>
+                                        <div class="custom-file">
+                                            <input type="file" name="exam_document" class="custom-file-input"
+                                                id="exam_document" required>
+                                            <label class="custom-file-label" for="exam_document">Choose a file...</label>
+                                            <div class="valid-feedback"> Looks good!</div>
+                                            <div class="invalid-feedback">Please provide a valid entry.</div>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="form-group">
+                                        <button type="submit" class="btn  btn-lg btn-block bg-dark text-white">Upload
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div id="student_replace"
+                        class="  justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
+                        style="display: none ;">
+                        <div class="container border  shadow-lg  my-5 pb-3 rounded"
+                            style="background-color: rgb(254, 253, 255); max-width: 700px;">
+                            <div class="container-fluid pt-3">
+                                <form class="form-horizontal" role="form" action="{% url 'classes:replace_students'%}"
+                                    method="post" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <button type="button" class="close" aria-label="Close"
+                                        onclick="close_student_replace()">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    <br>
+                                    <div class="form-group d-inline">
+                                        <input type="hidden" name="class_id" id="class_id" value="{{ class_id }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-10">
+                                                <label for="exam_document1"> Select The Students' Excel Sheet to Replace
+                                                    With:</label>
+                                            </div>
+
+                                        </div>
+                                        <div class="custom-file">
+                                            <input type="file" name="exam_document" class="custom-file-input" id="exam_document1" required>
+                                            <label class="custom-file-label" for="exam_document1">Choose a file...</label>
+                                            <div class="valid-feedback"> Looks good!</div>
+                                            <div class="invalid-feedback">Please provide a valid entry.</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <button type="submit" class="btn  btn-lg btn-block bg-dark text-white">Upload
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div id="single_student_add"
+                        class="  justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
+                        style="display: none ;">
+                        <div class="container border  shadow-lg  my-5 pb-3 rounded"
+                            style="background-color: rgb(254, 253, 255); max-width: 700px;">
+                            <div class="container-fluid pt-3">
+                                <form class="form-horizontal" role="form" action="{% url 'classes:add_single_student'%}"
+                                    method="post" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <button type="button" class="close" aria-label="Close"
+                                        onclick="close_single_student_replace()">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    <br>
+                                    <div class="form-group d-inline">
+                                        <input type="hidden" name="class_id" id="class_id" value="{{ class_id }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="student_email"> Student Email:</label>
+                                        <input class="form-control" id="student_email" name="student_email" type="text"
+                                            required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <button type="submit" class="btn  btn-lg btn-block bg-dark text-white">ADD
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div>
+                        <br>
+                        <br>
+                        <br>
+                        <ul class="list-group list-group-flush  col-7">
+                            {% for eve in full_stud_info %}
+                                <li class="list-group-item mb-1">
+                                    <div class="row">
+                                        <div class="form-group   pb-1">
+                                            <!-- <button type="submit"  class="btn  btn-lg alert-danger "data-toggle="modal"  data-target="#exampleModal">Delete Class</button> -->
+
+                                            <button type="button" class="close " aria-label="Close" onclick="removeStudent({{ eve.3 }}, {{ class_id }})">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm">
+    {#                                        <div class="user-pic">#}
+    {#                                            <img class="img-responsive img-rounded" src="{{ eve.2 }}">#}
+    {#                                        </div>#}
+                                            <div class="col-md-auto">
+                                                <img  class="img-fluid rounded"   src="{{ eve.2 }}">
+                                            </div>
+
+                                        </div>
+                                        <div class="col-sm">
+                                            <div>
+                                                <p class="h3 ">{{ eve.0 }}</p>
+
+                                            </div>
+                                            <div>
+                                                <p class="lead ">{{ eve.1 }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+
+                            {% endfor %}
+                        </ul>
+
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+
+
+    </div>
+
+    <script type="text/javascript">
+        $('#exam_document').on('change', function () {
+            //get the file name
+            var fileName = $(this).val().replace("C:\\fakepath\\", "");
+            //replace the "Choose a file" label
+            $(this).next('.custom-file-label').html(fileName);
+        });
+        $('#exam_document1').on('change', function () {
+            //get the file name
+            var fileName = $(this).val().replace("C:\\fakepath\\", "");
+            //replace the "Choose a file" label
+            $(this).next('.custom-file-label').html(fileName);
+        });
+
+        function statistic_fun() {
+            $("#carouselExampleIndicators").carousel(0);
+            var element = document.getElementById("statistic_option");
+            var element1 = document.getElementById("download_option");
+            {#var element2 = document.getElementById("edit_option");#}
+            element.classList.add("active");
+            element1.classList.remove("active");
+            {#element2.classList.remove("active");#}
+        }
+
+
+        function download_fun() {
+            $("#carouselExampleIndicators").carousel(1);
+            var element = document.getElementById("download_option");
+            var element1 = document.getElementById("statistic_option");
+            {#var element2 = document.getElementById("edit_option");#}
+            element.classList.add("active");
+            element1.classList.remove("active");
+            {#element2.classList.remove("active");#}
+        }
+
+
+
+        window.onload = function () {
+
+        };
+
+
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+
+    </script>
+    <script>
+        function display_adder() {
+            document.getElementById('event_adder').style.display = "block";
+            document.getElementById('single_student_add').style.display = "none";
+            document.getElementById('student_adder').style.display = "none";
+            document.getElementById('student_replace').style.display = "none";
+        }
+        function close_adder() {
+            document.getElementById('event_adder').style.display = "none";
+        }
+        function display_student_adder() {
+            document.getElementById('student_adder').style.display = "block";
+            {#document.getElementById('event_adder').style.display = "none";#}
+            document.getElementById('single_student_add').style.display = "none";
+            document.getElementById('student_replace').style.display = "none";
+        }
+        function display_single_student_adder() {
+            document.getElementById('single_student_add').style.display = "block";
+            {#document.getElementById('event_adder').style.display = "none";#}
+            document.getElementById('student_adder').style.display = "none";
+            document.getElementById('student_replace').style.display = "none";
+        }
+        function close_single_student_replace() {
+            document.getElementById('single_student_add').style.display = "none";
+        }
+        function close_student_adder() {
+            document.getElementById('student_adder').style.display = "none";
+        }
+
+
+        function display_student_replace() {
+            document.getElementById('student_replace').style.display = "block";
+            document.getElementById('single_student_add').style.display = "none";
+            {#document.getElementById('event_adder').style.display = "none";#}
+            document.getElementById('student_adder').style.display = "none";
+        }
+        function close_student_replace() {
+            document.getElementById('student_replace').style.display = "none";
+        }
+
+
+        function removeStudent(e, a) {
+            console.log(e);
+            console.log(a);
+            document.getElementById('student_id').value = e;
+            document.getElementById('student_remove_class_id').value = a;
+            document.getElementById("remove_student_button").click(); // Click on the checkbox
+        }
+
+
+
+        $("#picker1").datetimepicker({
+            timepicker: true,
+            datepicker: true,
+            format: "Y-m-d H:i",
+            step: 15,
+            onShow: function (ct) {
+                this.setOptions({
+                    maxDate: $("#picker2").val()
+                        ? $("#picker2").val()
+                        : false,
+                });
+            },
+        });
+        $("#picker2").datetimepicker({
+            timepicker: true,
+            datepicker: true,
+            format: "Y-m-d H:i",
+            step: 15,
+            onShow: function (ct) {
+                this.setOptions({
+                    minDate: $("#picker1").val()
+                        ? $("#picker1").val()
+                        : false,
+                });
+            },
+        });
+    </script>
+{% endblock %}

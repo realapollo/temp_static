@@ -1,0 +1,45 @@
+{% extends 'dashboard/dashboard.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block body %}
+
+
+
+    <div id="event_adder" class="  justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom" style="display: none ;"  >
+        <div class="container border  shadow-lg  my-5 pb-3 rounded" style="background-color: rgb(254, 253, 255); max-width: 700px;">
+            <div class="container-fluid pt-3">
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <script>
+        function hide_jumbo(e) {
+            let jumbo = document.getElementById(e);
+            jumbo.style.display = "none";
+        }
+
+    function display_jumbo(e) {
+            console.log("clicked");
+            console.log(e);
+            let jumbo = document.getElementById(e);
+            jumbo.style.display = "block";
+        }
+
+    function display_adder(){
+            document.getElementById('event_adder').style.display = "block";
+        }
+        function close_adder(){
+            document.getElementById('event_adder').style.display = "none";
+        }
+
+
+    </script>
+
+
+
+{% endblock %}

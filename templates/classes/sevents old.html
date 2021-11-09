@@ -1,0 +1,50 @@
+{% extends 'template/base.html' %}
+{% block title %}Instructor Events{% endblock %}
+{% block home_active %}active{% endblock %}
+{% block nav_color %}#12b3bd;{% endblock %}
+{% block nav_font_color %}navbar-dark{% endblock %}
+{% load static %}
+{% block body %}
+    <div class="container  py-3 ">
+        <br>
+        <br>
+        <br>
+        <legend class="border-bottom mb-4">
+            {{ class_name }} Class List of Events:
+        </legend>
+        <div class="container">
+
+            <br>
+            <br>
+            <br>
+
+            <ul class="list-group list-group-flush">
+                {% for class in ordered_events_list %}
+                <div class="row">
+                    {% for cl in class %}
+                    <div class="col-sm">
+                        <form method="post" enctype="multipart/form-data"
+                            action="{% url 'classes:show_single_events'%}">
+                            {% csrf_token %}
+                            <div class="form-group d-inline">
+                                <input type="hidden" name="event_id" id="event_id" value="{{ cl.id }}">
+                                <input type="hidden" name="class_id" id="class_id" value="{{ class_id }}">
+                            </div>
+                            <button type="submit" class="btn btn-info  btn-block py-4"
+                                style="margin-bottom:4px;white-space: normal;">{{ cl.event_name }}</button>
+                        </form>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </ul>
+
+
+        </div>
+
+
+    </div>
+
+
+
+{% endblock %}

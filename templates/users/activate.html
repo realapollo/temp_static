@@ -1,0 +1,9 @@
+
+{% autoescape off %}
+
+    Greating {{ user.first_name }} {{ user.last_name }}
+    Please click this link below to verify your email account
+
+    https://{{ domain }}{% url 'users:activate' uidb64=uid token=token %}
+
+{% endautoescape %}

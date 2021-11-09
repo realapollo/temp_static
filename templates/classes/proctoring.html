@@ -1,0 +1,2044 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="shortcut icon" href="{% static 'fav_icon.png' %}">
+    <title>AI Proctor</title>
+
+    <!-- Stylesheets -->
+    <link href="{% static 'classes/css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'classes/css/responsive.css' %}" rel="stylesheet">
+    {#<link rel="icon" href="#" type="image/x-icon">#}
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script> -->
+    <!-- <script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script> -->
+    <!-- <script src="{% static 'template/html2canvas.min.js' %}"></script> -->
+    <!-- <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script> -->
+    <!-- <script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script> -->
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+
+
+</head>
+
+<!-- page wrapper -->
+<body class="boxed_wrapper">
+ 
+    <!-- main header -->
+    <header class="main-header">
+
+        <!-- Header upper -->
+        <div class="header-upper">
+            <div class="container">
+                <div class="outer-box clearfix">
+                    <div class="float-left">
+                        <figure class="logo-box"><a href="{% url 'home:home' %}"><img src="{% static 'classes/images/logo.png' %}" alt="" title=""></a></figure>
+                    </div>
+                    <div class="float-right upper-right clearfix">
+                        <div class="nav-outer clearfix">
+                            <nav class="main-menu navbar-expand-lg">
+                                <div class="navbar-header">
+                                    <!-- Toggle Button -->      
+                                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    </button>
+                                </div>
+                                <div class="navbar-collapse collapse clearfix" id="navbarSupportedContent">
+                                    <ul class="navigation clearfix">
+                                        <li><a href="{% url 'home:home' %}">Home</a></li>
+                                        <li><a href="{% url 'download:home' %}">Download</a></li>
+                                        {% if user.is_authenticated %}
+                                            <li class="current"><a href="{% url 'classes:classes' %}">Classes</a></li>
+                                            <li><a href="{% url 'dashboard:dashboard' %}">Account</a></li>
+                                            <li class="log-btns"><a href="{% url 'users:logout' %}">Logout</a></li>
+                                        {% else %}
+                                            <li class="log-btns"><a href="{% url 'users:login' %}">Login</a></li>
+                                            <li class="log-btns"><a href="{% url 'users:register' %}">Sign Up</a></li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                            </nav><!-- Main Menu End-->            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--End Header Upper-->
+
+        <!--Sticky Header-->
+        <div class="sticky-header">
+            <div class="container">
+                <div class="clearfix">
+                    <!--Logo-->
+                    <div class="logo float-left">
+                        <a href="{% url 'home:home' %}" class="img-responsive"><img src="{% static 'classes/images/logo.png' %}" alt="" title=""></a>
+                    </div>
+                    
+                    <!--Right Col-->
+                    <div class="right-col float-right">
+                        <!-- Main Menu -->
+                        <nav class="main-menu navbar-expand-lg">
+                            <div class="navbar-collapse collapse clearfix">
+                            	<ul class="navigation clearfix">
+                            	    <li><a href="{% url 'home:home' %}">Home</a></li>
+                                    <li><a href="{% url 'download:home' %}">Download</a></li>
+                                        {% if user.is_authenticated %}
+                                            <li class="current"><a href="{% url 'classes:classes' %}">Classes</a></li>
+                                            <li><a href="{% url 'dashboard:dashboard' %}">Account</a></li>
+                                            <li class="log-btns"><a href="{% url 'users:logout' %}">Logout</a></li>
+                                        {% else %}
+                                            <li class="log-btns"><a href="{% url 'users:login' %}">Login</a></li>
+                                            <li class="log-btns"><a href="{% url 'users:register' %}">Sign Up</a></li>
+                                        {% endif %}
+                            	</ul>
+                            </div>
+                        </nav><!-- Main Menu End-->
+                    </div>
+                </div>
+                    
+                
+            </div>
+        </div>
+        <!--End Sticky Header-->
+    </header>
+
+    <!--Form Back Drop-->
+    <div class="form-back-drop"></div>
+ 
+	 <!-- page-title -->
+    <section class="page-title centred inner-head event-head" style="background-image: url({% static 'classes/images/login-head-bg.jpg' %})">
+        <div class="container">
+            <div class="content-box">
+                <h1>Proctoring in Progress</h1>
+            </div>
+        </div>
+    </section>
+    <!-- page-title end -->
+	
+	 
+   <section class="contact-section">
+        <div class="container">
+		    <div class="row">
+                <div class="col-lg-6 col-md-6 col-6 text-md-left">
+                    <form method="post" enctype="multipart/form-data" action="{% url 'classes:show_single_events'%}">
+                        {% csrf_token %}
+                        <input type="hidden" name="event_id" id="event_id" value="{{ event_id }}">
+                        <input type="hidden" name="class_id" id="class_id" value="{{ class_id }}">
+                        <a href="#"  onclick='this.parentNode.submit(); return false;'>
+
+                                <h5><i class="fas fa-angle-double-left"></i> Back to event</h5>
+
+                        </a>
+                    </form>
+
+                </div>
+
+		        <div class="col-lg-6 col-md-6 col-6 text-md-right">
+                    <a href="#" onclick="window.print();" class="btn-style-five">Download Page</a>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+		    <div class="row">
+ 		        <div class="col-lg-12">
+		            <div class="event-wrapper">
+		                <div class="row">
+		  	                <div class="col-lg-2 col-md-2 col-12">
+		  	                    <div class="start-event-box off-student">
+		  	                        <h5><i class="fa fa-circle"></i> Offline Students: <span id="offline_Students"></span></h5>
+		  	                        <ul id="offline_item">
+
+		  	                        </ul>
+		  	                    </div>
+		  	                </div>
+                            <div class="col-lg-8 col-md-8 col-12">
+                                <div class="start-event-box student-detail">
+                                    <div class="row">
+                                        <div class="std-screen">
+                                            <div class="container border  shadow-lg  rounded" style="background-color: rgb(254, 253, 255); ">
+                                                <div class="accordion accordion-flush my-1  rounded" id="accordionFlushExample">
+                                                    <div class="accordion-item">
+                                                        <h2 class="accordion-header" id="flush-headingOne">
+                                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                                                                Message To All Students
+                                                            </button>
+                                                        </h2>
+                                                        <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                                                            <div class="accordion-body">
+
+                                                                <div class="input-group">
+                                                                  <div class="input-group-prepend">
+                                                                    <button class="btn btn-warning" type="button" onclick="sendChatToAll();">SEND</button>
+                                                                  </div>
+                                                                  <textarea class="form-control" aria-label="With textarea" placeholder="Type your message here..." id="messageToStudents"></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col" id="stream" style="display: none;">
+                                            <div class="std-screen">
+                                                <div class="container border  shadow-lg   py-3 rounded" style="background-color: rgb(254, 253, 255); ">
+                                                    <button
+                                                        type="button"
+                                                        class="close"
+                                                        aria-label="Close"
+                                                        onclick="close_stream()"
+                                                    >
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                    <div class="row">
+                                                        <!-- <div class="text-center"> -->
+                                                        <div class="col-3  mx-4">
+                                                            <img src="#" class="img-fluid rounded" id="screen_stream" alt="Waiting for screen stream">
+                                                        </div>
+
+
+
+                                                        <!-- <div class="text-center"> -->
+                                                        <div class="col-3 mx-2">
+                                                            <img src="#" class="img-fluid rounded " id="face_stream" alt="Waiting for camera stream">
+                                                        </div>
+
+                                                        <!-- <div class="text-center"> -->
+                                                        <div class="col-3 mx-2">
+                                                            <img src="#" class="img-fluid rounded " id="rear_stream" alt="Waiting for mobile stream">
+                                                        </div>
+                                                    </div> 
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+
+                                        <div class="col" id="proc">
+                                            <div class="std-screen">
+                                                <div class="container border  shadow-lg    py-3 rounded" style="background-color: rgb(254, 253, 255); ">
+
+                                                    <div class="row">
+                                                        <div class="col-lg-6 col-md-6 col-12"> 
+                                                            <div id="jumbo3" class="jumbotron " style="display: none">
+                                                                <h1 class="display-4" ></h1>
+                                                                <p class="lead"></p>
+                                                                <p class="lead"></p>
+                                                                <hr class="my-4">
+                                                                <p class="lead  col-11 text-truncate" ></p>
+                                                                <div class="row justify-content-md-center">
+                                                                    <div class="col-md-auto">
+                                                                        <audio controls >
+                                                                            <source src="" type="audio/wav">
+                                                                            Your browser does not support the audio element.
+                                                                        </audio>
+        
+                                                                    </div>
+                                                                </div>
+                                                                <br>
+                                                                <br>
+                                                                <br>
+                                                                <div>
+        
+                                                                    <button type="button" class="btn  btn-lg  alert-danger remove_student" data-toggle="modal"
+                                                                        data-target="#exampleModal">
+                                                                        Remove Student
+                                                                    </button>
+        
+                                                                </div>
+                                                                <br>
+                                                                <br>
+                                                                <div class="input-group">
+                                                                    <div class="input-group-prepend">
+                                                                        <button class="btn btn-outline-secondary send_chat"  type="button">Send Message <br> to student</button>
+                                                                    </div>
+                                                                    <textarea class="form-control chat_box" aria-label="With textarea" placeholder="Write message here to be sent..."></textarea>
+                                                                </div>
+                                                            </div>
+        
+        
+                                                            <div id="jumbo2" class="jumbotron " style="display: none">
+                                                                <h1 class="display-4" ></h1>
+                                                                <p class="lead"></p>
+                                                                <p class="lead"></p>
+                                                                <hr class="my-4">
+                                                                <p class="lead" ></p>
+                                                                <div class="row justify-content-md-center">
+                                                                    <div class="col-md-auto">
+                                                                        <img  class="img-fluid rounded"   src="">
+                                                                    </div>
+                                                                </div>
+                                                                <br>
+                                                                <br>
+                                                                <br>
+                                                                <div>
+                                                                    <div class="row">
+                                                                        <div class="col">
+                                                                            <button type="button" class="btn  btn-lg  btn-outline-success Allow" data-toggle="modal"
+                                                                                data-target="#exampleModal">
+                                                                                Allow
+                                                                            </button>
+                                                                        </div>
+        
+                                                                        <div class="col">
+                                                                            <button type="button" class="btn  btn-lg  btn-outline-info Deny" data-toggle="modal"
+                                                                                data-target="#exampleModal">
+                                                                                Deny
+                                                                            </button>
+                                                                        </div>
+        
+                                                                        <div class="col">
+                                                                            <button type="button" class="btn  btn-lg  btn-outline-danger remove_student" data-toggle="modal"
+                                                                                data-target="#exampleModal">
+                                                                                Remove Student
+                                                                            </button>
+                                                                        </div>
+        
+                                                                    </div>
+        
+        
+                                                                </div>
+                                                            </div>
+        
+                                                            <div id="jumbo" class="jumbotron " style="display: none">
+                                                                <h1 class="display-4" ></h1>
+                                                                <p class="lead"></p>
+                                                                <p class="lead"></p>
+                                                                <hr class="my-4">
+                                                                <p class="lead  col-11 text-truncate" ></p>
+                                                                <div class="row justify-content-md-center">
+                                                                    <div class="col-md-auto">
+                                                                        <img  class="img-fluid rounded"   src="">
+                                                                    </div>
+                                                                </div>
+                                                                <br>
+                                                                <br>
+                                                                <br>
+                                                                <div>
+        
+                                                                    <button type="button" class="btn  btn-lg  alert-danger remove_student" data-toggle="modal"
+                                                                        data-target="#exampleModal">
+                                                                        Remove Student
+                                                                    </button>
+        
+                                                                </div>
+                                                                <br>
+                                                                <br>
+                                                                <div class="input-group">
+                                                                    <div class="input-group-prepend">
+                                                                        <button class="btn btn-outline-secondary send_chat"  type="button">Send Message <br> to student</button>
+                                                                    </div>
+                                                                    <textarea class="form-control chat_box" aria-label="With textarea" placeholder="Write message here to be sent..."></textarea>
+                                                                </div>
+                                                            </div> 
+
+                                                        </div>
+                                                        <div class="col-lg-6 col-md-6 col-12">
+                                                            <div id="media_pos"></div>
+                                                        </div>
+
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-12">
+                                <div class="start-event-box on-student">
+                                    <h5><i class="fa fa-circle"></i> Online Students: <span id="online_Students"></span></h5>
+                                    
+
+                                    <button class="list-group-item list-group-item-action " id="li_button_clone" type="button" style="display: none">
+                                        <div class="row">
+                                            <span class="student_name">
+
+                                            </span>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-5">
+                                                <span class="badge badge-pill mobile_off"  style="display: none">
+                                                    <i class="fa fa-mobile" style="font-size:24px; color: #DC3545"></i>
+                                                </span>
+                                                <span class="badge badge-pill mobile_on"  style="display: none">
+                                                    <i class="fa fa-mobile" style="font-size:24px; color: #45be25"></i>
+                                                </span>
+                                            </div>
+                                            <div class="col-5">
+                                                <span class="badge badge-pill camera_off"  style="display: none">
+                                                    <i class="fa fa-camera" style="font-size:24px; color: #DC3545"></i>
+                                                </span>
+                                                <span class="badge badge-pill camera_on" style="display: none">
+                                                    <i class="fa fa-camera" style="font-size:24px; color: #45be25"></i>
+                                                </span>
+                                            </div>
+
+                                        </div>
+
+
+
+                                    </button>
+                                    <ul id="online_item" >
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+		            </div>
+		        </div>
+		    </div>
+        </div>
+    </section>
+	
+
+
+<!-- jequery plugins -->
+<script src="{% static 'classes/js/jquery.js' %}"></script>
+<script src="{% static 'classes/js/popper.min.js' %}"></script>
+<script src="{% static 'classes/js/bootstrap.min.js' %}"></script>
+
+<script src="{% static 'classes/js/owl.js' %}"></script>
+<script src="{% static 'classes/js/wow.js' %}"></script>
+<script src="{% static 'classes/js/validation.js' %}"></script>
+<script src="{% static 'classes/js/jquery.fancybox.js' %}"></script>
+<script src="{% static 'classes/js/appear.js' %}"></script>
+<script src="{% static 'classes/js/aos.js' %}"></script>
+<script src="{% static 'classes/js/jquery.mCustomScrollbar.concat.min.js' %}"></script>
+<script src="{% static 'classes/js/jquery.paroller.min.js' %}"></script>
+<script src="{% static 'classes/js/jquery.datetimepicker.full.min.js' %}"></script>
+<!-- main-js -->
+<script src="{% static 'classes/js/script.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+	
+  	
+<script>
+    let ind = 0;
+    let stream_v = null;
+    let stream_stu_email = "";
+    // window.html2canvas = html2canvas;
+    // window.jsPDF = window.jspdf.jsPDF;
+
+    window.onload = function() {
+        student_status();
+        setInterval(c_reload, 2000);
+        // setInterval(p_reload, 1000);
+        // setInterval(mic_perm, 1000);
+        // setInterval(rejoinExam, 1000);
+        // setInterval(v_m_reload, 1000);
+        setInterval(student_status, 5000);
+        setInterval(check_sent_chat, 5000);
+    };
+
+    function sendChatToAll() {
+        let csrf_t = '{{csrf_token}}';
+        let chatText = document.getElementById("messageToStudents").value;
+        document.getElementById("messageToStudents").value = "";
+        console.log("index");
+        let xhr2 = new XMLHttpRequest();
+        xhr2.open("POST", "{% url 'classes:send_chat_to_all'%}", true);
+        xhr2.setRequestHeader("X-CSRFToken", csrf_t);
+        xhr2.setRequestHeader("Content-Type", "application/json");
+        xhr2.onloadend = function () {
+            if (xhr2.status === 200) {
+                let resp2 = JSON.parse(xhr2.responseText);
+                let c_type = resp2.stats;
+                if(c_type === 1){
+                    alert("Message scheduled to be sent in short time.");
+                }else {
+                    alert("Error happened while sending message");
+                }
+            }
+        };
+        xhr2.onerror = function (e) {
+            console.log(e);
+        };
+
+
+        xhr2.send(
+            JSON.stringify({
+                event_code: "{{ event_code }}",
+                chat_text: chatText,
+                class_id: "{{ class_id }}",
+            })
+        );
+    }
+
+
+    function c_reload() {
+        // console.log("start")
+        // console.log({{ event_id }});
+        // console.log({{ class_id }});
+        let csrf_t = '{{csrf_token}}';
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "{% url 'classes:get_cheater'%}", true);
+        xhr.setRequestHeader("X-CSRFToken", csrf_t);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onloadend = function () {
+            if (xhr.status === 200) {
+                let resp = JSON.parse(xhr.responseText);
+                let c_type = resp.type;
+                if(c_type === 0){
+                    let img = resp.img;
+                    let urls = resp.urls;
+                    let name = resp.cname;
+                    let e_id = resp.event_id;
+                    let class_id = resp.class_id;
+                    let e_code = resp.code;
+                    let number_urls = resp.nurls;
+                    let ctime = resp.ctime;
+                    let elem = document.getElementById("jumbo");
+                    let jumbo = elem.cloneNode(true);
+
+                    jumbo.getElementsByClassName("remove_student")[0].addEventListener('click', function () {
+                        let xhr2 = new XMLHttpRequest();
+                        xhr2.open("POST", "{% url 'classes:remove_student_exam'%}", true);
+                        xhr2.setRequestHeader("X-CSRFToken", csrf_t);
+                        xhr2.setRequestHeader("Content-Type", "application/json");
+                        xhr2.onloadend = function () {
+                            if (xhr2.status === 200) {
+                                let resp2 = JSON.parse(xhr2.responseText);
+                                let c_type = resp2.stats;
+                                if(c_type === 1){
+                                    alert("Student is scheduled to be removed successfully. The student " +
+                                        "browser will be closed in about 30 sec.");
+                                }else {
+                                    alert("Error happened while removing this student");
+                                }
+                            }
+                        };
+                        xhr2.onerror = function (e) {
+                            console.log(e);
+                        };
+
+
+                        xhr2.send(
+                            JSON.stringify({
+                                event_id: e_id,
+                                event_code: e_code,
+                                class_id: class_id,
+                            })
+                        );
+                    });
+
+
+                    jumbo.getElementsByClassName("send_chat")[0].addEventListener('click', function () {
+                        let chatText = jumbo.getElementsByClassName("chat_box")[0].value;
+                        let xhr2 = new XMLHttpRequest();
+                        xhr2.open("POST", "{% url 'classes:send_chat'%}", true);
+                        xhr2.setRequestHeader("X-CSRFToken", csrf_t);
+                        xhr2.setRequestHeader("Content-Type", "application/json");
+                        xhr2.onloadend = function () {
+                            if (xhr2.status === 200) {
+                                let resp2 = JSON.parse(xhr2.responseText);
+                                let c_type = resp2.stats;
+                                if(c_type === 1){
+                                    alert("Message scheduled to be sent in short time.");
+                                }else {
+                                    alert("Error happened while sending message");
+                                }
+                            }
+                        };
+                        xhr2.onerror = function (e) {
+                            console.log(e);
+                        };
+
+
+                        xhr2.send(
+                            JSON.stringify({
+                                event_id: e_id,
+                                event_code: e_code,
+                                chat_text: chatText,
+                                class_id: class_id,
+                            })
+                        );
+                    });
+
+                    jumbo.id = 'elem' + ind;
+                    jumbo.style.display = "block";
+                    ind += 1;
+
+                    let childs = jumbo.childNodes;
+                    childs[1].innerHTML = name;
+                    childs[3].innerHTML = "Student opened " + number_urls + " tabs";
+                    childs[5].innerHTML = ctime;
+                    let txt = "";
+                    let i;
+                    for (i = 0; i < urls.length; i++) {
+                        // var para = document.createElement("p");
+                        // var node = document.createTextNode(urls[i]);
+                        // para.appendChild(node);
+                        // para.classList.add("sticky");
+                        let aTag = document.createElement('a');
+                        let nL = document.createElement('br');
+                        aTag.classList.add("col-5");
+                        aTag.setAttribute('href',urls[i]);
+                        aTag.innerText = urls[i];
+                        childs[9].appendChild(aTag);
+                        childs[9].appendChild(nL);
+                    }
+                    {#childs[7].innerHTML = txt;#}
+                    let imag1 = childs[11].childNodes[1].childNodes[1];
+                    imag1.src = img;
+                    elem.after(jumbo);
+                }
+                else if (c_type === 1){
+                    let img = resp.img;
+                    let e_id = resp.event_id;
+                    let e_code = resp.code;
+                    let pnames = resp.pnames;
+                    let class_id = resp.class_id;
+                    let name = resp.cname;
+                    let ctime = resp.ctime;
+                    let elem1 = document.getElementById("jumbo");
+                    let jumbo1 = elem1.cloneNode(true);
+
+                    jumbo1.getElementsByClassName("remove_student")[0].addEventListener('click', function () {
+                        let xhr2 = new XMLHttpRequest();
+                        xhr2.open("POST", "{% url 'classes:remove_student_exam'%}", true);
+                        xhr2.setRequestHeader("X-CSRFToken", csrf_t);
+                        xhr2.setRequestHeader("Content-Type", "application/json");
+                        xhr2.onloadend = function () {
+                            if (xhr2.status === 200) {
+                                let resp2 = JSON.parse(xhr2.responseText);
+                                let c_type = resp2.stats;
+                                if(c_type === 1){
+                                    alert("Student is scheduled to be removed successfully. The student " +
+                                        "browser will be closed in about 30 sec.");
+                                }else {
+                                    alert("Error happened while removing this student");
+                                }
+                            }
+                        };
+                        xhr2.onerror = function (e) {
+                            console.log(e);
+                        };
+
+
+                        xhr2.send(
+                            JSON.stringify({
+                                event_id: e_id,
+                                event_code: e_code,
+                                class_id: class_id,
+                            })
+                        );
+                    });
+
+                    jumbo1.getElementsByClassName("send_chat")[0].addEventListener('click', function () {
+                        console.log("entered the click");
+                        let chatText = jumbo1.getElementsByClassName("chat_box")[0].value;
+                        console.log(chatText);
+                        let xhr33 = new XMLHttpRequest();
+                        xhr33.open("POST", "{% url 'classes:send_chat'%}", true);
+                        xhr33.setRequestHeader("X-CSRFToken", csrf_t);
+                        xhr33.setRequestHeader("Content-Type", "application/json");
+                        xhr33.onloadend = function () {
+                            if (xhr33.status === 200) {
+                                let resp2 = JSON.parse(xhr33.responseText);
+                                let c_type = resp2.stats;
+                                if(c_type === 1){
+                                    alert("Message scheduled to be sent in short time.");
+                                }else {
+                                    alert("Error happened while sending message");
+                                }
+                            }
+                        };
+                        xhr33.onerror = function (e) {
+                            console.log(e);
+                        };
+
+                        console.log("SENDING");
+                        console.log(e_id);
+                        console.log(e_code);
+                        console.log(chatText);
+                        xhr33.send(
+                            JSON.stringify({
+                                event_id: e_id,
+                                event_code: e_code,
+                                chat_text: chatText,
+                                class_id: class_id,
+                            })
+                        );
+                    });
+
+
+                    jumbo1.id = 'elem' + ind;
+                    jumbo1.style.display = "block";
+                    ind += 1;
+
+                    let childs = jumbo1.childNodes;
+                    childs[1].innerHTML = name;
+                    childs[3].innerHTML = "Student opened another program";
+                    childs[5].innerHTML = ctime;
+                    childs[9].innerHTML = pnames;
+                    let imag2 = childs[11].childNodes[1].childNodes[1];
+                    imag2.src = img;
+                    elem1.after(jumbo1);
+
+                }
+                else if (c_type === 2){
+                    let img = resp.img;
+                    let e_id = resp.event_id;
+                    let e_code = resp.code;
+                    let states = resp.states;
+                    let class_id = resp.class_id;
+                    let name = resp.cname;
+                    let ctime = resp.ctime;
+                    let elem2 = document.getElementById("jumbo");
+                    let jumbo2 = elem2.cloneNode(true);
+
+                    jumbo2.getElementsByClassName("remove_student")[0].addEventListener('click', function () {
+                        let xhr2 = new XMLHttpRequest();
+                        xhr2.open("POST", "{% url 'classes:remove_student_exam'%}", true);
+                        xhr2.setRequestHeader("X-CSRFToken", csrf_t);
+                        xhr2.setRequestHeader("Content-Type", "application/json");
+                        xhr2.onloadend = function () {
+                            if (xhr2.status === 200) {
+                                let resp2 = JSON.parse(xhr2.responseText);
+                                let c_type = resp2.stats;
+                                if(c_type === 1){
+                                    alert("Student is scheduled to be removed successfully. The student " +
+                                        "browser will be closed in about 30 sec.");
+                                }else {
+                                    alert("Error happened while removing this student");
+                                }
+                            }
+                        };
+                        xhr2.onerror = function (e) {
+                            console.log(e);
+                        };
+
+
+                        xhr2.send(
+                            JSON.stringify({
+                                event_id: e_id,
+                                event_code: e_code,
+                                class_id: class_id,
+                            })
+                        );
+                    });
+
+
+                    jumbo2.getElementsByClassName("send_chat")[0].addEventListener('click', function () {
+                        console.log("entered the click");
+                        let chatText = jumbo2.getElementsByClassName("chat_box")[0].value;
+                        console.log(chatText);
+                        let xhr44 = new XMLHttpRequest();
+                        xhr44.open("POST", "{% url 'classes:send_chat'%}", true);
+                        xhr44.setRequestHeader("X-CSRFToken", csrf_t);
+                        xhr44.setRequestHeader("Content-Type", "application/json");
+                        xhr44.onloadend = function () {
+                            if (xhr44.status === 200) {
+                                let resp44 = JSON.parse(xhr44.responseText);
+                                let c_type = resp44.stats;
+                                if(c_type === 1){
+                                    alert("Message scheduled to be sent in short time.");
+                                }else {
+                                    alert("Error happened while sending message");
+                                }
+                            }
+                        };
+                        xhr44.onerror = function (e) {
+                            console.log(e);
+                        };
+
+                        console.log("SENDING");
+                        console.log(e_id);
+                        console.log(e_code);
+                        console.log(chatText);
+                        xhr44.send(
+                            JSON.stringify({
+                                event_id: e_id,
+                                event_code: e_code,
+                                chat_text: chatText,
+                                class_id: class_id,
+                            })
+                        );
+                    });
+
+                    jumbo2.id = 'elem' + ind;
+                    jumbo2.style.display = "block";
+                    ind += 1;
+
+                    let childs = jumbo2.childNodes;
+                    childs[1].innerHTML = name;
+                    childs[3].innerHTML = "Problem with the face detection";
+                    childs[5].innerHTML = ctime;
+                    childs[9].innerHTML = states;
+                    let imag3 = childs[11].childNodes[1].childNodes[1];
+                    imag3.src = img;
+                    
+                    let right_col_stream = document.getElementById("media_pos");
+                    right_col_stream.after(jumbo2);
+                }
+                else if (c_type === 3){
+                    let name = resp.cname;
+                    let e_id = resp.event_id;
+                    let e_code = resp.code;
+                    let stat = resp.stat;
+                    let class_id = resp.class_id;
+                    let ctime = resp.ctime;
+                    let elem3 = document.getElementById("jumbo");
+                    let jumbo3 = elem3.cloneNode(true);
+
+                    jumbo3.getElementsByClassName("remove_student")[0].addEventListener('click', function () {
+                        let xhr2 = new XMLHttpRequest();
+                        xhr2.open("POST", "{% url 'classes:remove_student_exam'%}", true);
+                        xhr2.setRequestHeader("X-CSRFToken", csrf_t);
+                        xhr2.setRequestHeader("Content-Type", "application/json");
+                        xhr2.onloadend = function () {
+                            if (xhr2.status === 200) {
+                                let resp2 = JSON.parse(xhr2.responseText);
+                                let c_type = resp2.stats;
+                                if(c_type === 1){
+                                    alert("Student is scheduled to be removed successfully. The student " +
+                                        "browser will be closed in about 30 sec.");
+                                }else {
+                                    alert("Error happened while removing this student");
+                                }
+                            }
+                        };
+                        xhr2.onerror = function (e) {
+                            console.log(e);
+                        };
+
+
+                        xhr2.send(
+                            JSON.stringify({
+                                event_id: e_id,
+                                event_code: e_code,
+                                class_id: class_id,
+                            })
+                        );
+                    });
+
+
+                    jumbo3.getElementsByClassName("send_chat")[0].addEventListener('click', function () {
+                        console.log("entered the click");
+                        let chatText = jumbo3.getElementsByClassName("chat_box")[0].value;
+                        console.log(chatText);
+                        let xhr55 = new XMLHttpRequest();
+                        xhr55.open("POST", "{% url 'classes:send_chat'%}", true);
+                        xhr55.setRequestHeader("X-CSRFToken", csrf_t);
+                        xhr55.setRequestHeader("Content-Type", "application/json");
+                        xhr55.onloadend = function () {
+                            if (xhr55.status === 200) {
+                                let resp55 = JSON.parse(xhr55.responseText);
+                                let c_type = resp55.stats;
+                                if(c_type === 1){
+                                    alert("Message scheduled to be sent in short time.");
+                                }else {
+                                    alert("Error happened while sending message");
+                                }
+                            }
+                        };
+                        xhr55.onerror = function (e) {
+                            console.log(e);
+                        };
+
+                        console.log("SENDING");
+                        console.log(e_id);
+                        console.log(e_code);
+                        console.log(chatText);
+                        xhr55.send(
+                            JSON.stringify({
+                                event_id: e_id,
+                                event_code: e_code,
+                                chat_text: chatText,
+                                class_id: class_id,
+                            })
+                        );
+                    });
+
+
+                    jumbo3.id = 'elem' + ind;
+                    jumbo3.style.display = "block";
+                    ind += 1;
+
+                    let childes = jumbo3.childNodes;
+                    childes[1].innerHTML = name;
+                    childes[3].innerHTML = "Student disabled the extension from the incognito mode";
+                    childes[5].innerHTML = ctime;
+                    childes[9].innerHTML = stat;
+                    elem3.after(jumbo3);
+                }
+                else if (c_type === 4){
+                    let audio = resp.audio;
+                    let e_id = resp.event_id;
+                    let e_code = resp.code;
+                    let name = resp.cname;
+                    let class_id = resp.class_id;
+                    let ctime = resp.ctime;
+                    let elem1 = document.getElementById("jumbo3");
+                    let elem_base = document.getElementById("jumbo");
+                    let jumbo1 = elem1.cloneNode(true);
+
+                    jumbo1.getElementsByClassName("remove_student")[0].addEventListener('click', function () {
+                        let xhr2 = new XMLHttpRequest();
+                        xhr2.open("POST", "{% url 'classes:remove_student_exam'%}", true);
+                        xhr2.setRequestHeader("X-CSRFToken", csrf_t);
+                        xhr2.setRequestHeader("Content-Type", "application/json");
+                        xhr2.onloadend = function () {
+                            if (xhr2.status === 200) {
+                                let resp2 = JSON.parse(xhr2.responseText);
+                                let c_type = resp2.stats;
+                                if(c_type === 1){
+                                    alert("Student is scheduled to be removed successfully. The student " +
+                                        "browser will be closed in about 30 sec.");
+                                }else {
+                                    alert("Error happened while removing this student");
+                                }
+                            }
+                        };
+                        xhr2.onerror = function (e) {
+                            console.log(e);
+                        };
+
+
+                        xhr2.send(
+                            JSON.stringify({
+                                event_id: e_id,
+                                event_code: e_code,
+                                class_id: class_id,
+                            })
+                        );
+                    });
+
+                    jumbo1.getElementsByClassName("send_chat")[0].addEventListener('click', function () {
+                        console.log("entered the click");
+                        let chatText = jumbo1.getElementsByClassName("chat_box")[0].value;
+                        console.log(chatText);
+                        let xhr33 = new XMLHttpRequest();
+                        xhr33.open("POST", "{% url 'classes:send_chat'%}", true);
+                        xhr33.setRequestHeader("X-CSRFToken", csrf_t);
+                        xhr33.setRequestHeader("Content-Type", "application/json");
+                        xhr33.onloadend = function () {
+                            if (xhr33.status === 200) {
+                                let resp2 = JSON.parse(xhr33.responseText);
+                                let c_type = resp2.stats;
+                                if(c_type === 1){
+                                    alert("Message scheduled to be sent in short time.");
+                                }else {
+                                    alert("Error happened while sending message");
+                                }
+                            }
+                        };
+                        xhr33.onerror = function (e) {
+                            console.log(e);
+                        };
+
+                        console.log("SENDING");
+                        console.log(e_id);
+                        console.log(e_code);
+                        console.log(chatText);
+                        xhr33.send(
+                            JSON.stringify({
+                                event_id: e_id,
+                                event_code: e_code,
+                                chat_text: chatText,
+                                class_id: class_id,
+                            })
+                        );
+                    });
+
+
+                    jumbo1.id = 'elem' + ind;
+                    jumbo1.style.display = "block";
+                    ind += 1;
+
+                    let childs = jumbo1.childNodes;
+                    childs[1].innerHTML = name;
+                    childs[3].innerHTML = "The student might to be talking";
+                    childs[5].innerHTML = ctime;
+                    let imag2 = childs[11].childNodes[1].childNodes[1].childNodes[1];
+                    imag2.src = audio;
+                    let right_col_stream = document.getElementById("media_pos");
+                    right_col_stream.after(jumbo1);
+
+                }
+                else if (c_type === 5){
+                    let name = resp.cname;
+                    let e_id = resp.event_id;
+                    let e_code = resp.code;
+                    let stat = resp.stat;
+                    let class_id = resp.class_id;
+                    let ctime = resp.ctime;
+                    let elem3 = document.getElementById("jumbo");
+                    let jumbo3 = elem3.cloneNode(true);
+
+                    jumbo3.getElementsByClassName("remove_student")[0].addEventListener('click', function () {
+                        let xhr2 = new XMLHttpRequest();
+                        xhr2.open("POST", "{% url 'classes:remove_student_exam'%}", true);
+                        xhr2.setRequestHeader("X-CSRFToken", csrf_t);
+                        xhr2.setRequestHeader("Content-Type", "application/json");
+                        xhr2.onloadend = function () {
+                            if (xhr2.status === 200) {
+                                let resp2 = JSON.parse(xhr2.responseText);
+                                let c_type = resp2.stats;
+                                if(c_type === 1){
+                                    alert("Student is scheduled to be removed successfully. The student " +
+                                        "browser will be closed in about 30 sec.");
+                                }else {
+                                    alert("Error happened while removing this student");
+                                }
+                            }
+                        };
+                        xhr2.onerror = function (e) {
+                            console.log(e);
+                        };
+
+
+                        xhr2.send(
+                            JSON.stringify({
+                                event_id: e_id,
+                                event_code: e_code,
+                                class_id: class_id,
+                            })
+                        );
+                    });
+
+
+                    jumbo3.getElementsByClassName("send_chat")[0].addEventListener('click', function () {
+                        console.log("entered the click");
+                        let chatText = jumbo3.getElementsByClassName("chat_box")[0].value;
+                        console.log(chatText);
+                        let xhr55 = new XMLHttpRequest();
+                        xhr55.open("POST", "{% url 'classes:send_chat'%}", true);
+                        xhr55.setRequestHeader("X-CSRFToken", csrf_t);
+                        xhr55.setRequestHeader("Content-Type", "application/json");
+                        xhr55.onloadend = function () {
+                            if (xhr55.status === 200) {
+                                let resp55 = JSON.parse(xhr55.responseText);
+                                let c_type = resp55.stats;
+                                if(c_type === 1){
+                                    alert("Message scheduled to be sent in short time.");
+                                }else {
+                                    alert("Error happened while sending message");
+                                }
+                            }
+                        };
+                        xhr55.onerror = function (e) {
+                            console.log(e);
+                        };
+
+                        console.log("SENDING");
+                        console.log(e_id);
+                        console.log(e_code);
+                        console.log(chatText);
+                        xhr55.send(
+                            JSON.stringify({
+                                event_id: e_id,
+                                event_code: e_code,
+                                chat_text: chatText,
+                                class_id: class_id,
+                            })
+                        );
+                    });
+
+
+                    jumbo3.id = 'elem' + ind;
+                    jumbo3.style.display = "block";
+                    ind += 1;
+
+                    let childes = jumbo3.childNodes;
+                    childes[1].innerHTML = name;
+                    childes[3].innerHTML = "Mic disabled";
+                    childes[5].innerHTML = ctime;
+                    childes[9].innerHTML = "The student has disabled or having issue with his mic.";
+                    elem3.after(jumbo3);
+                }
+                else if (c_type === 6){
+                    let img = resp.img;
+                    let e_id = resp.event_id;
+                    let e_code = resp.code;
+                    let pnames = resp.pnames;
+                    let name = resp.cname;
+                    let class_id = resp.class_id;
+                    let ctime = resp.ctime;
+                    let elem1 = document.getElementById("jumbo");
+                    let jumbo1 = elem1.cloneNode(true);
+
+                    jumbo1.getElementsByClassName("remove_student")[0].addEventListener('click', function () {
+                        let xhr2 = new XMLHttpRequest();
+                        xhr2.open("POST", "{% url 'classes:remove_student_exam'%}", true);
+                        xhr2.setRequestHeader("X-CSRFToken", csrf_t);
+                        xhr2.setRequestHeader("Content-Type", "application/json");
+                        xhr2.onloadend = function () {
+                            if (xhr2.status === 200) {
+                                let resp2 = JSON.parse(xhr2.responseText);
+                                let c_type = resp2.stats;
+                                if(c_type === 1){
+                                    alert("Student is scheduled to be removed successfully. The student " +
+                                        "browser will be closed in about 30 sec.");
+                                }else {
+                                    alert("Error happened while removing this student");
+                                }
+                            }
+                        };
+                        xhr2.onerror = function (e) {
+                            console.log(e);
+                        };
+
+
+                        xhr2.send(
+                            JSON.stringify({
+                                event_id: e_id,
+                                event_code: e_code,
+                                class_id: class_id,
+                            })
+                        );
+                    });
+
+                    jumbo1.getElementsByClassName("send_chat")[0].addEventListener('click', function () {
+                        console.log("entered the click");
+                        let chatText = jumbo1.getElementsByClassName("chat_box")[0].value;
+                        console.log(chatText);
+                        let xhr33 = new XMLHttpRequest();
+                        xhr33.open("POST", "{% url 'classes:send_chat'%}", true);
+                        xhr33.setRequestHeader("X-CSRFToken", csrf_t);
+                        xhr33.setRequestHeader("Content-Type", "application/json");
+                        xhr33.onloadend = function () {
+                            if (xhr33.status === 200) {
+                                let resp2 = JSON.parse(xhr33.responseText);
+                                let c_type = resp2.stats;
+                                if(c_type === 1){
+                                    alert("Message scheduled to be sent in short time.");
+                                }else {
+                                    alert("Error happened while sending message");
+                                }
+                            }
+                        };
+                        xhr33.onerror = function (e) {
+                            console.log(e);
+                        };
+
+                        console.log("SENDING");
+                        console.log(e_id);
+                        console.log(e_code);
+                        console.log(chatText);
+                        xhr33.send(
+                            JSON.stringify({
+                                event_id: e_id,
+                                event_code: e_code,
+                                chat_text: chatText,
+                                class_id: class_id,
+                            })
+                        );
+                    });
+
+
+                    jumbo1.id = 'elem' + ind;
+                    jumbo1.style.display = "block";
+                    ind += 1;
+
+                    let childs = jumbo1.childNodes;
+                    childs[1].innerHTML = name;
+                    childs[3].innerHTML = "Student upload an unrecognized answer file";
+                    childs[5].innerHTML = ctime;
+                    childs[9].innerHTML = pnames;
+                    let imag2 = childs[11].childNodes[1].childNodes[1];
+                    imag2.src = img;
+                    elem1.after(jumbo1);
+
+                }
+                else {
+                    // console.log("RETURNS");
+                    // console.log(c_type);
+                }
+
+
+            
+
+                }else {
+                 console.log("ERROR RESPONSE");
+            }
+        };
+        xhr.onerror = function (e) {
+            console.log(e);
+        };
+
+
+        xhr.send(
+            JSON.stringify({
+                event_id: "{{ event_id }}",
+                class_id: "{{ class_id }}",
+            })
+        );
+
+
+    }
+
+
+
+
+    function p_reload() {
+        // console.log({{ event_id }});
+        // console.log({{ class_id }});
+        let csrf_t = '{{csrf_token}}';
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "{% url 'classes:no_cam_permission'%}", true);
+        xhr.setRequestHeader("X-CSRFToken", csrf_t);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onloadend = function () {
+            if (xhr.status === 200) {
+                let resp = JSON.parse(xhr.responseText);
+                let ctype = resp.type;
+                if(ctype === "yes"){
+                    let name = resp.cname;
+                    let e_id = resp.event_id;
+                    let e_code = resp.code;
+                    let class_id = resp.class_id;
+                    let ctime = resp.ctime;
+                    // console.log(name);
+
+                    let elem = document.getElementById("jumbo2");
+                    let elem2 = document.getElementById("jumbo");
+                    let jumbo = elem.cloneNode(true);
+
+                    jumbo.getElementsByClassName("remove_student")[0].addEventListener('click', function () {
+                        let xhr2 = new XMLHttpRequest();
+                        xhr2.open("POST", "{% url 'classes:remove_student_exam'%}", true);
+                        xhr2.setRequestHeader("X-CSRFToken", csrf_t);
+                        xhr2.setRequestHeader("Content-Type", "application/json");
+                        xhr2.onloadend = function () {
+                            if (xhr2.status === 200) {
+                                let resp2 = JSON.parse(xhr2.responseText);
+                                let c_type = resp2.stats;
+                                if(c_type === 1){
+                                    alert("Student is scheduled to be removed successfully. The student " +
+                                        "browser will be closed in about 30 sec.");
+                                }else {
+                                    alert("Error happened while removing this student");
+                                }
+                            }
+                        };
+                        xhr2.onerror = function (e) {
+                            console.log(e);
+                        };
+
+
+                        xhr2.send(
+                            JSON.stringify({
+                                event_id: e_id,
+                                event_code: e_code,
+                                class_id: class_id,
+                            })
+                        );
+                    });
+
+                    jumbo.getElementsByClassName("Allow")[0].addEventListener('click', function () {
+                        let xhr2 = new XMLHttpRequest();
+                        xhr2.open("POST", "{% url 'classes:grant_permission'%}", true);
+                        xhr2.setRequestHeader("X-CSRFToken", csrf_t);
+                        xhr2.setRequestHeader("Content-Type", "application/json");
+                        xhr2.onloadend = function () {
+                            if (xhr2.status === 200) {
+                                let resp2 = JSON.parse(xhr2.responseText);
+                                let c_type = resp2.stats;
+                                if(c_type === 1){
+                                    alert("You granted permission to start the exam without camera detection for this student");
+                                }else {
+                                    alert("Error happened while giving permission to this student");
+                                }
+                            }
+                        };
+                        xhr2.onerror = function (e) {
+                            console.log(e);
+                        };
+
+
+                        xhr2.send(
+                            JSON.stringify({
+                                event_id: e_id,
+                                event_code: e_code,
+                                class_id: class_id,
+                                perm: "True",
+                            })
+                        );
+                    });
+
+                    jumbo.getElementsByClassName("Deny")[0].addEventListener('click', function () {
+                        let xhr2 = new XMLHttpRequest();
+                        xhr2.open("POST", "{% url 'classes:grant_permission'%}", true);
+                        xhr2.setRequestHeader("X-CSRFToken", csrf_t);
+                        xhr2.setRequestHeader("Content-Type", "application/json");
+                        xhr2.onloadend = function () {
+                            if (xhr2.status === 200) {
+                                let resp2 = JSON.parse(xhr2.responseText);
+                                let c_type = resp2.stats;
+                                if(c_type === 1){
+                                    alert("You denied permission to start the exam without camera detection for this student.");
+                                }else {
+                                    alert("Error happened while denying permission to this student");
+                                }
+                            }
+                        };
+                        xhr2.onerror = function (e) {
+                            console.log(e);
+                        };
+
+
+                        xhr2.send(
+                            JSON.stringify({
+                                event_id: e_id,
+                                event_code: e_code,
+                                class_id: class_id,
+                                perm: "False",
+                            })
+                        );
+                    });
+
+                    jumbo.id = 'elem' + ind;
+                    jumbo.style.display = "block";
+                    ind += 1;
+
+                    let childs = jumbo.childNodes;
+                    childs[1].innerHTML = "Permission Request To Start Exam Without Camera";
+                    childs[3].innerHTML = "Student '" + name + "' Requesting Permission.";
+                    childs[5].innerHTML = ctime;
+                    elem2.after(jumbo);
+                }
+
+            } else {
+                 console.log("ERROR RESPONSE");
+            }
+        };
+        xhr.onerror = function (e) {
+            console.log(e);
+        };
+
+
+        xhr.send(
+            JSON.stringify({
+                event_id: "{{ event_id }}",
+                class_id: "{{ class_id }}",
+            })
+        );
+
+
+    }
+
+
+
+
+    function mic_perm() {
+        // console.log({{ event_id }});
+        // console.log({{ class_id }});
+        let csrf_t = '{{csrf_token}}';
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "{% url 'classes:no_mic_permission'%}", true);
+        xhr.setRequestHeader("X-CSRFToken", csrf_t);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onloadend = function () {
+            if (xhr.status === 200) {
+                let resp = JSON.parse(xhr.responseText);
+                let ctype = resp.type;
+                if(ctype === "yes"){
+                    let name = resp.cname;
+                    let e_id = resp.event_id;
+                    let e_code = resp.code;
+                    let class_id = resp.class_id;
+                    let ctime = resp.ctime;
+                    // console.log(name);
+
+                    let elem = document.getElementById("jumbo2");
+                    let elem2 = document.getElementById("jumbo");
+                    let jumbo = elem.cloneNode(true);
+
+                    jumbo.getElementsByClassName("remove_student")[0].addEventListener('click', function () {
+                        let xhr2 = new XMLHttpRequest();
+                        xhr2.open("POST", "{% url 'classes:remove_student_exam'%}", true);
+                        xhr2.setRequestHeader("X-CSRFToken", csrf_t);
+                        xhr2.setRequestHeader("Content-Type", "application/json");
+                        xhr2.onloadend = function () {
+                            if (xhr2.status === 200) {
+                                let resp2 = JSON.parse(xhr2.responseText);
+                                let c_type = resp2.stats;
+                                if(c_type === 1){
+                                    alert("Student is scheduled to be removed successfully. The student " +
+                                        "browser will be closed in about 30 sec.");
+                                }else {
+                                    alert("Error happened while removing this student");
+                                }
+                            }
+                        };
+                        xhr2.onerror = function (e) {
+                            console.log(e);
+                        };
+
+
+                        xhr2.send(
+                            JSON.stringify({
+                                event_id: e_id,
+                                event_code: e_code,
+                                class_id: class_id,
+                            })
+                        );
+                    });
+
+                    jumbo.getElementsByClassName("Allow")[0].addEventListener('click', function () {
+                        let xhr2 = new XMLHttpRequest();
+                        xhr2.open("POST", "{% url 'classes:grant_mic_permission'%}", true);
+                        xhr2.setRequestHeader("X-CSRFToken", csrf_t);
+                        xhr2.setRequestHeader("Content-Type", "application/json");
+                        xhr2.onloadend = function () {
+                            if (xhr2.status === 200) {
+                                let resp2 = JSON.parse(xhr2.responseText);
+                                let c_type = resp2.stats;
+                                if(c_type === 1){
+                                    alert("You granted permission to start the exam without mic detection for this student");
+                                }else {
+                                    alert("Error happened while giving permission to this student");
+                                }
+                            }
+                        };
+                        xhr2.onerror = function (e) {
+                            console.log(e);
+                        };
+
+
+                        xhr2.send(
+                            JSON.stringify({
+                                event_id: e_id,
+                                event_code: e_code,
+                                class_id: class_id,
+                                perm: "True",
+                            })
+                        );
+                    });
+
+                    jumbo.getElementsByClassName("Deny")[0].addEventListener('click', function () {
+                        let xhr2 = new XMLHttpRequest();
+                        xhr2.open("POST", "{% url 'classes:grant_mic_permission'%}", true);
+                        xhr2.setRequestHeader("X-CSRFToken", csrf_t);
+                        xhr2.setRequestHeader("Content-Type", "application/json");
+                        xhr2.onloadend = function () {
+                            if (xhr2.status === 200) {
+                                let resp2 = JSON.parse(xhr2.responseText);
+                                let c_type = resp2.stats;
+                                if(c_type === 1){
+                                    alert("You denied permission to start the exam without mic detection for this student.");
+                                }else {
+                                    alert("Error happened while denying permission to this student");
+                                }
+                            }
+                        };
+                        xhr2.onerror = function (e) {
+                            console.log(e);
+                        };
+
+
+                        xhr2.send(
+                            JSON.stringify({
+                                event_id: e_id,
+                                event_code: e_code,
+                                class_id: class_id,
+                                perm: "False",
+                            })
+                        );
+                    });
+
+                    jumbo.id = 'elem' + ind;
+                    jumbo.style.display = "block";
+                    ind += 1;
+
+                    let childs = jumbo.childNodes;
+                    childs[1].innerHTML = "Permission Request To Start The Exam Without Mic";
+                    childs[3].innerHTML = "Student '" + name + "' Requesting Permission.";
+                    childs[5].innerHTML = ctime;
+                    elem2.after(jumbo);
+                }
+
+            } else {
+                 console.log("ERROR RESPONSE");
+            }
+        };
+        xhr.onerror = function (e) {
+            console.log(e);
+        };
+
+
+        xhr.send(
+            JSON.stringify({
+                event_id: "{{ event_id }}",
+                class_id: "{{ class_id }}",
+            })
+        );
+
+
+    }
+
+ 
+
+    function rejoinExam() {
+        // console.log({{ event_id }});
+        // console.log({{ class_id }});
+        let csrf_t = '{{csrf_token}}';
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "{% url 'classes:rejoin_exam_check'%}", true);
+        xhr.setRequestHeader("X-CSRFToken", csrf_t);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onloadend = function () {
+            if (xhr.status === 200) {
+                let resp = JSON.parse(xhr.responseText);
+                let ctype = resp.type;
+                if(ctype === "yes"){
+                    let name = resp.cname;
+                    let e_id = resp.event_id;
+                    let e_code = resp.code;
+                    let class_id = resp.class_id;
+                    let ctime = resp.ctime;
+                    // console.log(name);
+
+                    let elem = document.getElementById("jumbo2");
+                    let elem2 = document.getElementById("jumbo");
+                    let jumbo = elem.cloneNode(true);
+
+                    jumbo.getElementsByClassName("remove_student")[0].style.display = "none";
+
+
+                    jumbo.getElementsByClassName("Allow")[0].addEventListener('click', function () {
+                        let xhr2 = new XMLHttpRequest();
+                        xhr2.open("POST", "{% url 'classes:reinstate_student'%}", true);
+                        xhr2.setRequestHeader("X-CSRFToken", csrf_t);
+                        xhr2.setRequestHeader("Content-Type", "application/json");
+                        xhr2.onloadend = function () {
+                            if (xhr2.status === 200) {
+                                let resp2 = JSON.parse(xhr2.responseText);
+                                let c_type = resp2.stats;
+                                if(c_type === 1){
+                                    alert("You granted permission to reinstate this student to the exam.");
+                                }else {
+                                    alert("Error happened while giving permission to this student");
+                                }
+                            }
+                        };
+                        xhr2.onerror = function (e) {
+                            console.log(e);
+                        };
+
+
+                        xhr2.send(
+                            JSON.stringify({
+                                event_id: e_id,
+                                event_code: e_code,
+                                class_id: class_id,
+                                perm: "True",
+                            })
+                        );
+                    });
+
+                    jumbo.getElementsByClassName("Deny")[0].addEventListener('click', function () {
+                        let xhr2 = new XMLHttpRequest();
+                        xhr2.open("POST", "{% url 'classes:reinstate_student'%}", true);
+                        xhr2.setRequestHeader("X-CSRFToken", csrf_t);
+                        xhr2.setRequestHeader("Content-Type", "application/json");
+                        xhr2.onloadend = function () {
+                            if (xhr2.status === 200) {
+                                let resp2 = JSON.parse(xhr2.responseText);
+                                let c_type = resp2.stats;
+                                if(c_type === 1){
+                                    alert("You denied permission to reinstate this student to the exam.");
+                                }else {
+                                    alert("Error happened while denying permission to this student");
+                                }
+                            }
+                        };
+                        xhr2.onerror = function (e) {
+                            console.log(e);
+                        };
+
+
+                        xhr2.send(
+                            JSON.stringify({
+                                event_id: e_id,
+                                event_code: e_code,
+                                class_id: class_id,
+                                perm: "False",
+                            })
+                        );
+                    });
+
+                    jumbo.id = 'elem' + ind;
+                    jumbo.style.display = "block";
+                    ind += 1;
+
+                    let childs = jumbo.childNodes;
+                    childs[1].innerHTML = "Permission Request To Reinstate To The Exam.";
+                    childs[3].innerHTML = "Student '" + name + "' Requesting Permission To Be Reinstated.";
+                    childs[5].innerHTML = ctime;
+                    elem2.after(jumbo);
+                }
+
+            } else {
+                 console.log("ERROR RESPONSE");
+            }
+        };
+        xhr.onerror = function (e) {
+            console.log(e);
+        };
+
+
+        xhr.send(
+            JSON.stringify({
+                event_id: "{{ event_id }}",
+                class_id: "{{ class_id }}",
+            })
+        );
+
+
+    }
+
+
+
+    function v_m_reload() {
+        // console.log({{ event_id }});
+        // console.log({{ class_id }});
+        let csrf_t = '{{csrf_token}}';
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "{% url 'classes:v_m_permission'%}", true);
+        xhr.setRequestHeader("X-CSRFToken", csrf_t);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onloadend = function () {
+            if (xhr.status === 200) {
+                let resp = JSON.parse(xhr.responseText);
+                let ctype = resp.type;
+                if(ctype === "yes"){
+                    let name = resp.cname;
+                    let e_id = resp.event_id;
+                    let e_code = resp.code;
+                    let class_id = resp.class_id;
+                    let ctime = resp.ctime;
+                    // console.log(name);
+
+                    let elem = document.getElementById("jumbo2");
+                    let elem2 = document.getElementById("jumbo");
+                    let jumbo = elem.cloneNode(true);
+
+                    jumbo.getElementsByClassName("remove_student")[0].addEventListener('click', function () {
+                        let xhr2 = new XMLHttpRequest();
+                        xhr2.open("POST", "{% url 'classes:remove_student_exam'%}", true);
+                        xhr2.setRequestHeader("X-CSRFToken", csrf_t);
+                        xhr2.setRequestHeader("Content-Type", "application/json");
+                        xhr2.onloadend = function () {
+                            if (xhr2.status === 200) {
+                                let resp2 = JSON.parse(xhr2.responseText);
+                                let c_type = resp2.stats;
+                                if(c_type === 1){
+                                    alert("Student is scheduled to be removed successfully. The student " +
+                                        "browser will be closed in about 30 sec.");
+                                }else {
+                                    alert("Error happened while removing this student");
+                                }
+                            }
+                        };
+                        xhr2.onerror = function (e) {
+                            console.log(e);
+                        };
+
+
+                        xhr2.send(
+                            JSON.stringify({
+                                event_id: e_id,
+                                event_code: e_code,
+                                class_id: class_id,
+                            })
+                        );
+                    });
+
+                    jumbo.getElementsByClassName("Allow")[0].addEventListener('click', function () {
+                        let xhr2 = new XMLHttpRequest();
+                        xhr2.open("POST", "{% url 'classes:v_m_grant_permission'%}", true);
+                        xhr2.setRequestHeader("X-CSRFToken", csrf_t);
+                        xhr2.setRequestHeader("Content-Type", "application/json");
+                        xhr2.onloadend = function () {
+                            if (xhr2.status === 200) {
+                                let resp2 = JSON.parse(xhr2.responseText);
+                                let c_type = resp2.stats;
+                                if(c_type === 1){
+                                    alert("You granted permission to start the exam using virtual machine.");
+                                }else {
+                                    alert("Error happened while giving permission to this student");
+                                }
+                            }
+                        };
+                        xhr2.onerror = function (e) {
+                            console.log(e);
+                        };
+
+
+                        xhr2.send(
+                            JSON.stringify({
+                                event_id: e_id,
+                                event_code: e_code,
+                                class_id: class_id,
+                                perm: "True",
+                            })
+                        );
+                    });
+
+                    jumbo.getElementsByClassName("Deny")[0].addEventListener('click', function () {
+                        let xhr2 = new XMLHttpRequest();
+                        xhr2.open("POST", "{% url 'classes:v_m_grant_permission'%}", true);
+                        xhr2.setRequestHeader("X-CSRFToken", csrf_t);
+                        xhr2.setRequestHeader("Content-Type", "application/json");
+                        xhr2.onloadend = function () {
+                            if (xhr2.status === 200) {
+                                let resp2 = JSON.parse(xhr2.responseText);
+                                let c_type = resp2.stats;
+                                if(c_type === 1){
+                                    alert("You denied permission to start the exam using virtual machine.");
+                                }else {
+                                    alert("Error happened while denying permission to this student");
+                                }
+                            }
+                        };
+                        xhr2.onerror = function (e) {
+                            console.log(e);
+                        };
+
+
+                        xhr2.send(
+                            JSON.stringify({
+                                event_id: e_id,
+                                event_code: e_code,
+                                class_id: class_id,
+                                perm: "False",
+                            })
+                        );
+                    });
+
+                    jumbo.id = 'elem' + ind;
+                    jumbo.style.display = "block";
+                    ind += 1;
+
+                    let childs = jumbo.childNodes;
+                    childs[1].innerHTML = "Permission Request To Start Exam using 'VIRTUAL MACHINE' ";
+                    childs[3].innerHTML = "Student '" + name + "' Requesting Permission.";
+                    childs[5].innerHTML = ctime;
+                    elem2.after(jumbo);
+                }
+
+            } else {
+                 console.log("ERROR RESPONSE");
+            }
+        };
+        xhr.onerror = function (e) {
+            console.log(e);
+        };
+
+
+        xhr.send(
+            JSON.stringify({
+                event_id: "{{ event_id }}",
+                class_id: "{{ class_id }}",
+            })
+        );
+
+
+    }
+
+
+
+    // function print() {
+    //     window.print();  
+    // }
+
+
+
+    // function print(quality = 1) {
+    //     // import { jsPDF } from "jspdf";
+    //     const filename  = 'LiveProctoringReport.pdf';
+    //     let el = document.getElementsByClassName("jumbotron");
+    //     let pdf = new jsPDF('p', 'mm', 'a4');
+    //     let i;
+    //     let index = 3;
+    //     for(i = 0; i < el.length; i++) {
+    //         if(el[i].style.display === "block"){
+    //             html2canvas(el[i], {scale: quality} ).then(canvas => {
+    //                 pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 211, 298);
+    //                 if(index === el.length){ 
+    //                     pdf.save(filename);
+    //                 }else { 
+    //                     pdf.addPage();
+    //                     index += 1;
+    //                 }
+    //             });
+    //         }
+    //     }
+    // }
+
+
+    function refresh_stream() {
+        let csrf_t = '{{csrf_token}}';
+        let stream_http = new XMLHttpRequest();
+        stream_http.open("POST", "{% url 'classes:refresh_stream'%}", true);
+        stream_http.setRequestHeader("X-CSRFToken", csrf_t);
+        stream_http.setRequestHeader("Content-Type", "application/json");
+        stream_http.onloadend = function () {
+            if (stream_http.status === 200) {
+                let resp = JSON.parse(stream_http.responseText);
+                let c_type = resp.seen;
+                if(c_type === 1){
+                    let s_img = resp.s_img;
+                    let f_img = resp.f_img;
+                    let r_img = resp.r_img;
+                    let fac_tag = document.getElementById("face_stream");
+                    let scr_tag = document.getElementById("screen_stream");
+                    let rear_tag = document.getElementById("rear_stream");
+                    fac_tag.src = f_img;
+                    scr_tag.src = s_img;
+                    rear_tag.src = r_img;
+                }
+
+            }
+        };
+
+        stream_http.onerror = function (e) {
+            console.log(e);
+        };
+
+
+        stream_http.send(
+            JSON.stringify({
+                class_id: "{{ class_id }}",
+                stu_email: stream_stu_email,
+                event_code: "{{ event_code }}",
+            })
+        );
+    }
+
+    function student_status() {
+        let csrf_t = '{{csrf_token}}';
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "{% url 'classes:get_students_state'%}", true);
+        xhr.setRequestHeader("X-CSRFToken", csrf_t);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onloadend = function () {
+            if (xhr.status === 200) {
+                let resp = JSON.parse(xhr.responseText);
+                let onliners = resp.online;
+                let offliners = resp.offline;
+                // console.log('onliners')
+                // console.log(onliners)
+                // console.log('offliners')
+                // console.log(offliners)
+                let online_list = document.getElementById("online_item");
+                while(online_list.firstChild) online_list.removeChild(online_list.firstChild);
+ 
+
+                let online_number_of_Students = document.getElementById("online_Students");
+                online_number_of_Students.innerHTML = onliners.length;
+                for (let i = 0; i < onliners.length; i++) {
+                    // let li = document.createElement('li');
+                    // li.className = 'list-group-item';
+                    // let li = document.createElement('button');
+                    // li.classList.add("list-group-item");
+                    // li.classList.add("list-group-item-action");
+                    // li.setAttribute("type", "button");
+                    // li.addEventListener('click', function () {
+                    let button_orig = document.getElementById("li_button_clone");
+                    let button_clone = button_orig.cloneNode(true);
+
+                    button_clone.addEventListener('click', function () {
+                        let csrf_t2 = '{{csrf_token}}';
+                        let xhr99 = new XMLHttpRequest();
+
+                        xhr99.open("POST", "{% url 'classes:get_student_stream'%}", true);
+                        xhr99.setRequestHeader("X-CSRFToken", csrf_t2);
+                        xhr99.setRequestHeader("Content-Type", "application/json");
+
+                        xhr99.onloadend = function () {
+
+                            if (xhr99.status === 200) {
+                                let respw = JSON.parse(xhr99.responseText);
+                                // console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+                                // console.log(respw);
+                                let c_type = respw.seen;
+
+                                if(c_type === 1){
+                                    let stream = document.getElementById('stream');
+                                    let proc = document.getElementById('proc');
+                                    stream.style.display = "block";
+                                    // proc.classList.remove("col");
+                                    // proc.classList.add("col-6");
+                                    // stream.classList.remove("col");
+                                    // stream.classList.add("col-6");
+
+                                    stream_stu_email = onliners[i][1];
+                                    stream_v = setInterval(refresh_stream, 250);
+                                }
+
+                            } else {
+                                 console.log("ERROR RESPONSE");
+                            }
+                        };
+
+                        xhr99.onerror = function (e) {
+                            console.log(e);
+                        };
+
+
+                        xhr99.send(
+                            JSON.stringify({
+                                class_id: "{{ class_id }}",
+                                stu_email: onliners[i][1],
+                                event_code: "{{ event_code }}",
+                            })
+                        );
+                    });
+
+                    button_clone.style.display = "block";
+                    let mobile_badge_off = button_clone.getElementsByClassName("mobile_off")[0];
+                    let mobile_badge_on = button_clone.getElementsByClassName("mobile_on")[0];
+                    let camera_badge_on = button_clone.getElementsByClassName("camera_on")[0];
+                    let camera_badge_off = button_clone.getElementsByClassName("camera_off")[0];
+                    let studentName = button_clone.getElementsByClassName("student_name")[0];
+                    if(onliners[i][2] === true) {
+                        mobile_badge_on.style.display = "block";
+                        mobile_badge_off.style.display = "none";
+                    }else {
+                        mobile_badge_on.style.display = "none";
+                        mobile_badge_off.style.display = "block";
+                    }
+                    if(onliners[i][3] === true) {
+                        camera_badge_on.style.display = "block";
+                        camera_badge_off.style.display = "none";
+                    }else {
+                        camera_badge_on.style.display = "none";
+                        camera_badge_off.style.display = "block";
+                    }
+                    studentName.innerHTML = onliners[i][0];
+                    online_list.appendChild(button_clone);
+                }
+
+
+
+                let offline_list = document.getElementById("offline_item");
+                while(offline_list.firstChild) offline_list.removeChild(offline_list.firstChild);
+ 
+                let off_number_of_Students = document.getElementById("offline_Students");
+                off_number_of_Students.innerHTML = offliners.length;
+
+                for (let i = 0; i < offliners.length; i++) {
+                    // console.log('offliners[i]');
+                    // console.log(offliners[i]);
+                    let li2 = document.createElement('li');
+                    li2.className = 'list-group-item';
+                    li2.appendChild(document.createTextNode(offliners[i]));
+                    offline_list.appendChild(li2);
+                }
+
+
+
+
+            } else {
+                 console.log("ERROR RESPONSE");
+            }
+        };
+        xhr.onerror = function (e) {
+            console.log(e);
+        };
+
+
+        xhr.send(
+            JSON.stringify({
+                class_id: "{{ class_id }}",
+                event_code: "{{ event_code }}",
+            })
+        );
+
+
+    }
+
+
+
+
+    function check_sent_chat() {
+        // console.log("{{ class_id }}");
+        // console.log("{{ event_code }}");
+        let csrf_t = '{{csrf_token}}';
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "{% url 'classes:check_sent_chat'%}", true);
+        xhr.setRequestHeader("X-CSRFToken", csrf_t);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onloadend = function () {
+            if (xhr.status === 200) {
+                let resp11 = JSON.parse(xhr.responseText);
+                let c_type = resp11.seen;
+                if(c_type === 1){
+                    let s_name = resp11.name;
+                    alert("Student '" + s_name + "' seen the message");
+                }
+
+            } else {
+                 console.log("ERROR RESPONSE");
+            }
+        };
+        xhr.onerror = function (e) {
+            console.log(e);
+        };
+
+
+        xhr.send(
+            JSON.stringify({
+                class_id: "{{ class_id }}",
+                event_code: "{{ event_code }}",
+            })
+        );
+
+
+    }
+
+    function close_stream(){
+            let stream = document.getElementById('stream');
+            let proc = document.getElementById('proc');
+            stream.style.display = "none";
+            // proc.classList.remove("col-6");
+            // proc.classList.add("col");
+            // stream.classList.remove("col-6");
+            // stream.classList.add("col");
+            clearInterval(stream_v);
+            let csrf_t2 = '{{csrf_token}}';
+            let xhr99 = new XMLHttpRequest();
+
+            xhr99.open("POST", "{% url 'classes:stop_student_stream'%}", true);
+            xhr99.setRequestHeader("X-CSRFToken", csrf_t2);
+            xhr99.setRequestHeader("Content-Type", "application/json");
+
+            xhr99.onerror = function (e) {
+                console.log(e);
+            };
+
+
+            xhr99.send(
+                JSON.stringify({
+                    class_id: "{{ class_id }}",
+                    stu_email: stream_stu_email,
+                    event_code: "{{ event_code }}",
+                })
+            );
+        }
+
+</script>
+
+</body><!-- End of .page_wrapper -->
+
+</html>

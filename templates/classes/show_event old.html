@@ -1,0 +1,393 @@
+{% extends 'template/base.html' %}
+{% block title %}Instructor Events{% endblock %}
+{% block home_active %}active{% endblock %}
+{% block nav_color %}#12b3bd;{% endblock %}
+{% block nav_font_color %}navbar-dark{% endblock %}
+{% load static %}
+    {% block body %}
+
+
+        <div class="container">
+            <br>
+            <br>
+            <br>
+            <div class="float-right">
+                <button class="btn btn-outline-info" onclick="display_adder()">
+                    Modify the Event
+                </button>
+            </div>
+
+            <div id="event_adder"
+                class="  justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
+                style="display: none ;">
+                <div class="container border  shadow-lg  my-5 pb-3 rounded"
+                    style="background-color: rgb(254, 253, 255); max-width: 700px;">
+                    <div class="container-fluid pt-3">
+                        <form class="form-horizontal" role="form" action="{% url 'classes:modify_event'%}"
+                            method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <button type="button" class="close" aria-label="Close" onclick="close_adder()">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <br>
+                            <div class="form-group d-inline">
+                                <input type="hidden" name="class_id" id="class_id" value="{{ class_id }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="event_name"> Event Name:</label>
+                                <input class="form-control" id="event_name" name="event_name" type="text"
+                                    required value="{{ event_name }}">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="event_info"> Event info:</label>
+                                <input class="form-control" id="event_info" name="event_info" type="text"
+                                    required value="{{ event_disc }}">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="event_info"> Event URL:</label>
+                                <input class="form-control" id="event_url" name="event_url" type="text"
+                                    required value="{{ url }}">
+                            </div>
+
+                            <div class="form-group">
+                                <input type="hidden" name="class_id" id="class_id" value="{{ class_id }}">
+                                <input type="hidden" name="event_id" id="event_id" value="{{ event_id }}">
+
+                            </div>
+
+                            <div class="form-group">
+                                <label for="picker1"> Event schedule:</label>
+                                <div class="container">
+                                    <div class="row justify-content-md-center">
+                                        <div class="col-sm-12 col-lg-6">
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="basic-addon1">
+                                                        From
+                                                    </span>
+                                                </div>
+                                                <input type="text" class="form-control" id="picker1" name="picker1" placeholder="{{ start_time }}" autocomplete="off" required/>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-12 col-lg-6">
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="basic-addon2">
+                                                        To
+                                                    </span>
+                                                </div>
+                                                <input type="text" id="picker2" class="form-control" name="picker2"  placeholder="{{ end_time }}" autocomplete="off" required/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="allowed_programs">Allowed Programs</label>
+                                <textarea class="form-control" id="allowed_programs" name="allowed_programs" rows="3"></textarea>
+
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="allowed_pages">Allowed Websites</label>
+                                <textarea class="form-control" id="allowed_pages" name="allowed_pages" rows="3"></textarea>
+
+                            </div>
+
+
+                            <div class="form-group">
+                                <button type="submit" class="btn  btn-lg btn-block bg-dark text-white">Modify
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <br>
+
+            <ul class="list-group list-group-flush">
+                {% for class in ordered_events_list %}
+                <div class="row">
+                    {% for cl in class %}
+                    <div class="col-sm">
+                        <form method="post" enctype="multipart/form-data"
+                            action="{% url 'classes:show_single_events'%}">
+                            {% csrf_token %}
+                            <div class="form-group d-inline">
+                                <input type="hidden" name="event_id" id="event_id" value="{{ cl.id }}">
+                                <input type="hidden" name="class_id" id="class_id" value="{{ class_id }}">
+                            </div>
+                            <button type="submit" class="btn btn-info  btn-block py-4"
+                                style="margin-bottom:4px;white-space: normal;">{{ cl.event_name }}</button>
+                        </form>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </ul>
+
+
+        </div>
+
+
+        <div class="container border  shadow-lg  my-5 py-3 rounded" style="background-color: rgb(254, 253, 255); ">
+
+            <div class="jumbotron " >
+                <h1 class="display-4">{{ event_name }}</h1>
+                <p class="lead">{{ event_disc }}</p>
+                <hr class="my-4">
+
+                <p class="lead">
+                    <p class="lead" >URL: {{ url }}</p>
+                    Event schedule:
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item my-2">Start Time: {{ start_time }} </li>
+                        <li class="list-group-item my-1">Ending Time: {{ end_time }} </li>
+                    </ul>
+
+                    {% if  w_pages%}
+                        Allowed Websites:
+                        <div style="background-color: #ffffff">
+                            {% for web in w_pages %}
+                            <p>{{ web }} </p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {% if  w_programs%}
+                        Allowed Programs:
+                        <div style="background-color: #ffffff">
+                            {% for web in w_programs %}
+                            <p >{{ web }} </p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <div >
+                        <form class="form-horizontal" role="form" action="{% url 'classes:start_event'%}" method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <input type="hidden" name="class_id" id="class_id" value="{{ class_id }}">
+                                <input type="hidden" name="event_id" id="event_id" value="{{ event_id }}">
+                                <input type="hidden" name="event_code" id="event_code" value="{{ event_code }}">
+
+                            </div>
+
+                            <div class="form-group ">
+                                <!-- <button type="submit"  class="btn  btn-lg alert-danger "data-toggle="modal"  data-target="#exampleModal">Delete Class</button> -->
+                                <br>
+                                <br>
+
+                                <button type="submit" class="btn  btn-lg  btn-secondary " >
+                                    Proctor The Event
+                                </button> 
+
+                            </div>
+                        </form>
+                    </div>
+                    {% if have_report %}
+                        <div >
+                            <form class="form-horizontal" role="form" action="{% url 'classes:download_reports'%}" method="post">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <input type="hidden" name="class_id" id="class_id" value="{{ class_id }}">
+                                    <input type="hidden" name="event_id" id="event_id" value="{{ event_id }}">
+
+                                </div>
+
+                                <div class="form-group ">
+                                    <!-- <button type="submit"  class="btn  btn-lg alert-danger "data-toggle="modal"  data-target="#exampleModal">Delete Class</button> -->
+                                    <br>
+                                    <br>
+
+                                    <button type="submit" class="btn  btn-lg  btn-info" >
+                                        Download Reports
+                                    </button>
+
+                                </div>
+                            </form>
+                        </div>
+                    {% endif %}
+                </p>
+            </div>
+
+            <div>
+                <form class="form-horizontal" role="form" action="{% url 'classes:delete_event'%}" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input type="hidden" name="class_id" id="class_id" value="{{ class_id }}">
+                        <input type="hidden" name="event_id" id="event_id" value="{{ event_id }}">
+
+                    </div>
+
+                    <div class="form-group ">
+                        <!-- <button type="submit"  class="btn  btn-lg alert-danger "data-toggle="modal"  data-target="#exampleModal">Delete Class</button> -->
+
+                        <button type="button" class="btn  btn-lg btn-block alert-danger " data-toggle="modal"
+                            data-target="#exampleModal">
+                            Delete Event
+                        </button>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Delete Event</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Are you sure you want to delete this event? This is an irreversible action
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancle</button>
+                                        <button type="submit" class="btn btn-primary">Delete</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+
+
+
+        <script type="text/javascript">
+        $('#exam_document').on('change', function () {
+            //get the file name
+            var fileName = $(this).val().replace("C:\\fakepath\\", "");
+            //replace the "Choose a file" label
+            $(this).next('.custom-file-label').html(fileName);
+        })
+        $('#exam_document1').on('change', function () {
+            //get the file name
+            var fileName = $(this).val().replace("C:\\fakepath\\", "");
+            //replace the "Choose a file" label
+            $(this).next('.custom-file-label').html(fileName);
+        })
+
+        function statistic_fun() {
+            $("#carouselExampleIndicators").carousel(0);
+            var element = document.getElementById("statistic_option");
+            var element1 = document.getElementById("download_option");
+            var element2 = document.getElementById("edit_option");
+            element.classList.add("active");
+            element1.classList.remove("active");
+            element2.classList.remove("active");
+        }
+
+
+        function download_fun() {
+            $("#carouselExampleIndicators").carousel(1);
+            var element = document.getElementById("download_option");
+            var element1 = document.getElementById("statistic_option");
+            var element2 = document.getElementById("edit_option");
+            element.classList.add("active");
+            element1.classList.remove("active");
+            element2.classList.remove("active");
+        }
+
+
+
+        window.onload = function () {
+
+        };
+
+
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+
+    </script>
+    <script>
+        function display_adder() {
+            document.getElementById('event_adder').style.display = "block";
+            document.getElementById('single_student_add').style.display = "none";
+            document.getElementById('student_adder').style.display = "none";
+            document.getElementById('student_replace').style.display = "none";
+        }
+        function close_adder() {
+            document.getElementById('event_adder').style.display = "none";
+        }
+        function display_student_adder() {
+            document.getElementById('student_adder').style.display = "block";
+            document.getElementById('event_adder').style.display = "none";
+            document.getElementById('single_student_add').style.display = "none";
+            document.getElementById('student_replace').style.display = "none";
+        }
+        function display_single_student_adder() {
+            document.getElementById('single_student_add').style.display = "block";
+            document.getElementById('event_adder').style.display = "none";
+            document.getElementById('student_adder').style.display = "none";
+            document.getElementById('student_replace').style.display = "none";
+        }
+        function close_single_student_replace() {
+            document.getElementById('single_student_add').style.display = "none";
+        }
+        function close_student_adder() {
+            document.getElementById('student_adder').style.display = "none";
+        }
+
+
+        function display_student_replace() {
+            document.getElementById('student_replace').style.display = "block";
+            document.getElementById('single_student_add').style.display = "none";
+            document.getElementById('event_adder').style.display = "none";
+            document.getElementById('student_adder').style.display = "none";
+        }
+        function close_student_replace() {
+            document.getElementById('student_replace').style.display = "none";
+        }
+
+
+        function removeStudent(e, a) {
+            console.log(e);
+            console.log(a);
+            document.getElementById('student_id').value = e;
+            document.getElementById('student_remove_class_id').value = a;
+            document.getElementById("remove_student_button").click(); // Click on the checkbox
+        }
+
+
+
+        $("#picker1").datetimepicker({
+            timepicker: true,
+            datepicker: true,
+            format: "Y-m-d H:i",
+            step: 15,
+            onShow: function (ct) {
+                this.setOptions({
+                    maxDate: $("#picker2").val()
+                        ? $("#picker2").val()
+                        : false,
+                });
+            },
+        });
+        $("#picker2").datetimepicker({
+            timepicker: true,
+            datepicker: true,
+            format: "Y-m-d H:i",
+            step: 15,
+            onShow: function (ct) {
+                this.setOptions({
+                    minDate: $("#picker1").val()
+                        ? $("#picker1").val()
+                        : false,
+                });
+            },
+        });
+    </script>
+
+    {% endblock %}

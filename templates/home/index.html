@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% load static %}
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<link rel="shortcut icon" href="{% static 'fav_icon.png' %}">
+
+<title>AI Proctor</title>
+
+<!-- Stylesheets -->
+<link href="{% static 'home/css/style_v1.css' %}" rel="stylesheet">
+<link href="{% static 'home/css/responsive.css' %}" rel="stylesheet">
+<link rel="icon" href="#" type="image/x-icon">
+
+</head>
+
+<!-- page wrapper -->
+<body class="boxed_wrapper">
+ 
+    <!-- main header -->
+    <header class="main-header">
+
+        <!-- Header upper -->
+        <div class="header-upper">
+            <div class="container">
+                <div class="outer-box clearfix">
+                    <div class="float-left">
+                        <figure class="logo-box"><a href="{% url 'home:home' %}"><img src="{% static 'home/images/logo.png' %}" alt="" title=""></a></figure>
+                    </div>
+                    <div class="float-right upper-right clearfix">
+                        <div class="nav-outer clearfix">
+                            <nav class="main-menu navbar-expand-lg">
+                                <div class="navbar-header">
+                                    <!-- Toggle Button -->      
+                                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    </button>
+                                </div>
+                                <div class="navbar-collapse collapse clearfix" id="navbarSupportedContent">
+                                    <ul class="navigation clearfix">
+                                        <li class="current"><a href="{% url 'home:home' %}">Home</a></li>
+                                        <li><a href="{% url 'policy:policy' %}">PRIVACY POLICY</a></li>
+                                        <li><a href="{% url 'download:home' %}">Download</a></li>
+
+                                        {% if user.is_authenticated %}
+                                            <li><a href="{% url 'classes:classes' %}">Classes</a></li>
+                                            <li><a href="{% url 'dashboard:dashboard' %}">Account</a></li>
+                                            {% if request.user.is_superuser %}
+                                                <li><a href="{% url 'statistic:home' %}">Statistics</a></li>
+                                            {% endif %}
+                                            <li class="log-btns"><a href="{% url 'users:logout' %}">Logout</a></li>
+                                        {% else %}
+                                            <li class="log-btns"><a href="{% url 'users:login' %}">Login</a></li>
+                                            <li class="log-btns"><a href="{% url 'users:register' %}">Sign Up</a></li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                            </nav><!-- Main Menu End-->      
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--End Header Upper-->
+
+        <!--Sticky Header-->
+        <div class="sticky-header">
+            <div class="container">
+                <div class="clearfix">
+                    <!--Logo-->
+                    <div class="logo float-left">
+                        <a href="{% url 'home:home' %}" class="img-responsive"><img src="{% static 'home/images/logo.png' %}" alt="" title=""></a>
+                    </div>
+                    
+                    <!--Right Col-->
+                    <div class="right-col float-right">
+                        <!-- Main Menu -->
+                        <nav class="main-menu navbar-expand-lg">
+                            <div class="navbar-collapse collapse clearfix">
+                                <ul class="navigation clearfix">
+                                	<li class="current"><a href="{% url 'home:home' %}">Home</a></li>
+                                    <li><a href="{% url 'policy:policy' %}">PRIVACY POLICY</a></li>
+                                    <li><a href="{% url 'download:home' %}">Download</a></li>
+
+                                    {% if user.is_authenticated %}
+                                        <li><a href="{% url 'classes:classes' %}">Classes</a></li>
+                                	    <li><a href="{% url 'dashboard:dashboard' %}">Account</a></li>
+                                        {% if request.user.is_superuser %}
+                                            <li><a href="{% url 'statistic:home' %}">Statistics</a></li>
+                                        {% endif %}
+                                        <li class="log-btns"><a href="{% url 'users:logout' %}">Logout</a></li>
+                                    {% else %}
+                                        <li class="log-btns"><a href="{% url 'users:login' %}">Login</a></li>
+                                        <li class="log-btns"><a href="{% url 'users:register' %}">Sign Up</a></li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </nav><!-- Main Menu End-->
+                    </div>
+                </div>
+                    
+                
+            </div>
+        </div>
+        <!--End Sticky Header-->
+    </header>
+
+
+    <!--Form Back Drop-->
+    <div class="form-back-drop"></div>
+ 
+	
+   <!-- banner-style-three -->
+    <section class="banner-style-three" style="background-image: url({% static 'home/images/background/banner-3.png' %});">
+        <div class="container clearfix">
+            <div class="inner-box">
+                <div class="row">
+                    <div class="col-lg-8 col-md-12 col-sm-12 image-column">
+                        <div class="content-box" data-aos="fade-right" data-aos-easing="linear" data-aos-duration="1000">
+                            <h1>AI Proctor</h1>
+                            <div class="text">A Proctoring System Powered by Artificial Intelligence!</div>
+                            <div id="vid_link"><a href="#promo_vid">Watch the AI Proctor promo video</a> </div>
+                            <div id="vid_link2"> <a href="#promo_vid">Watch the AI Proctor detailed presentation </a> </div>
+                         </div>
+                    </div>
+                </div>
+                <div class="image-box" data-aos="fade-left" data-aos-easing="linear" data-aos-duration="1000">
+                    <figure class="image flot-bob-y"><img src="{% static 'home/images/banner-img-4.png' %}" alt=""></figure>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- banner-style-three end -->
+	
+	
+	<section class="creative-style-two ai-protect-bg">
+        <div class="style-image"><figure class="image"><img src="{% static 'home/images/icons/style-2.png' %}" alt=""></figure></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-md-12 col-sm-12 image-column">
+                    <div class="image-box clearfix">
+                        <div class="bubble-box">
+                            <div class="bubbles-1"></div>
+                            <div class="bubbles-2"></div>
+                        </div>
+                        <figure class="image flot-bob-y"><img src="{% static 'home/images/ai-protect-1.png' %}" class="img-fluid" alt=""></figure>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-12 col-sm-12 content-column">
+                    <div class="content-box">
+
+                        <div class="sec-title">
+							<h2>The AI-Proctor</h2>
+							<h4>A Necessary Ingredient for Credible Online Certificates!</h4>
+						</div>
+                        <div class="text">
+                            <ul class="my-list1">
+                                <li>Ensures credibility of exams results</li>
+                                <li>Very easy to use by both instructors and students</li>
+                                <li>Works with any examination portal!</li>
+                                <li>Minimal traffic to work even with weak internet connections</li>
+                                <li>Real time monitoring and detailed final reports for all suspicious activities by students</li>
+                                <li>Uses face recognition speech detection to ensure in class exam similar experience</li>
+                                <li>Works even with internet disconnections, and can recover from power outage!</li>
+                                <li>White list for programs and websites allowed for students</li>
+                                <li>Encryption for all the communication between student’s machine and the server</li>
+                                <li>And many other practical features ...</li> 
+                            </ul>
+                        </div> 
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+	
+	<section class="agency-section service-page-1">
+        <div class="container">
+            <div class="inner-content">
+                <div class="single-item">
+                    <div class="row">
+                        <div class="col-xl-4 col-lg-12 col-md-12 image-column">
+                            <figure class="image-box paroller"><img src="{% static 'home/images/real-monitoring.png' %}" alt=""></figure>
+                        </div>
+                        <div class="col-xl-6 col-lg-12 col-md-12 offset-xl-2 content-column">
+                            <div class="content-box"  data-aos="fade-left" data-aos-easing="linear" data-aos-duration="1500">
+                                <h2><a href="#">Real-Time Monitoring</a></h2>
+                                <p>During the exam, the instructor will be notified, in real time, with any suspicious activity by the exam takers.</p>
+							    <p>The instructor can chat in real time with the student. He can also remove the student permanently from the exam using the real time monitoring dashboard.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="single-item">
+                    <div class="row">
+                        <div class="col-xl-6 col-lg-12 col-md-12 content-column">
+                            <div class="content-box" data-aos="fade-right" data-aos-easing="linear" data-aos-duration="1500">
+                                <h2><a href="#">Browser’s monitoring</a></h2>
+                                <p>If the student opened any websites other than the exam’s website even in 
+                                    a new window or a new tab, the AI Proctor will notify the instructor in 
+                                    real-time with a screenshot of the student activity, and the website she 
+                                    is trying to access. When the exam ends, the instructor will receive a 
+                                    full detailed report with all opened websites, and when they were opened. 
+                                    A short video for the every cheating activity will be sent to the instructor 
+                                    along with the report.</p>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-lg-12 col-md-12 offset-xl-2 image-column">
+                            <figure class="image-box paroller"><img src="{% static 'home/images/tab-monitoring.png' %}" alt=""></figure>
+                        </div>
+                    </div>
+                </div>
+                <div class="single-item">
+                    <div class="row">
+                        <div class="col-xl-4 col-lg-12 col-md-12 image-column">
+                            <figure class="image-box paroller"><img src="{% static 'home/images/foreground-program.png' %}" alt=""></figure>
+                        </div>
+                        <div class="col-xl-6 col-lg-12 col-md-12 offset-xl-2 content-column">
+                            <div class="content-box" data-aos="fade-left" data-aos-easing="linear" data-aos-duration="1500">
+                                <h2><a href="#">An unauthorized program</a></h2>
+                                <p>If the exam taker opens or switches to an already opened program (like a pdf reader), 
+                                    the instructor will be notified immediately with a screen-shot of the opened program. 
+                                    The instructor will also receive a full report with the cheating activities and a short 
+                                    video for each of them.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="single-item">
+                    <div class="row">
+                        <div class="col-xl-6 col-lg-12 col-md-12 content-column">
+                            <div class="content-box" data-aos="fade-right" data-aos-easing="linear" data-aos-duration="1500">
+                                <h2><a href="#">Be close to your students</a></h2>
+                                <p>The instructor can see a list of the online students, and the offlines students. 
+                                    She/He can click on the name of any online student and can stream his screen and 
+                                    camera. This gives an unprecedented feeling of control of the proctoring process.</p>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-lg-12 col-md-12 offset-xl-2 image-column">
+                            <figure class="image-box paroller"><img src="{% static 'home/images/stream.png' %}" alt=""></figure>
+                        </div>
+                    </div>
+                </div>
+                <div class="single-item">
+                    <div class="row">
+                        <div class="col-xl-4 col-lg-12 col-md-12 image-column">
+                            <figure class="image-box paroller"><img src="{% static 'home/images/Internet-disconnections.png' %}" alt=""></figure>
+                        </div>
+                        <div class="col-xl-6 col-lg-12 col-md-12 offset-xl-2 content-column">
+                            <div class="content-box" data-aos="fade-left" data-aos-easing="linear" data-aos-duration="1500">
+                                <h2><a href="#">Works even with Internet disconnections and power outage</a></h2>
+                                <p>If the Internet is disconnected at a certain student's place, the system caches all 
+                                    cheating events and sends them to the instructor once the connection is restored. 
+                                    Cheating events are encrypted and stored until the Internet is retrieved. Advanced 
+                                    techniques are used to verify no fraud activities are done by offline students. 
+                                    If a student suffers from power outage, the AI-Proctor will send the reports once 
+                                    the computer is opened again.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+	<section class="features-style-two centred">
+        <div class="large-container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 col-sm-12 feature-block">
+                    <div class="feature-block-one" data-aos="fade-up" data-aos-easing="linear" data-aos-duration="1500">
+                        <span class="snow-dot"></span>
+                        <span class="snow-dot"></span>
+                        <span class="snow-dot"></span>
+                        <span class="snow-dot"></span>
+                        <span class="snow-dot"></span>
+                        <span class="snow-dot"></span>
+                        <span class="snow-dot"></span>
+                        <div class="hover-content"></div>
+                        <div class="icon-box">
+                            <i class="fa fa-user-shield"></i>
+                        </div>
+                        <div class="lower-content">
+                            <h3><a href="#">Exam web address is safe!</a></h3>
+                            <div class="text">The exam page opens automatically by the AI Proctoring system 
+                                in incognito mode, and in full screen. If the exam taker tries to escape the 
+                                full screen to see the check the URL, the AI-Proctor will enforce the browser 
+                                to switch to full screen mode again.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 feature-block">
+                    <div class="feature-block-one" data-aos="fade-up" data-aos-easing="linear" data-aos-duration="2000">
+                        <span class="snow-dot"></span>
+                        <span class="snow-dot"></span>
+                        <span class="snow-dot"></span>
+                        <span class="snow-dot"></span>
+                        <span class="snow-dot"></span>
+                        <span class="snow-dot"></span>
+                        <span class="snow-dot"></span>
+                        <div class="hover-content"></div>
+                        <div class="icon-box">
+                            <i class="fas fa-smile-beam"></i>
+                        </div>
+                        <div class="lower-content">
+                            <h3><a href="#">Face verification</a></h3>
+                            <div class="text">The AI-Proctor opens the exam only after facial verification. 
+                                The student uploads his picture during registration, and it is used in all his 
+                                exams to make sure he doesn't leave the examination place.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 feature-block">
+                    <div class="feature-block-one" data-aos="fade-up" data-aos-easing="linear" data-aos-duration="2500">
+                        <span class="snow-dot"></span>
+                        <span class="snow-dot"></span>
+                        <span class="snow-dot"></span>
+                        <span class="snow-dot"></span>
+                        <span class="snow-dot"></span>
+                        <span class="snow-dot"></span>
+                        <span class="snow-dot"></span>
+                        <div class="hover-content"></div>
+                        <div class="icon-box">
+                            <i class="fa fa-microphone"></i>
+                        </div>
+                        <div class="lower-content">
+                            <h3><a href="#">Human speech detection</a></h3>
+                            <div class="text">The AI-Proctor continuously checks the microphone to make sure the 
+                                examination place has no one speaking. It will not be confused with other sounds like 
+                                music or fan sound!</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+	
+	  
+
+
+    
+	<section id="promo_vid" class="creative-style-two ai-protect-bg">
+        <div class="style-image"><figure class="image"><img src="{% static 'home/images/icons/style-2.png' %}" alt=""></figure></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-md-12 col-sm-12 image-column">
+                    <div class="image-box clearfix">
+                        <section class="video-section centred">
+                            <div class="container">
+                                <div class="inner-box">
+                                    <a href="https://youtu.be/UBVkdbpHMWg
+                                    " class="overlay-link lightbox-image" data-caption=""><i class="fa fa-play"></i></a>
+                                    <h3><span>Click</span> to watch our promo</h3>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+                 
+                <div class="col-lg-6 col-md-12 col-sm-12 image-column">
+                    <div class="image-box clearfix">
+                        <section class="video-section centred">
+                            <div class="container">
+                                <div class="inner-box">
+                                    <a href="https://youtu.be/6tA9Qd7JfGM
+                                    " class="overlay-link lightbox-image" data-caption=""><i class="fa fa-play"></i></a>
+                                    <h3><span>Click</span> to watch the detailed presentation</h3>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+                 
+            </div>
+        </div>
+    </section>
+	
+
+
+
+
+    <!-- creative-section -->
+    <section class="creative-section" style="background-image: url({% static 'home/images/creative-bg-1.png' %});">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 inner-column">
+                    <div class="content-block">
+                        <div class="title-block">
+                            <h3>What are the main benefits of using the system?</h3>
+                        </div>
+                        <ul class="my-list">
+                        	<li>The AI-Proctor can be configured to work with any examination or quizzes portal.</li>
+                        	<li>A macro-proctoring mode to monitor the rest of the examination room using Jitsi open source tool is 
+                                integrated within the system. Currently, the monitoring is human assistant.</li>
+                        	<li>No need for any special hardware to proctoring. You only need the already used cam for Zoom.</li>
+                        	<li>The students are also allowed to access “ a white list” of websites and programs that the instructor can configure.</li>
+                        	<li>The date and time of exam are shown at the students' browser add-on.</li>
+                        	<li>The system reminds the student 5 mins and 1 mins before the exam ends.</li>
+                        	<li>When the exam ends, the browser automatically closes and detailed cheating videos are sent to the instructor.</li>
+                        	<li>The system consists of a browser add-on to monitor browser activity, and an application to monitor out of browser activities.</li>
+                        	<li>Instructor adds students to a class easily by their emails. They can be added one by one or as a list.</li>
+                        	<li>When the exam starts, the system closes all browser windows and opens the exam's webpage in full-screen mode.</li>
+                        	<li>The system detects changing the microphone, turning off the camera, or running within a virtual machine.</li>
+                        	<li>A lecture attendance mode exists, with reports suitable for lecture attendance.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- creative-section end -->
+
+    <!-- main-footer -->
+    <footer class="main-footer">
+        <div class="footer-bottom">
+            <div class="large-container clearfix">
+				<div class="row">
+					<div class="col-lg-12 text-center">
+                		<div class="left-content">
+                		    <div class="copyright">To try the application, please send to <a href="mailto:info@techibees.com">info@techibees.com</a></div>
+                		</div>
+					</div>
+				</div>
+            </div>                
+        </div>
+    </footer>
+   <!-- main-footer end -->
+
+
+
+<!--Scroll to top-->
+<button class="scroll-top scroll-to-target" data-target="html">
+    <span class="fa fa-arrow-up"></span>
+    <span class="text">Top</span>
+</button>
+
+
+
+<!-- jequery plugins -->
+<script src="{% static 'home/js/jquery.js' %}"></script>
+<script src="{% static 'home/js/popper.min.js' %}"></script>
+<script src="{% static 'home/js/bootstrap.min.js' %}"></script>
+
+<script src="{% static 'home/js/owl.js' %}"></script>
+<script src="{% static 'home/js/wow.js' %}"></script>
+<script src="{% static 'home/js/validation.js' %}"></script>
+<script src="{% static 'home/js/jquery.fancybox.js' %}"></script>
+<script src="{% static 'home/js/appear.js' %}"></script>
+<script src="{% static 'home/js/aos.js' %}"></script>
+<script src="{% static 'home/js/jquery.mCustomScrollbar.concat.min.js' %}"></script>
+<script src="{% static 'home/js/jquery.paroller.min.js' %}"></script>
+<script src="{% static 'home/js/jquery.datetimepicker.full.min.js' %}"></script>
+<!-- main-js -->
+<script src="{% static 'home/js/script.js' %}"></script>
+
+</body><!-- End of .page_wrapper -->
+
+</html>

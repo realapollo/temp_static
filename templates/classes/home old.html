@@ -1,0 +1,138 @@
+{% extends 'template/base.html' %}
+{% block title %}AI Proctor{% endblock %}
+{% block home_active %}active{% endblock %}
+{% block nav_color %}#12b3bd;{% endblock %}
+{% block nav_font_color %}navbar-dark{% endblock %}
+{% load static %}
+{% block body %}
+    <div class="container py-3">
+        <div class="content-section">
+{#            {% if messages %}#}
+{#            <div class="alert alert-danger mt-6">#}
+{#                <h5 class="alert-heading">{{ messages }}</h5>#}
+{#            </div>#}
+
+
+            {% if error %}
+                {% if class_exists %}
+                    <div class="alert alert-danger mt-6">
+                        <h5 class="alert-heading">Class Already Exist Please Choose Another Name.</h5>
+                    </div>
+
+                {% endif %}
+
+            {% else %}
+            <legend class="border-bottom mb-4">
+                {% if is_teacher %}
+                    List of Created Classes
+                {% else %}
+                    List of Admitted Classes {% endif %}
+            </legend>
+
+            <div class="container">
+                <div class="float-right">
+                    <button class="btn btn-outline-info" onclick="display_adder()">
+                        Add New Class
+                    </button>
+                </div>
+                <div id="event_adder"
+                    class="justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
+                    style="display: none;" >
+                    <div class="container border shadow-lg my-5 pb-3 rounded"
+                        style="
+                            background-color: rgb(254, 253, 255);
+                            max-width: 700px;
+                        " >
+                        <div class="container-fluid pt-3">
+                            <form
+                                class="form-horizontal"
+                                role="form"
+                                action="{% url 'classes:add_class'%}"
+                                method="post"
+                                enctype="multipart/form-data" >
+                                {% csrf_token %}
+                                <button
+                                    type="button"
+                                    class="close"
+                                    aria-label="Close"
+                                    onclick="close_adder()" >
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <br />
+
+                                <div class="form-group">
+                                    <label for="subject"> Class Name:</label>
+                                    <input
+                                        class="form-control"
+                                        id="class_name"
+                                        name="class_name"
+                                        type="text"
+                                        required
+                                    />
+                                </div>
+
+                                <div class="form-group">
+                                    <button
+                                        type="submit"
+                                        class="btn btn-lg btn-block bg-dark text-white"
+                                    >
+                                        ADD
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <br />
+                <br />
+                <br />
+
+                <ul class="list-group list-group-flush">
+                    {% for class in ordered_classes_list %}
+                    <div class="row">
+                        {% for cl in class %}
+                        <div class="col-sm">
+                            <form method="post"
+                                enctype="multipart/form-data"
+                                action="{% url 'classes:show_events'%}" >
+                                {% csrf_token %}
+                                <div class="form-group d-inline">
+                                    <input
+                                        type="hidden"
+                                        name="class_id"
+                                        id="class_id"
+                                        value="{{ cl.id }}"
+                                    />
+                                </div>
+                                <button type="submit"
+                                    class="btn btn-info btn-block py-4"
+                                    style="margin-bottom: 4px; white-space: normal;">
+                                    {{ cl.class_name }}
+                                </button>
+                            </form>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+
+
+
+     <script>
+
+        function display_adder(){
+            document.getElementById('event_adder').style.display = "block";
+        }
+        function close_adder(){
+            document.getElementById('event_adder').style.display = "none";
+        }
+
+
+    </script>
+{% endblock %}

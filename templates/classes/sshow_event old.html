@@ -1,0 +1,25 @@
+{% extends 'template/base.html' %}
+{% block title %}Instructor Events{% endblock %}
+{% block home_active %}active{% endblock %}
+{% block nav_color %}#12b3bd;{% endblock %}
+{% block nav_font_color %}navbar-dark{% endblock %}
+{% load static %}
+{% block body %}
+    <div class="container border  shadow-lg  my-5 py-3 rounded" style="background-color: rgb(254, 253, 255); ">
+        <div class="jumbotron ">
+            <h1 class="display-4">{{ event_name }}</h1>
+            <p class="lead">{{ event_disc }}</p>
+            <hr class="my-4">
+
+            <p class="lead">
+                Event schedule:
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item my-2">Start Time: {{ start_time }} </li>
+                <li class="list-group-item my-1">Ending Time: {{ end_time }} </li>
+            </ul>
+            </p>
+        </div>
+    </div>
+
+
+{% endblock %}

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    {% load crispy_forms_tags %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{% static 'fav_icon.png' %}">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"  crossorigin="anonymous" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <meta name="description" content="Responsive sidebar template with sliding effect and dropdown menu based on bootstrap 3"> 
+     
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
+    crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'dashboard/style.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Satisfy&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
+    <title>Dashboard</title>
+
+        <link href="{% static 'dashboard/jquery.datetimepicker.min.css' %}" rel="stylesheet" />
+</head>
+<body>
+    <div class="sticky-top">
+        <nav class="navbar navbar-dark bg-dark navbar-expand-xl sticky-top shadow"  >
+            <div class="container">
+                <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="{% url 'home:home' %}" style="font-family: 'Satisfy', cursive;">AI Proctor</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ml-auto">
+
+                        {% if user.is_authenticated %}
+                            <li class="nav-item   ">
+                                <a class="nav-link" href="{% url 'users:logout' %}"> <span><i class="fas fa-sign-out-alt"></i></span> Logout</a>
+                            </li>
+
+                        {% endif %}
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <div class="page-wrapper chiller-theme ">
+        <a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
+            <i class="fas fa-bars"></i>
+        </a>
+        <nav id="sidebar" class="sidebar-wrapper">
+            <div class="sidebar-content">
+                <div class="sidebar-brand">
+                    <div class="d-flex flex-row-reverse" id="close-sidebar">
+                        <i class="fas fa-times"></i>
+                    </div>
+                </div>
+                <div class="sidebar-header">
+                    <div class="user-pic">
+                        <img class="img-responsive img-rounded" src="{{ user.userprofileinfo.profile_pic.url }}" alt="User picture">
+                    </div>
+                    <div class="user-info">
+                    <span class="user-name">{{ user.first_name }}
+                        <strong>{{ user.last_name }}</strong>
+                    </span>
+                    <span class="user-name">
+                        <small>
+                            {{ user.email }}
+                        </small>
+                    </span>
+                    <span class="user-status">
+                        <i class="fa fa-circle"></i>
+                        <span>Online</span>
+                    </span>
+                    </div>
+                </div>
+                <div class="sidebar-header"> 
+                    <div class="user-info">
+                        <span class="user-name">
+                            <strong>Dashboard Menu</strong>
+                        </span> 
+                    </div>
+                </div>
+                 
+                <div class="sidebar-menu">
+                    <ul>
+                        <li>
+                        <a href="{% url 'dashboard:edit_profile'%}">
+                            <i class="fas fa-users"></i>
+                            <span>Edit Profile</span>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a href="{% url 'dashboard:edit_profile'%}">
+                            <i class="fa fa-download" ></i>
+
+                            <span>Download PC Client</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'dashboard:edit_profile'%}">
+                            <i class="fa fa-download" ></i>
+
+                            <span>Download Mobile App</span>
+                        </a>
+                    </li>
+
+                    </ul>
+                </div>
+                 
+                <div class="sidebar-menu">
+                    <ul>
+                        <li>
+                            <a href="{% url 'dashboard:edit_profile'%}">
+                                <i class="fa fa-download" ></i>
+
+                                <span>Download PC Client</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+                 
+                <div class="sidebar-menu">
+                    <ul>
+                        <li>
+                            <a href="{% url 'dashboard:edit_profile'%}">
+                                <i class="fa fa-download" ></i>
+
+                                <span>Download Mobile App</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+                <!-- sidebar-menu  -->
+            </div>
+            <!-- sidebar-content  -->
+             
+        </nav>
+        <!-- sidebar-wrapper  -->
+        <main class="page-content">
+            <div class="container-fluid">
+            {% block body %}
+            {% endblock %}
+            </div>
+        </main>
+        <!-- page-content" -->
+        </div>
+        <!-- page-wrapper -->
+        <script
+            src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"
+        ></script>
+        <script src="{% static 'dashboard/jquery.datetimepicker.full.min.js' %} "></script>
+
+{#        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>#}
+{#        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>#}
+{#        <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->#}
+{#        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>#}
+        <script>
+
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip()
+            })
+
+            jQuery(function ($) { 
+                $(".sidebar-dropdown > a").click(function() {
+                    $(".sidebar-submenu").slideUp(200);
+                    if ( $(this) .parent() .hasClass("active")) {
+                        $(".sidebar-dropdown").removeClass("active");
+                        $(this).parent().removeClass("active");
+                    } else {
+                        $(".sidebar-dropdown").removeClass("active");
+                        $(this).next(".sidebar-submenu").slideDown(200);
+                        $(this).parent().addClass("active");
+                    }
+                });
+                    $("#close-sidebar").click(function() {
+                    $(".page-wrapper").removeClass("toggled");
+                });
+                    $("#show-sidebar").click(function() {
+                    $(".page-wrapper").addClass("toggled");
+                });
+                    $('#exam_document').on('change',function(){
+                        //get the file name
+                        var fileName = $(this).val().replace("C:\\fakepath\\", "");
+                        //replace the "Choose a file" label
+                        $(this).next('.custom-file-label').html(fileName);
+                    });
+            });
+        </script>
+        <script>
+            $("#picker1").datetimepicker({
+                timepicker: true,
+                datepicker: true,
+                format: "Y-m-d H:i",
+                step: 15,
+                onShow: function (ct) {
+                    this.setOptions({
+                        maxDate: $("#picker2").val()
+                            ? $("#picker2").val()
+                            : false,
+                    });
+                },
+            });
+            $("#picker2").datetimepicker({
+                timepicker: true,
+                datepicker: true,
+                format: "Y-m-d H:i",
+                step: 15,
+                onShow: function (ct) {
+                    this.setOptions({
+                        minDate: $("#picker1").val()
+                            ? $("#picker1").val()
+                            : false,
+                    });
+                },
+            });
+        </script>
+</body>
+</html> 
+<body>
+
+</body>
+
+</html>

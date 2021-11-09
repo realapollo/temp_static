@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="shortcut icon" href="{% static 'fav_icon.png' %}">
+
+    <title>AI Proctor</title>
+
+    <!-- Stylesheets -->
+    <link href="{% static 'classes/css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'classes/css/responsive.css' %}" rel="stylesheet">
+    {#<link rel="icon" href="#" type="image/x-icon">#}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script>
+    <script src="{% static 'template/html2canvas.min.js' %}"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+</head>
+
+<!-- page wrapper -->
+<body class="boxed_wrapper">
+ 
+    <!-- main header -->
+    <header class="main-header">
+
+        <!-- Header upper -->
+        <div class="header-upper">
+            <div class="container">
+                <div class="outer-box clearfix">
+                    <div class="float-left">
+                        <figure class="logo-box"><a href="{% url 'home:home' %}"><img src="{% static 'classes/images/logo.png' %}" alt="" title=""></a></figure>
+                    </div>
+                    <div class="float-right upper-right clearfix">
+                        <div class="nav-outer clearfix">
+                            <nav class="main-menu navbar-expand-lg">
+                                <div class="navbar-header">
+                                    <!-- Toggle Button -->      
+                                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    </button>
+                                </div>
+                                <div class="navbar-collapse collapse clearfix" id="navbarSupportedContent">
+                                    <ul class="navigation clearfix">
+                                        <li><a href="{% url 'home:home' %}">Home</a></li>
+                                        <li><a href="{% url 'download:home' %}">Download</a></li>
+                                        {% if user.is_authenticated %}
+                                            <li class="current"><a href="{% url 'classes:classes' %}">Classes</a></li>
+                                            <li><a href="{% url 'dashboard:dashboard' %}">Account</a></li>
+                                            <li class="log-btns"><a href="{% url 'users:logout' %}">Logout</a></li>
+                                        {% else %}
+                                            <li class="log-btns"><a href="{% url 'users:login' %}">Login</a></li>
+                                            <li class="log-btns"><a href="{% url 'users:register' %}">Sign Up</a></li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                            </nav><!-- Main Menu End-->            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--End Header Upper-->
+
+        <!--Sticky Header-->
+        <div class="sticky-header">
+            <div class="container">
+                <div class="clearfix">
+                    <!--Logo-->
+                    <div class="logo float-left">
+                        <a href="{% url 'home:home' %}" class="img-responsive"><img src="{% static 'classes/images/logo.png' %}" alt="" title=""></a>
+                    </div>
+                    
+                    <!--Right Col-->
+                    <div class="right-col float-right">
+                        <!-- Main Menu -->
+                        <nav class="main-menu navbar-expand-lg">
+                            <div class="navbar-collapse collapse clearfix">
+                            	<ul class="navigation clearfix">
+                            	    <li><a href="{% url 'home:home' %}">Home</a></li>
+                                    <li><a href="{% url 'download:home' %}">Download</a></li>
+                                        {% if user.is_authenticated %}
+                                            <li class="current"><a href="{% url 'classes:classes' %}">Classes</a></li>
+                                            <li><a href="{% url 'dashboard:dashboard' %}">Account</a></li>
+                                            <li class="log-btns"><a href="{% url 'users:logout' %}">Logout</a></li>
+                                        {% else %}
+                                            <li class="log-btns"><a href="{% url 'users:login' %}">Login</a></li>
+                                            <li class="log-btns"><a href="{% url 'users:register' %}">Sign Up</a></li>
+                                        {% endif %}
+                            	</ul>
+                            </div>
+                        </nav><!-- Main Menu End-->
+                    </div>
+                </div>
+                    
+                
+            </div>
+        </div>
+        <!--End Sticky Header-->
+    </header>
+
+    <!--Form Back Drop-->
+    <div class="form-back-drop"></div>
+ 
+	 <!-- page-title -->
+    <section class="page-title centred inner-head event-head" style="background-image: url({% static 'classes/images/login-head-bg.jpg' %})">
+        <div class="container">
+            <div class="content-box">
+                <h1>Students Identification</h1>
+            </div>
+        </div>
+    </section>
+    <!-- page-title end -->
+	
+	 
+   <section class="contact-section">
+        <div class="container">
+		    <div class="row">
+                <div class="col-lg-6 col-md-6 col-6 text-md-left">
+                    <form method="post" enctype="multipart/form-data" action="{% url 'classes:show_single_events'%}">
+                        {% csrf_token %}
+                        <input type="hidden" name="event_id" id="event_id" value="{{ event_id }}">
+                        <input type="hidden" name="class_id" id="class_id" value="{{ class_id }}">
+                        <a href="#"  onclick='this.parentNode.submit(); return false;'>
+
+                                <h5><i class="fas fa-angle-double-left"></i> Back to event</h5>
+
+                        </a>
+                    </form>
+
+                </div>
+
+		        
+            </div>
+        </div>
+        <div class="container-fluid">
+		    <div class="row">
+ 		        <div class="col-lg-12">
+		            <div class="event-wrapper">
+		                <div class="row">
+		  	                <!-- <div class="col-lg-1 col-md-1 col-12">
+		  	                     
+		  	                </div> -->
+                            <div class="col-lg-12 col-md-12 col-12">
+                                <div class="start-event-box student-detail">
+                                    
+                                    <div class="row">
+
+                                        <div class="col" id="proc">
+                                            <div class="std-screen">
+                                                <div class="container border  shadow-lg    py-3 rounded" style="background-color: rgb(254, 253, 255); ">
+
+                                                    <div class="row">
+                                                        <div class="col-lg-6 col-md-6 col-12">  
+                                                            <h4  class="text-center">Verified faces</h3>
+                                                            <div id="jumbo" class="jumbotron " style="display: none">
+                                                                <p class="lead" style="font-weight: bold; color:#ff9500;" ></p>
+                                                                <p  ></p>
+                                                                <p  ></p>
+                                                                <hr class="my-4">
+                                                                <p class="lead  col-11 text-truncate" ></p>
+                                                                <div class="row justify-content-md-center">
+                                                                    <div class="col-md-auto">
+                                                                        <img  class="img-fluid rounded"   src="">
+                                                                    </div>
+                                                                </div>
+                                                                <br>
+                                                                <br>
+                                                                <br>
+                                                                <div>
+        
+                                                                    <button type="button" class="btn  btn-lg  alert-danger remove_student" data-toggle="modal"
+                                                                        data-target="#exampleModal">
+                                                                        Remove Student
+                                                                    </button>
+        
+                                                                </div>
+                                                                <!-- <br>
+                                                                <br>
+                                                                <div class="input-group">
+                                                                    <div class="input-group-prepend">
+                                                                        <button class="btn btn-outline-secondary send_chat"  type="button">Send Message <br> to student</button>
+                                                                    </div>
+                                                                    <textarea class="form-control chat_box" aria-label="With textarea" placeholder="Write message here to be sent..."></textarea>
+                                                                </div> -->
+                                                            </div> 
+
+                                                        </div>
+                                                        <div class="col-lg-6 col-md-6 col-12">  
+                                                            <h4 class="text-center">Unverified faces</h3>
+                                                            <div id="media_pos"></div>
+                                                        </div>
+
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <div class="col-lg-1 col-md-1 col-12">
+                                 
+                            </div> -->
+                        </div>
+		            </div>
+		        </div>
+		    </div>
+        </div>
+    </section>
+	
+
+
+<!-- jequery plugins -->
+<script src="{% static 'classes/js/jquery.js' %}"></script>
+<script src="{% static 'classes/js/popper.min.js' %}"></script>
+<script src="{% static 'classes/js/bootstrap.min.js' %}"></script>
+
+<script src="{% static 'classes/js/owl.js' %}"></script>
+<script src="{% static 'classes/js/wow.js' %}"></script>
+<script src="{% static 'classes/js/validation.js' %}"></script>
+<script src="{% static 'classes/js/jquery.fancybox.js' %}"></script>
+<script src="{% static 'classes/js/appear.js' %}"></script>
+<script src="{% static 'classes/js/aos.js' %}"></script>
+<script src="{% static 'classes/js/jquery.mCustomScrollbar.concat.min.js' %}"></script>
+<script src="{% static 'classes/js/jquery.paroller.min.js' %}"></script>
+<script src="{% static 'classes/js/jquery.datetimepicker.full.min.js' %}"></script>
+<!-- main-js -->
+<script src="{% static 'classes/js/script.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+	
+  	
+<script>
+    let ind = 0;
+    let stream_v = null;
+    let stream_stu_email = "";
+    window.onload = function() { 
+        reset_st_sup();
+        setInterval(get_st_sup, 2000); 
+    };
+
+
+    function get_st_sup() {
+        // console.log("start")
+        // console.log({{ event_id }});
+        // console.log({{ class_id }});
+        let csrf_t = '{{csrf_token}}';
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "{% url 'classes:get_st_id'%}", true);
+        xhr.setRequestHeader("X-CSRFToken", csrf_t);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onloadend = function () {
+            if (xhr.status === 200) {
+                let resp = JSON.parse(xhr.responseText);
+                let c_type = resp.type; 
+                console.log(c_type);
+                if (c_type === 1 || c_type === 0){
+                    let img = resp.img;
+                    let e_id = resp.event_id;
+                    let e_code = resp.code; 
+                    let class_id = resp.class_id;
+                    let name = resp.cname;
+                    let ctime = resp.ctime;
+                    let elem1 = document.getElementById("jumbo");
+                    let jumbo1 = elem1.cloneNode(true);
+
+                    jumbo1.getElementsByClassName("remove_student")[0].addEventListener('click', function () {
+                        let xhr2 = new XMLHttpRequest();
+                        xhr2.open("POST", "{% url 'classes:remove_student_exam'%}", true);
+                        xhr2.setRequestHeader("X-CSRFToken", csrf_t);
+                        xhr2.setRequestHeader("Content-Type", "application/json");
+                        xhr2.onloadend = function () {
+                            if (xhr2.status === 200) {
+                                let resp2 = JSON.parse(xhr2.responseText);
+                                let c_type = resp2.stats;
+                                if(c_type === 1){
+                                    alert("Student is scheduled to be removed successfully. The student " +
+                                        "browser will be closed in about 30 sec.");
+                                }else {
+                                    alert("Error happened while removing this student");
+                                }
+                            }
+                        };
+                        xhr2.onerror = function (e) {
+                            console.log(e);
+                        };
+
+
+                        xhr2.send(
+                            JSON.stringify({
+                                event_id: e_id,
+                                event_code: e_code,
+                                class_id: class_id,
+                            })
+                        );
+                    });  
+                    jumbo1.id = 'elem' + ind;
+                    jumbo1.style.display = "block";
+                    ind += 1;
+
+                    let childs = jumbo1.childNodes;
+                    childs[1].innerHTML = name;
+                    // childs[3].innerHTML = "Student opened another program";
+                    childs[5].innerHTML = ctime;
+                    // childs[9].innerHTML = pnames;
+                    let imag2 = childs[11].childNodes[1].childNodes[1];
+                    imag2.src = img;
+                    if (c_type === 1){
+                        elem1.after(jumbo1); 
+                    } 
+                    
+                    else { 
+                        let right_col_stream = document.getElementById("media_pos");
+                        right_col_stream.after(jumbo1);
+                    } 
+                } 
+            }else {
+                console.log("ERROR RESPONSE");
+            }
+        };
+        xhr.onerror = function (e) {
+            console.log(e);
+        };
+
+
+        xhr.send(
+            JSON.stringify({
+                event_id: "{{ event_id }}",
+                class_id: "{{ class_id }}",
+            })
+        );
+
+
+    }
+
+
+
+    function reset_st_sup() {
+        // console.log({{ class_id }});
+        let csrf_t = '{{csrf_token}}';
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "{% url 'classes:reset_st_sup'%}", true);
+        xhr.setRequestHeader("X-CSRFToken", csrf_t);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onloadend = function () {};
+        xhr.onerror = function (e) {
+            console.log(e);
+        };
+
+
+        xhr.send(
+            JSON.stringify({
+                event_id: "{{ event_id }}",
+                class_id: "{{ class_id }}",
+            })
+        );
+
+
+    }
+
+
+
+</script>
+
+</body><!-- End of .page_wrapper -->
+
+</html>

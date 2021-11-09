@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% load static %}
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<link rel="shortcut icon" href="{% static 'fav_icon.png' %}">
+
+<title>AI Proctor</title>
+
+<!-- Stylesheets -->
+<link href="{% static 'home/css/style_v1.css' %}" rel="stylesheet">
+<link href="{% static 'home/css/responsive.css' %}" rel="stylesheet">
+<link rel="icon" href="#" type="image/x-icon">
+
+</head>
+
+<!-- page wrapper -->
+<body class="boxed_wrapper">
+ 
+    <!-- main header -->
+    <header class="main-header">
+
+        <!-- Header upper -->
+        <div class="header-upper">
+            <div class="container">
+                <div class="outer-box clearfix">
+                    <div class="float-left">
+                        <figure class="logo-box"><a href="{% url 'home:home' %}"><img src="{% static 'home/images/logo.png' %}" alt="" title=""></a></figure>
+                    </div>
+                    <div class="float-right upper-right clearfix">
+                        <div class="nav-outer clearfix">
+                            <nav class="main-menu navbar-expand-lg">
+                                <div class="navbar-header">
+                                    <!-- Toggle Button -->      
+                                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    </button>
+                                </div>
+                                <div class="navbar-collapse collapse clearfix" id="navbarSupportedContent">
+                                    <ul class="navigation clearfix">
+                                        <li class="current"><a href="{% url 'home:home' %}">Home</a></li>
+
+                                        {% if user.is_authenticated %}
+                                            <li><a href="{% url 'classes:classes' %}">Classes</a></li>
+                                            <li><a href="{% url 'dashboard:dashboard' %}">Account</a></li>
+                                            {% if request.user.is_superuser %}
+                                                <li><a href="{% url 'statistic:home' %}">Statistics</a></li>
+                                            {% endif %}
+                                            <li class="log-btns"><a href="{% url 'users:logout' %}">Logout</a></li>
+                                        {% else %}
+                                            <li class="log-btns"><a href="{% url 'users:login' %}">Login</a></li>
+                                            <li class="log-btns"><a href="{% url 'users:register' %}">Sign Up</a></li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                            </nav><!-- Main Menu End-->      
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--End Header Upper-->
+
+        <!--Sticky Header-->
+        <div class="sticky-header">
+            <div class="container">
+                <div class="clearfix">
+                    <!--Logo-->
+                    <div class="logo float-left">
+                        <a href="{% url 'home:home' %}" class="img-responsive"><img src="{% static 'home/images/logo.png' %}" alt="" title=""></a>
+                    </div>
+                    
+                    <!--Right Col-->
+                    <div class="right-col float-right">
+                        <!-- Main Menu -->
+                        <nav class="main-menu navbar-expand-lg">
+                            <div class="navbar-collapse collapse clearfix">
+                                <ul class="navigation clearfix">
+                                	<li class="current"><a href="index.html">Home</a></li>
+
+                                    {% if user.is_authenticated %}
+                                        <li><a href="{% url 'classes:classes' %}">Classes</a></li>
+                                	    <li><a href="{% url 'dashboard:dashboard' %}">Account</a></li>
+                                        <li class="log-btns"><a href="{% url 'users:logout' %}">Logout</a></li>
+                                    {% else %}
+                                        <li class="log-btns"><a href="{% url 'users:login' %}">Login</a></li>
+                                        <li class="log-btns"><a href="{% url 'users:register' %}">Sign Up</a></li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </nav><!-- Main Menu End-->
+                    </div>
+                </div>
+                    
+                
+            </div>
+        </div>
+        <!--End Sticky Header-->
+    </header>
+
+
+    <!--Form Back Drop-->
+    <div class="form-back-drop"></div>
+ 
+	
+   <!-- banner-style-three -->
+    <section class="banner-style-three" style="background-image: url({% static 'home/images/background/banner-3.png' %});">
+        <div class="container clearfix">
+            <div class="inner-box">
+                <div class="row">
+                    <div class="col-lg-8 col-md-12 col-sm-12 image-column">
+                        <div class="content-box" data-aos="fade-right" data-aos-easing="linear" data-aos-duration="1000">
+                            <h1>Activation Required</h1>
+                            <div class="text">A <strong><u>NEW</u></strong> email was sent to you with activation link. please login to your email and activate your account. </div>
+                            <div class="text">Thank you for joining our vision toward a secure proctoring. </div>  
+                             
+                         </div>
+                    </div>
+                </div>
+                <div class="image-box" data-aos="fade-left" data-aos-easing="linear" data-aos-duration="1000">
+                    <figure class="image flot-bob-y"><img src="{% static 'home/images/banner-img-4.png' %}" alt=""></figure>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- banner-style-three end -->
+	
+	 
+    <!-- main-footer -->
+    <footer class="main-footer">
+        <div class="footer-bottom">
+            <div class="large-container clearfix">
+				<div class="row">
+					<div class="col-lg-12 text-center">
+                		<div class="left-content">
+                		    <div class="copyright">To try the application, please send to <a href="mailto:info@techibees.com">info@techibees.com</a></div>
+                		</div>
+					</div>
+				</div>
+            </div>                
+        </div>
+    </footer>
+   <!-- main-footer end -->
+
+
+
+<!--Scroll to top-->
+<button class="scroll-top scroll-to-target" data-target="html">
+    <span class="fa fa-arrow-up"></span>
+    <span class="text">Top</span>
+</button>
+
+
+
+<!-- jequery plugins -->
+<script src="{% static 'home/js/jquery.js' %}"></script>
+<script src="{% static 'home/js/popper.min.js' %}"></script>
+<script src="{% static 'home/js/bootstrap.min.js' %}"></script>
+
+<script src="{% static 'home/js/owl.js' %}"></script>
+<script src="{% static 'home/js/wow.js' %}"></script>
+<script src="{% static 'home/js/validation.js' %}"></script>
+<script src="{% static 'home/js/jquery.fancybox.js' %}"></script>
+<script src="{% static 'home/js/appear.js' %}"></script>
+<script src="{% static 'home/js/aos.js' %}"></script>
+<script src="{% static 'home/js/jquery.mCustomScrollbar.concat.min.js' %}"></script>
+<script src="{% static 'home/js/jquery.paroller.min.js' %}"></script>
+<script src="{% static 'home/js/jquery.datetimepicker.full.min.js' %}"></script>
+<!-- main-js -->
+<script src="{% static 'home/js/script.js' %}"></script>
+
+</body><!-- End of .page_wrapper -->
+
+</html>

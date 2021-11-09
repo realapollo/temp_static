@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    {% load static %}
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"  crossorigin="anonymous" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <meta name="description" content="Responsive sidebar template with sliding effect and dropdown menu based on bootstrap 3">
+
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
+    crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'dashboard/style.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Satisfy&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
+    <title>AI Proctor</title>
+
+    <link href="{% static 'dashboard/jquery.datetimepicker.min.css' %}" rel="stylesheet" />
+
+
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Satisfy&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/125d2443b9.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
+    crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static 'template/../../static/template/style.css' %}"/>
+    <title>{% block title %}AI Proctor{% endblock %}</title>
+    <link href="{% static 'dashboard/jquery.datetimepicker.min.css' %}" rel="stylesheet" />
+    {% block header-to-add-style %}{% endblock %}
+    <style>
+        .dropdown:hover>.dropdown-menu{
+            display: block;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script>
+    <script src="{% static 'template/html2canvas.min.js' %}"></script>
+    {% block style_sheet_toadd %}{% endblock %}
+
+</head>
+<body >
+    <nav class="navbar navbar-expand-xl fixed-top shadow {% block nav_font_color %}{% endblock %}"  style="background-color: {% block nav_color %}{% endblock %}">
+{#        <a class="navbar-brand " href="{% url 'home:home' %}" style="font-family: 'Satisfy', cursive;">AI Proctor</a>#}
+        <a class="navbar-brand " href="{% url 'home:home' %}" style="font-family: 'Satisfy', cursive;">
+            <img src="../../static/home/images/logo2.png" width="120"  alt="">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item {% block home_active %}{% endblock %}">
+                    <a class="nav-link" href="{% url 'home:home' %}" style="color: #000000; font-size: 25px;"> <span><i class="fas fa-home"></i></span> Home</a>
+                </li>
+
+                {% if user.is_authenticated %}
+                    <li class="nav-item {% block template_active %}{% endblock %}">
+                        <a class="nav-link" href="{% url 'classes:classes' %}" style="color: #000000; font-size: 25px; margin-left: 20px;"> <span><i class="fas fa-file-alt"></i></span> Classes </a>
+                    </li>
+                    <li class="nav-item {% block dashboard_active %}{% endblock %}">
+                        <a class="nav-link" href="{% url 'dashboard:dashboard' %}" style="color: #000000; font-size: 25px; margin-left: 20px;"> <span><i class="fa fa-user" aria-hidden="true"></i></span> Account</a>
+                    </li>
+                {% endif %}
+
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                {% if user.is_authenticated %}
+
+                <li class="nav-item   ">
+                        <a class="nav-link" href="{% url 'users:logout' %}" style="color: #000000; font-size: 20px;"> <span><i class="fas fa-sign-out-alt"></i></span> Logout</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item   ">
+                        <a class="nav-link" href="{% url 'users:login' %}" style="color: #000000; font-size: 20px;"> <span><i class="fas fa-sign-in-alt"></i></span> Login</a>
+                    </li>
+                    <li class="nav-item  ">
+                        <a class="nav-link" href="{% url 'users:register' %}" style="color: #000000; font-size: 20px;"> <span><i class="fas fa-user-plus"></i></span> sign up</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+
+
+    </nav>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+
+
+    <script src="{% static 'dashboard/jquery.datetimepicker.full.min.js' %} "></script>
+
+
+
+    {% block body %}
+    {% endblock %}
+
+
+
+</body>
+</html>

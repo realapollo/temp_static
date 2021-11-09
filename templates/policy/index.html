@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="shortcut icon" href="{% static 'fav_icon.png' %}">
+
+    <title>AI Proctor</title>
+
+    <!-- Stylesheets -->
+    <link href="{% static 'classes/css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'classes/css/responsive.css' %}" rel="stylesheet">
+    {#<link rel="icon" href="#" type="image/x-icon">#}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script>
+    <script src="{% static 'template/html2canvas.min.js' %}"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+ 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.13/jquery.mousewheel.min.js"></script>
+
+    <style>
+        <!--
+         /* Font Definitions */
+         @font-face
+            {font-family:"Cambria Math";
+            panose-1:2 4 5 3 5 4 6 3 2 4;}
+        @font-face
+            {font-family:Calibri;
+            panose-1:2 15 5 2 2 2 4 3 2 4;}
+         /* Style Definitions */
+         p.MsoNormal, li.MsoNormal, div.MsoNormal
+            {margin-top:0in;
+            margin-right:0in;
+            margin-bottom:8.0pt;
+            margin-left:0in;
+            line-height:107%;
+            font-size:11.0pt;
+            font-family:"Calibri",sans-serif;}
+        a:link, span.MsoHyperlink
+            {color:blue;
+            text-decoration:underline;}
+        a:visited, span.MsoHyperlinkFollowed
+            {color:#954F72;
+            text-decoration:underline;}
+        p
+            {margin-right:0in;
+            margin-left:0in;
+            font-size:12.0pt;
+            font-family:"Times New Roman",serif;}
+        .MsoChpDefault
+            {font-family:"Calibri",sans-serif;}
+        .MsoPapDefault
+            {margin-bottom:8.0pt;
+            line-height:107%;}
+        @page WordSection1
+            {size:8.5in 11.0in;
+            margin:1.0in 1.0in 1.0in 1.0in;}
+        div.WordSection1
+            {page:WordSection1;}
+         /* List Definitions */
+         ol
+            {margin-bottom:0in;}
+        ul
+            {margin-bottom:0in;}
+        -->
+        </style>
+        
+
+
+
+</head>
+
+<!-- page wrapper -->
+<body class="boxed_wrapper"  lang=EN-US link=blue vlink="#954F72">
+
+    <!-- main header -->
+    <header class="main-header">
+
+        <!-- Header upper -->
+        <div class="header-upper">
+            <div class="container">
+                <div class="outer-box clearfix">
+                    <div class="float-left">
+                        <figure class="logo-box"><a href="{% url 'home:home' %}"><img src="{% static 'classes/images/logo.png' %}" alt="" title=""></a></figure>
+                    </div>
+                    <div class="float-right upper-right clearfix">
+                        <div class="nav-outer clearfix">
+                            <nav class="main-menu navbar-expand-lg">
+                                <div class="navbar-header">
+                                    <!-- Toggle Button -->
+                                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    </button>
+                                </div>
+                                <div class="navbar-collapse collapse clearfix" id="navbarSupportedContent">
+                                    <ul class="navigation clearfix">
+                                        <li><a href="{% url 'home:home' %}">Home</a></li>
+                                        <li><a href="{% url 'download:home' %}">Download</a></li>
+                                        {% if user.is_authenticated %}
+                                            <li class="current"><a href="{% url 'classes:classes' %}">Classes</a></li>
+                                            <li><a href="{% url 'dashboard:dashboard' %}">Account</a></li>
+                                            <li class="log-btns"><a href="{% url 'users:logout' %}">Logout</a></li>
+                                        {% else %}
+                                            <li class="log-btns"><a href="{% url 'users:login' %}">Login</a></li>
+                                            <li class="log-btns"><a href="{% url 'users:register' %}">Sign Up</a></li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                            </nav><!-- Main Menu End-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--End Header Upper-->
+
+        <!--Sticky Header-->
+        <div class="sticky-header">
+            <div class="container">
+                <div class="clearfix">
+                    <!--Logo-->
+                    <div class="logo float-left">
+                        <a href="{% url 'home:home' %}" class="img-responsive"><img src="{% static 'classes/images/logo.png' %}" alt="" title=""></a>
+                    </div>
+
+                    <!--Right Col-->
+                    <div class="right-col float-right">
+                        <!-- Main Menu -->
+                        <nav class="main-menu navbar-expand-lg">
+                            <div class="navbar-collapse collapse clearfix">
+                            	<ul class="navigation clearfix">
+                            	    <li><a href="{% url 'home:home' %}">Home</a></li>
+                                    <li><a href="{% url 'download:home' %}">Download</a></li>
+                                        {% if user.is_authenticated %}
+                                            <li class="current"><a href="{% url 'classes:classes' %}">Classes</a></li>
+                                            <li><a href="{% url 'dashboard:dashboard' %}">Account</a></li>
+                                            <li class="log-btns"><a href="{% url 'users:logout' %}">Logout</a></li>
+                                        {% else %}
+                                            <li class="log-btns"><a href="{% url 'users:login' %}">Login</a></li>
+                                            <li class="log-btns"><a href="{% url 'users:register' %}">Sign Up</a></li>
+                                        {% endif %}
+                            	</ul>
+                            </div>
+                        </nav><!-- Main Menu End-->
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <!--End Sticky Header-->
+    </header>
+
+    <!--Form Back Drop-->
+    <div class="form-back-drop"></div>
+
+	 <!-- page-title -->
+    <section class="page-title centred inner-head event-head" style="background-image: url({% static 'classes/images/login-head-bg.jpg' %})">
+        <div class="container">
+            <div class="content-box">
+                <h1>PRIVACY POLICY</h1>
+            </div>
+        </div>
+    </section>
+    <!-- page-title end -->
+
+
+   <section class="contact-section">
+        
+        <div class="container-fluid">
+		    <div class="row justify-content-md-center">
+
+ 		        <div class="container col-lg-8 ">
+		            <div class="event-wrapper">
+		                 
+                            
+                             
+
+                        <p><b>PRIVACY POLICY</b></p>
+
+                        <p><b>This is the privacy policy for test takers using AI-Proctor application </b></p>
+
+                        <p><b><u>Summary:</u></b></p>
+
+                        <p style='margin-left:.5in;text-indent:-.25in'>1.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        </span><span dir=LTR></span>AI-Proctor is a system used for computer based and
+                        remote education to facilitate the proctoring and monitoring processes. This is
+                        the only use of AI-Proctor.</p>
+
+                        <p style='margin-left:.5in;text-indent:-.25in'>2.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        </span><span dir=LTR></span>The data collected by AI-Proctor is never sold to a
+                        third party.</p>
+
+                        <p style='margin-left:.5in;text-indent:-.25in'>3.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        </span><span dir=LTR></span>The applications, mobile apps, browser extensions
+                        and website are free from viruses, worms, Trojan horses, ransom-ware, spyware,
+                        adware and other malicious software programs.</p>
+
+                        <p style='margin-left:.5in;text-indent:-.25in'>4.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        </span><span dir=LTR></span>The software does not collect or send any
+                        information to the server or to a third party <u>except when it is active</u>. Before
+                        the session, or after the session, the software does not access any data on the
+                        test taker's computer</p>
+
+                        <p style='margin-left:.5in;text-indent:-.25in'>5.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        </span><span dir=LTR></span>The software does not modify, copy, send, or delete
+                        any existing data on the test taker's computer. </p>
+
+                        <p style='margin-left:.5in;text-indent:-.25in'>6.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        </span><span dir=LTR></span>The information that may be sent to the AI-Proctor server
+                        during the session are (1) images for the screen content of the students, (2)
+                        the camera view of the computers of the students, or of cameras connected to
+                        these computers, (3) the audio captured by the computer of the student, or by
+                        an external microphone connected to the computer of the student, (4) the files
+                        recorded during the session that describes the student's activities, (5) the
+                        current running programs during the session, (6) if there are external devices
+                        connected to the student's computer, (7) the websites opened in the browser,
+                        (8) the camera view of the mobile application (if applicable).</p>
+
+                        <p style='margin-left:.5in;text-indent:-.25in'>7.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        </span><span dir=LTR></span>We never do marketing to test takers. We never send
+                        test takers' information for others for marketing.</p>
+
+                        <p class=MsoNormal style='margin-bottom:6.0pt;text-align:justify'><span
+                        style='font-size:12.0pt;line-height:107%'>&nbsp;</span></p>
+
+                        <p class=MsoNormal style='margin-bottom:6.0pt;text-align:justify'><span
+                        style='font-size:12.0pt;line-height:107%;font-family:"Times New Roman",serif'>Your
+                        use of the AI-Proctor System is subject to your consent to this Privacy Policy.
+                        You acknowledge that you have read and understood the terms of this Privacy
+                        Policy and agree to be bound thereby. This Privacy Policy becomes effective
+                        upon your first use of the AI-Proctor System. If you disagree with this Privacy
+                        Policy, do not use the AI-Proctor System, or any materials and resources
+                        related to it. </span></p>
+
+                        <p class=MsoNormal style='margin-bottom:6.0pt;text-align:justify'><span
+                        style='font-size:12.0pt;line-height:107%;font-family:"Times New Roman",serif'>In
+                        the rest of this agreement, the AI-Proctor System refers to the AI-Proctor
+                        computer applications, mobile applications, browser extensions, website, and
+                        any other needed software or hardware provided by TechiBees Inc. as part of the
+                        AI-Proctor System to enhance the proctoring performance and experience.</span></p>
+
+                        <p class=MsoNormal style='margin-bottom:6.0pt;text-align:justify'><span
+                        style='font-size:12.0pt;line-height:107%;font-family:"Times New Roman",serif'>TechiBees
+                        Inc., the owner of AI-Proctor system, may change this Privacy Policy, at its
+                        sole discretion, from time to time. This Privacy Policy may be available in
+                        different languages. When there are inconsistencies or differences in
+                        interpretation between the English version of the Privacy Policy and those
+                        Privacy Policies made available in other languages; the English version of our
+                        Privacy Policy shall govern in all disputes, claims or proceedings to interpret
+                        or enforce.</span></p>
+
+                        <p><b>Information AI-Proctor System may collect</b></p>
+
+                        <p>AI-Proctor works in two modes of operation: (1) independent on LMS (Learning
+                        Management System), and (2) integrated with LMS</p>
+
+                        <p>When AI-Proctor works independent on LMS, it may require students to enter
+                        the following information for using the AI-Proctor application: (1) the
+                        student's name, (2) a picture for the student, (3) the student's email address</p>
+
+                        <p>When AI-Proctor is integrated with an LMS (e.g. Moodle, Black Board, ...etc),
+                        the test taker does not provide any registration information on the AI-Procotor
+                        website. When launching the application for test taking from LMS platform, the
+                        AI-Proctor system may send the following information to our servers to be used
+                        during the session: (1) A link to Student's photo ID on TIMEs (if face
+                        recognition is required), (2) First and Last names, (3) Student ID</p>
+
+                        <p>To successfully establish a connection between the test taker and the
+                        server, we collect the IP address, browser type, the link that redirected the
+                        user to the website, operating system, date and time stamps, and country of
+                        residence</p>
+
+                        <p>To link the student to the correct module and to help the instructor conduct
+                        the proctoring session, we collect the following information: (1) the course in
+                        the LMS used to launch the AI-Proctor application, (2) module start and end
+                        times, (3) module duration, (4) event name, (5) event creator email</p>
+
+                        <p><b>Information Collected while using AI-Proctor</b></p>
+
+                        <p>During the session, the AI-Proctor system collects the following
+                        information:</p>
+
+                        <p style='margin-left:1.0in;text-indent:-.25in'>a.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        </span><span dir=LTR></span>Images of the screen content of the students </p>
+
+                        <p style='margin-left:1.0in;text-indent:-.25in'>b.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        </span><span dir=LTR></span>The camera view of the computers of the students,
+                        or of cameras connected to these computers</p>
+
+                        <p style='margin-left:1.0in;text-indent:-.25in'>c.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        </span><span dir=LTR></span>The audio captured by the computer of the student,
+                        or by an external microphone connected to the computer of the student</p>
+
+                        <p style='margin-left:1.0in;text-indent:-.25in'>d.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        </span><span dir=LTR></span>The current running programs during the session</p>
+
+                        <p style='margin-left:1.0in;text-indent:-.25in'>e.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        </span><span dir=LTR></span>If there are any external connected devices to the
+                        student's computer</p>
+
+                        <p style='margin-left:1.0in;text-indent:-.25in'>f.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        </span><span dir=LTR></span>The websites opened in the browser during the
+                        session</p>
+
+                        <p style='margin-left:1.0in;text-indent:-.25in'>g.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        </span><span dir=LTR></span>The camera view of the mobile application</p>
+
+                        <p>The software writes some files to the computer during the session. The
+                        software does not alter any existing files at the test taker's computer. </p>
+
+                        <p><b>Sharing information</b></p>
+
+                        <p>The information collected by the AI-Proctor system is shared with your
+                        institution. The authorized people at your institution can check any collected
+                        information by AI-Proctor for the test takers.</p>
+
+                        <p>The information collected during the session can be shared with a trusted
+                        third party for technical assistance and optimization. An NDA will be signed
+                        with the third party before using any data. </p>
+
+                        <p>In some situations, TechiBess Inc. may be required to disclose personal data
+                        in response to lawful requests by public authorities, including to meet
+                        national security or law enforcement requirements.</p>
+
+                        <p>As required by law, such as to comply with a subpoena or similar legal
+                        process, we may disclose some collected information. When we believe in good
+                        faith that disclosure is necessary to protect our rights, protect your safety
+                        or the safety of others, investigate fraud, or respond to a government request.</p>
+
+                        <p>TechiBees Inc. may engage in a merger, acquisition, bankruptcy, dissolution,
+                        reorganization, or similar transaction or proceeding that involves the transfer
+                        of the information it has to a third party. In such case, TechiBees will notify
+                        your institute or add a clear notice on the <span class=MsoHyperlink><a
+                        href="http://www.ai-proctor.com">www.ai-proctor.com</a></span> website to
+                        clarify the change of ownership that may affect your information, as well as
+                        the choices that you may have regarding that. </p>
+
+                        <p>We will also share your information when you provide us with consent to do
+                        so.</p>
+
+                        <p><b>Data Retantion</b></p>
+
+                        <p>TechiBees Inc. will hold and use the Data only as long as is necessary to be
+                        used by you or your institution, or as required to comply with legal or
+                        regulatory obligations.</p>
+
+                        <p><b>Data Transfers</b></p>
+
+                        <p>Your information may be stored and processed in any country in which TechiBees
+                        and partner companies maintain facilities, or where TechiBees servers exist. In
+                        this regard, or for purposes of sharing or disclosing, TechiBees reserves the
+                        right to transfer information outside of your country. By using the AI-Proctor
+                        System, you consent to any such transfer of information outside of your country
+                        for the purpose of enabling you to use the System. </p>
+
+                        <p><b>Security</b></p>
+
+                        <p>It is our goal to use and handle information collected in a responsible
+                        manner. We take measures to secure your information by the possible technological
+                        means, such as storing your information on secure servers that permit access
+                        only to authorized personnel, and provision of the technical ability to protect
+                        your account. In spite of such precautions, the security of your information
+                        cannot be absolutely guaranteed. We encourage you not to share any sensitive
+                        information about using our System with any third party. If you think your data
+                        is being compromised, contact us immediately at <span class=MsoHyperlink><a
+                        href="mailto:support@ai-proctor.com">support@ai-proctor.com</a></span></p>
+
+                        <p>&nbsp;</p>
+
+                        <p><b>Changes to this Policy</b></p>
+
+                        <p>We may update this privacy policy to reflect changes to our information practices.
+                        The updated policy will always be at <span class=MsoHyperlink><a
+                        href="http://www.ai-proctor.com/privacy">www.ai-proctor.com/privacy</a></span> </p>
+
+                        <p>&nbsp;</p>
+
+                        <p><b>Contact Information</b></p>
+
+                        <p>Please if you have any questions regarding this privacy policy, contact us
+                        at :</p>
+
+                        <p>TechiBees Inc.<br>
+                        Attn: Privacy<br>
+                        <i>89</i> AbuBakr ElSeddik, Saudi Company Buildings, Hadayek Al Qobba, Cairo,
+                        Egypt</p>
+
+                        <p><br>
+                        <span class=MsoHyperlink><a href="mailto:support@ai-proctor.com">support@ai-proctor.com</a></span>
+                        </p>
+
+                        <p>Effective Date:&nbsp; July 6, 2021</p>
+
+                        <p class=MsoNormal>&nbsp;</p>
+
+
+
+
+                        
+
+                             
+
+                         
+		            </div>
+		        </div>
+		    </div>
+        </div>
+    </section>
+
+
+
+<!-- jequery plugins -->
+<script src="{% static 'classes/js/jquery.js' %}"></script>
+<script src="{% static 'classes/js/popper.min.js' %}"></script>
+<script src="{% static 'classes/js/bootstrap.min.js' %}"></script>
+
+<script src="{% static 'classes/js/owl.js' %}"></script>
+<script src="{% static 'classes/js/wow.js' %}"></script>
+<script src="{% static 'classes/js/validation.js' %}"></script>
+<script src="{% static 'classes/js/jquery.fancybox.js' %}"></script>
+<script src="{% static 'classes/js/appear.js' %}"></script>
+<script src="{% static 'classes/js/aos.js' %}"></script>
+<script src="{% static 'classes/js/jquery.mCustomScrollbar.concat.min.js' %}"></script>
+<script src="{% static 'classes/js/jquery.paroller.min.js' %}"></script>
+<script src="{% static 'classes/js/jquery.datetimepicker.full.min.js' %}"></script>
+<!-- main-js -->
+<script src="{% static 'classes/js/script.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+
+ 
+
+</body><!-- End of .page_wrapper -->
+
+</html>

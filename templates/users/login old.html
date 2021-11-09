@@ -1,0 +1,67 @@
+{% extends 'users/base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Login{% endblock %}
+{% block nav_color %}rgb(0, 79, 158){% endblock %}
+{% block nav_font_color %}navbar-dark{% endblock %}
+{% block header-to-add-style %}<script src="https://kit.fontawesome.com/125d2443b9.js"></script>{% endblock %}
+{% load static %}
+    {% block nav_block %}
+        <li class="nav-item  {% block logein_active %}{% endblock %}">
+            <a class="nav-link" href="{% url 'users:register' %}"> <span><i class="fas fa-user-plus"></i></span> sign up</a>
+        </li>
+    {% endblock %}
+
+{% block body %}
+
+    <div class="content-section">
+        <form method="post"  enctype="multipart/form-data">
+            {% csrf_token %}
+            <fieldset class="form-group" >
+                <legend class="border-bottom mb-4">
+                    Log In
+                </legend>
+                {{ form|crispy }}
+                <div>
+                    <a href="{% url 'password_reset' %}">Forgot your password?</a>
+                </div>
+            </fieldset>
+
+
+            <div class="form-group">
+                <button class="btn btn-outline-info" type="submit">
+                    Login
+                </button>
+            </div>
+        </form>
+        <div class="border-top pt-3">
+            <small class="text-muted">
+                Don't Have An Account? <a class="ml-2" href="{% url 'users:register' %}">Sign Up</a>
+            </small>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,57 @@
+{% extends 'template/base.html' %}
+{% block title %}AI Proctor{% endblock %}
+{% block home_active %}active{% endblock %}
+{% block nav_color %}#12b3bd;{% endblock %}
+{% block nav_font_color %}navbar-dark{% endblock %}
+{% load static %}
+{% block body %}
+    <div class="container py-3">
+        <div class="content-section">
+            {% if messages %}
+            <div class="alert alert-danger mt-6">
+                <h5 class="alert-heading">{{ messages }}</h5>
+            </div>
+
+            {% else %}
+            <legend class="border-bottom mb-4">
+                {% if is_teacher %}
+                    List of Created Classes
+                {% else %}
+                    List of Admitted Classes {% endif %}
+            </legend>
+
+            <div class="container">
+
+                <br />
+                <br />
+                <br />
+
+                <ul class="list-group list-group-flush">
+                    {% for class in ordered_classes_list %}
+                    <div class="row">
+                        {% for cl in class %}
+                            <div class="col-sm">
+                                <form method="post" enctype="multipart/form-data" action="{% url 'classes:show_events'%}">
+                                    {% csrf_token %}
+                                    <div class="form-group d-inline">
+                                        <input type="hidden" name="class_id" id="class_id" value="{{ cl.id }}"/>
+                                    </div>
+                                    <button type="submit" class="btn btn-info btn-block py-4" style="margin-bottom: 4px; white-space: normal;">
+                                        {{ cl.class_name }}
+                                    </button>
+                                </form>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+
+
+
+
+{% endblock %}

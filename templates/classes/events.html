@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<link rel="shortcut icon" href="{% static 'fav_icon.png' %}">
+
+<title>AI Proctor</title>
+
+<!-- Stylesheets -->
+<link href="{% static 'classes/css/style.css' %}" rel="stylesheet">
+<link href="{% static 'classes/css/responsive.css' %}" rel="stylesheet">
+{#<link rel="icon" href="#" type="image/x-icon">#}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+    <style>
+        #exam_duration {
+            width: 100px;
+            height: 42px;
+            line-height: 1.65;
+            float: left;
+            display: block;
+            padding: 0;
+            margin: 0;
+            padding-left: 20px;
+            border: 1px solid #b8bbbb;
+        }
+    </style>
+
+
+</head>
+
+<!-- page wrapper -->
+<body class="boxed_wrapper">
+ 
+    <!-- main header -->
+    <header class="main-header">
+
+        <!-- Header upper -->
+        <div class="header-upper">
+            <div class="container">
+                <div class="outer-box clearfix">
+                    <div class="float-left">
+                        <figure class="logo-box"><a href="{% url 'home:home' %}"><img src="{% static 'classes/images/logo.png' %}" alt="" title=""></a></figure>
+                    </div>
+                    <div class="float-right upper-right clearfix">
+                        <div class="nav-outer clearfix">
+                            <nav class="main-menu navbar-expand-lg">
+                                <div class="navbar-header">
+                                    <!-- Toggle Button -->      
+                                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    </button>
+                                </div>
+                                <div class="navbar-collapse collapse clearfix" id="navbarSupportedContent">
+                                    <ul class="navigation clearfix">
+                                        <li><a href="{% url 'home:home' %}">Home</a></li>
+                                        <li><a href="{% url 'download:home' %}">Download</a></li>
+                                        {% if user.is_authenticated %}
+                                            <li class="current"><a href="{% url 'classes:classes' %}">Classes</a></li>
+                                            <li><a href="{% url 'dashboard:dashboard' %}">Account</a></li>
+                                            <li class="log-btns"><a href="{% url 'users:logout' %}">Logout</a></li>
+                                        {% else %}
+                                            <li class="log-btns"><a href="{% url 'users:login' %}">Login</a></li>
+                                            <li class="log-btns"><a href="{% url 'users:register' %}">Sign Up</a></li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                            </nav><!-- Main Menu End-->   
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--End Header Upper-->
+
+        <!--Sticky Header-->
+        <div class="sticky-header">
+            <div class="container">
+                <div class="clearfix">
+                    <!--Logo-->
+                    <div class="logo float-left">
+                        <a href="{% url 'home:home' %}" class="img-responsive"><img src="{% static 'classes/images/logo.png' %}" alt="" title=""></a>
+                    </div>
+                    
+                    <!--Right Col-->
+                    <div class="right-col float-right">
+                        <!-- Main Menu -->
+                        <nav class="main-menu navbar-expand-lg">
+                            <div class="navbar-collapse collapse clearfix">
+                                <ul class="navigation clearfix">
+                                    <li><a href="{% url 'home:home' %}">Home</a></li>
+                                    <li><a href="{% url 'download:home' %}">Download</a></li>
+                                    {% if user.is_authenticated %}
+                                        <li class="current"><a href="{% url 'classes:classes' %}">Classes</a></li>
+                                        <li><a href="{% url 'dashboard:dashboard' %}">Account</a></li>
+                                        <li class="log-btns"><a href="{% url 'users:logout' %}">Logout</a></li>
+                                    {% else %}
+                                        <li class="log-btns"><a href="{% url 'users:login' %}">Login</a></li>
+                                        <li class="log-btns"><a href="{% url 'users:register' %}">Sign Up</a></li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </nav><!-- Main Menu End-->
+                    </div>
+                </div>
+                    
+                
+            </div>
+        </div>
+        <!--End Sticky Header-->
+    </header>
+
+    <!--Form Back Drop-->
+    <div class="form-back-drop"></div>
+ 
+	 <!-- page-title -->
+    <section class="page-title centred inner-head" style="background-image: url({% static 'classes/images/classes-bg.jpg' %})">
+        <div class="container">
+            <div class="content-box">
+                <h1>{{ class_name }} Class</h1>
+            </div>
+        </div>
+    </section>
+    <!-- page-title end -->
+	
+	<section class="classes-head">
+        <div class="container">
+			<div class="row justify-content-between">
+			    <div class="col-lg-12 class-tab">
+			        <div class="class-tab-wrap">
+			            <div class="row justify-content-between">
+			                <div class="col-lg-8">
+			                    <ul class="nav nav-pills" id="pills-tab" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link active" id="pills-events-tab" data-toggle="pill" href="#pills-events" role="tab" aria-controls="pills-events" aria-selected="true">Events</a>
+                                    </li>
+                                    {% if allow_add_student%}
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link" id="pills-student-list-tab" data-toggle="pill" href="#pills-student-list" role="tab" aria-controls="pills-student-list" aria-selected="false">Students list</a>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+			                </div>
+                            {% if allow_add_student %}
+                                <div class="col-lg-2">
+                                    <button type="button" id="modify-class" class="btn  btn-rounded float-right" data-toggle="modal" data-target="#renamecls">Rename Class</button>
+                                </div>
+                            {% endif %}
+                            {% if invitation_needed %}
+                                <div class="col-lg-2">
+                                    <button type="button" id="modify-class" class="btn  btn-rounded float-right" data-toggle="modal" data-target="#renamecls">Rename Class</button>
+                                </div>
+                            {% endif %}
+
+			                <div class="col-lg-2">
+			                    <button type="button" class="btn de-class btn-rounded float-right" data-toggle="modal" data-target="#removecls">Delete Class</button>
+			                </div>
+			            </div>
+			        </div>
+                    <div class="tab-content" id="pills-tabContent">
+                        <div class="tab-pane fade show active" id="pills-events" role="tabpanel" aria-labelledby="pills-events-tab">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="class-list-wrape">
+                                        {% if have_students_limit %}
+                                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                <strong>Note:</strong> You Have '{{ proctoring_hours }}' proctoring hours, and you can only invite '{{ students_limit }}' students to the new created event.
+                                                 
+                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                        {% endif %}
+
+
+                                        {% if failed_message %}
+                                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                {{ failed_message_content }}
+                                                {% if list_failed_added %}
+                                                    <br>
+                                                    {% for stu in list_failed_added %}
+                                                        {{ stu }}
+                                                        <br>
+                                                    {% endfor %}
+                                                {% endif %}
+                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                        {% endif %}
+
+                                        {% if exist_message %}
+                                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                                {{ exist_message_content }}
+                                                {% if list_exist_students %}
+                                                    <br>
+                                                    {% for stu in list_exist_students %}
+                                                        {{ stu }}
+                                                        <br>
+                                                    {% endfor %}
+                                                {% endif %}
+                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                        {% endif %}
+
+                                        {% if success_message %}
+                                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                                {{ success_message_content }}
+                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                        {% endif %}
+ 
+
+
+
+                                        <h5><strong class="primary-clr">{{ class_name }}</strong> Class List of Events:</h5>
+                                        {% if have_students %}
+                                            <button type="button" class="btn-style-five" data-toggle="modal" data-target="#addEvent">Add New Event</button>
+                                        {% endif %}
+                                        {% if invitation_needed %}
+                                            <button type="button" class="btn-style-five" data-toggle="modal" data-target="#addEvent">Add New Event</button>
+                                        {% endif %}
+
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                {% for class in ordered_events_list %}
+                                    <div class="col-lg-4 col-md-6 col-12">
+                                        <form method="post" enctype="multipart/form-data" action="{% url 'classes:show_single_events'%}">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="event_id" id="event_id" value="{{ class.id }}">
+                                            <input type="hidden" name="class_id" id="class_id" value="{{ class_id }}">
+                                            <a href="#"  onclick='this.parentNode.submit(); return false;'>
+                                                 <div class="new-class-add">
+                                                     <h5>{{ class.event_name }}</h5>
+                                                 </div>
+                                            </a>
+                                        </form>
+
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+                        </div>
+                        <div class="tab-pane fade student-list" id="pills-student-list" role="tabpanel" aria-labelledby="pills-student-list-tab">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <ul class="list-inline">
+                                        <li class="list-inline-item">
+                                            <button type="button" class="btn-style-five my-2" data-toggle="modal" data-target="#addStudent">Add Single Student</button>
+                                        </li>
+                                        <li class="list-inline-item">
+                                            <button type="button" class="btn-style-five my-2" data-toggle="modal" data-target="#stdExcel">Add Students From Excel File</button><br>
+                                            <a class="btn btn-outline-info" href="{% url 'classes:download_template'%}" data-toggle="tooltip" data-placement="top" title="Download Template">Use This Template <i class="fas fa-download"></i> </a>
+                                        </li>
+                                        <li class="list-inline-item">
+                                            <button type="button" class="btn-style-five my-2" data-toggle="modal" data-target="#stdExcelreplace">Replace All Students Using Excel File</button><br>
+                                            <a class="btn btn-outline-info" href="{% url 'classes:download_template'%}" data-toggle="tooltip" data-placement="top" title="Download Template">Use This Template <i class="fas fa-download"></i> </a>
+                                        </li>
+                                        <li class="list-inline-item">
+                                            <button type="button" class="btn-danger my-2" data-toggle="modal" data-target="#removeStd">Remove All Students</button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <form role="form" action="{% url 'classes:download_students_list'%}" method="post" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        <div class="form-group d-inline">
+                                            <input type="hidden" name="class_id" id="class_id" value="{{ class_id }}">
+                                        </div> 
+                                        <div class="col-lg-12 col-md-12 col-sm-12 wow slideInUp" data-wow-delay="100ms" data-wow-duration="1500ms"> 
+                                            <button type="submit" class="btn btn-outline-success" >Download List of All Students</button>
+                                        </div> 
+                                    </form> 
+                                </div>
+                            </div>
+
+                            <!-- <div class="row sl-info">
+                                {% for eve in full_stud_info %}
+                                    <div class="col-lg-4">
+                                        <div class="student-info">
+                                            <button type="button" class="close" aria-label="Close" onclick="removeStudent({{ eve.3 }}, {{ class_id }})"><span aria-hidden="true">&times;</span></button>
+                                            <div class="media">
+                                                <img src="{{ eve.2 }}" class="mr-3" alt="...">
+                                                <div class="media-body">
+                                                    <h5 class="mt-0">{{ eve.0 }}</h5>
+                                                    {{ eve.1 }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div> -->
+                            <div class="row sl-info">
+                                {% for eve in full_stud_info %}
+                                    <div class="col-lg-6">
+                                        <div class="student-info">
+                                            <button type="button" class="close" aria-label="Close" onclick="removeStudent({{ eve.3 }}, {{ class_id }})"><span aria-hidden="true">&times;</span></button>
+
+                                            <div class="row">
+                                                <div class="col-lg-4 col- col-md-5 col-sm-12">
+                                                    <img src="{{ eve.2 }}" class="img-fluid mr-3" alt="...">
+                                                </div>
+                                                <div class="col-lg-8 col-md-6 col-sm-12">
+                                                    <div class="media-body">
+                                                        <h5 class="mt-0">{{ eve.0 }}</h5>
+                                                        {{ eve.1 }}
+                                                    </div> 
+                                                </div>
+                                            </div> 
+                                        </div> 
+                                    </div>
+                                     
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+			</div>
+        </div>
+    </section>
+	
+	
+    <!-- add class modal -->
+    <div class="modal fade" id="addEvent" tabindex="-1" aria-labelledby="addEventLabel" aria-hidden="true">
+        <div class="modal-lg modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addEventLabel">Add New Event</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="inner-content">
+                        <div class="contact-form-area">
+                            <div class="login-form add-event-form">
+                                <form role="form" action="{% url 'classes:add_event'%}" method="post" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="form-group d-inline">
+                                        <input type="hidden" name="class_id" id="class_id" value="{{ class_id }}">
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 form-group has-icon">
+                                            <input type="text" name="event_name" placeholder="Event Name" required>
+                                            <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top" title="Input the event name"></i>
+                                        </div>
+                                        <div class="col-lg-12 col-md-12 col-sm-12 form-group has-icon">
+                                            <input type="text" name="event_info" placeholder="Event info" required>
+                                            <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top" title="Input event info"></i>
+                                        </div>
+                                        <div class="col-lg-12 col-md-12 col-sm-12 form-group has-icon">
+                                            <input type="text" name="event_url" placeholder="Event URL" required>
+                                            <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top" title="Input event URL"></i>
+                                        </div>
+                                        <div class="col-lg-12 col-md-12 col-sm-12 form-group has-icon">
+                                            <input type="text" name="social" placeholder="Invitation URL (optional)">
+                                            <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top" title="Input social invitation URL"></i>
+                                        </div>
+                                        <div class="col-lg-12 form-group">
+                                            Event Type 
+                                            <div class="form-check">
+                                              <input class="form-check-input" type="radio" name="is_exam" id="exampleRadios1" value="yes" checked>
+                                              <label class="form-check-label" for="exampleRadios1">
+                                                Exam
+                                              </label>
+                                            </div>
+                                            <div class="form-check">
+                                              <input class="form-check-input" type="radio" name="is_exam" id="exampleRadios2" value="no" >
+                                              <label class="form-check-label" for="exampleRadios2">
+                                                Lecture
+                                              </label>
+                                            </div>	
+                                        </div>
+                                        <div class="col-lg-12">
+                                            <h6>Event schedule:</h6>
+                                            <div class="row">
+                                                <div class="form-group col-lg-6">
+                                                    <label for="picker1">From <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top" title="Select start event date"></i></label>
+                                                    <input type="text" id="picker1" class="form-control" name="picker1" autocomplete="off" required/>
+                                                </div>
+                                                <div class="form-group col-lg-6">
+                                                   <label for="picker2">To <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top" title="Select end event date"></i></label>
+                                                   <input type="text" id="picker2" class="form-control" name="picker2" autocomplete="off" required/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-lg-12 col-md-12 col-sm-12 form-group has-icon">
+                                            <div class="row mx-2">
+                                                <label class="form-check-label" for="exam_duration" id="exam_duration_label">
+                                                    Event Duration (can not be more than 0 min).
+                                                </label>
+                                            </div>
+
+                                            <input type="number"   name="exam_duration" id="exam_duration"  min="0" max="0" value="0">
+
+                                            <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top" title="Input event duration if the exam is a portion od the 'Event schedule' time."></i>
+                                        </div>
+
+                                        <div class="col-lg-12">
+                                            <h6>Microphone useage:</h6>
+                                            <div class="row">
+                                                <div class="col-lg-6 form-group">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="microphone" id="microphone1" value="0" checked>
+                                                        <label class="form-check-label" for="microphone1">
+                                                            Use microphone.
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="microphone" id="microphone2" value="1"  >
+                                                        <label class="form-check-label" for="microphone2">
+                                                            Don't use microphone.
+                                                        </label>
+                                                    </div> 
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="col-lg-12">
+                                            <h6>Face Recognation:</h6>
+                                            <div class="row">
+                                                <div class="col-lg-6 form-group">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="face_rec" id="face_rec1" value="0" checked>
+                                                        <label class="form-check-label" for="face_rec1">
+                                                            Use Face Recognation
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="face_rec" id="face_rec2" value="1"  >
+                                                        <label class="form-check-label" for="face_rec2">
+                                                            Don't use Face Recognation
+                                                        </label>
+                                                    </div>
+                                                     
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+
+                                        <div class="col-lg-12">
+                                            <h6>Record type:</h6>
+                                            <div class="row">
+                                                <div class="col-lg-6 form-group">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="recording_type" id="recording_type1" value="0" checked>
+                                                        <label class="form-check-label" for="recording_type1">
+                                                            No record
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="recording_type" id="recording_type2" value="1"  >
+                                                        <label class="form-check-label" for="recording_type2">
+                                                            Record only last 5 Min.
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="recording_type" id="recording_type3" value="2"  >
+                                                        <label class="form-check-label" for="recording_type3">
+                                                            Full recording
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        
+                                        <div class="col-lg-12">
+                                            <h6>Answer Tools:</h6>
+                                            <div class="row">
+                                                <div class="col-lg-6 form-group my-0">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" value="True" id="word_file" name="word_file">
+                                                        <label class="form-check-label" for="word_file">
+                                                            Word File.
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-6 form-group my-0">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" value="True" id="excel_file" name="excel_file">
+                                                        <label class="form-check-label" for="excel_file">
+                                                            Excel File.
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-6 form-group  ">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" value="True" id="scanning" name="scanning">
+                                                        <label class="form-check-label" for="scanning">
+                                                            Document Scanning.
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        
+
+                                        <div class="col-lg-12 col-md-12 col-sm-12 form-group has-icon">
+                                           <textarea class="form-control" rows="3" name="allowed_programs" placeholder="Allowed Programs"></textarea>
+                                            <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top" title="Input allowed programs"></i>
+                                        </div>
+                                        <div class="col-lg-12 col-md-12 col-sm-12 form-group has-icon">
+                                            <textarea class="form-control" rows="3" name="allowed_pages"  placeholder="Allowed Websites"></textarea>
+                                            <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top" title="Input allowed websites"></i>
+                                        </div>
+                                        <div class="col-lg-6 col-md-12 col-sm-12 wow slideInUp" data-wow-delay="100ms" data-wow-duration="1500ms">
+                                            <button type="submit" class="btn-style-five">Add</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+	
+    <!-- add student modal -->
+    <div class="modal fade" id="addStudent" tabindex="-1" aria-labelledby="addStudentLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addStudentLabel">Add Single Student</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="inner-content">
+                        <div class="contact-form-area">
+                            <div class="login-form">
+                                <form role="form" action="{% url 'classes:add_single_student'%}" method="post" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="form-group d-inline">
+                                        <input type="hidden" name="class_id" id="class_id" value="{{ class_id }}">
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                                            <label for="student_email" class="col-form-label">Student Email:</label>
+                                            <input type="email" id="student_email" name="student_email" required>
+                                        </div>
+                                        <div class="col-lg-6 col-md-12 col-sm-12 wow slideInUp" data-wow-delay="100ms" data-wow-duration="1500ms">
+                                            <button type="submit" class="btn-style-five">Add</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- add student excel modal -->
+    <div class="modal fade" id="stdExcel" tabindex="-1" aria-labelledby="stdExcelLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="stdExcelLabel">Add Students From Excel File</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="inner-content">
+                        <div class="contact-form-area">
+                            <div class="login-form">
+                                <form role="form" action="{% url 'classes:add_students'%}" method="post" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="form-group d-inline">
+                                        <input type="hidden" name="class_id" id="class_id" value="{{ class_id }}">
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                                            <label for="chooseFile" class="col-form-label">Select The Students' Excel Sheet:</label>
+                                            <div class="file-upload">
+                                                <div class="file-select">
+                                                    <div class="file-select-button" id="fileName">Choose File</div>
+                                                    <div class="file-select-name" id="noFile">No file chosen...</div>
+                                                    <input type="file" name="exam_document" id="chooseFile" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-12 col-sm-12 wow slideInUp" data-wow-delay="100ms" data-wow-duration="1500ms">
+                                            <button type="submit" class="btn-style-five">Upload</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- add student excel replace modal -->
+    <div class="modal fade" id="stdExcelreplace" tabindex="-1" aria-labelledby="stdExcelreplaceLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="stdExcelreplaceLabel">Replace All Students Using Excel File</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="inner-content">
+                        <div class="contact-form-area">
+                            <div class="login-form">
+                                <form role="form" action="{% url 'classes:replace_students'%}" method="post" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="form-group d-inline">
+                                        <input type="hidden" name="class_id" id="class_id" value="{{ class_id }}">
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                                            <label for="chooseFile1" class="col-form-label">Select The Students' Excel Sheet to Replace With:</label>
+                                            <div class="file-upload">
+                                                <div class="file-select">
+                                                    <div class="file-select-button" id="fileName1">Choose File</div>
+                                                    <div class="file-select-name" id="noFile1">No file chosen...</div>
+                                                    <input type="file" name="exam_document" id="chooseFile1" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-12 col-sm-12">
+                                            <button type="submit" class="btn-style-five">Upload</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- remove all std modal -->
+    <form role="form" action="{% url 'classes:delete_students'%}" method="post">
+        {% csrf_token %}
+
+        <input type="hidden" name="subject" id="subject" value="{{ class_name }}">
+        <input type="hidden" name="class_id" id="class_id" value="{{ class_id }}">
+
+
+        <div class="modal fade" id="removeStd" tabindex="-1" aria-labelledby="removeStdLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="removeStdLabel">Delete Class</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="inner-content">
+                            <div class="contact-form-area">
+                                <p>Are you sure you want to remove all students in "Math" class? This is an irreversible action</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-rounded" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn de-class">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </form>
+
+
+    <!-- remove all std modal -->
+    <form   role="form" action="{% url 'classes:rename_class'%}" method="post">
+        {% csrf_token %}
+
+        <input type="hidden" name="subject" id="subject" value="{{ class_name }}">
+        <input type="hidden" name="class_id" id="class_id" value="{{ class_id }}">
+
+
+        <div class="modal fade" id="renamecls" tabindex="-1" aria-labelledby="renameclsLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="renameclsLabel">Delete Class</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="inner-content">
+                            <div class="contact-form-area">
+                                <div class="login-form add-event-form modify-event">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                                         <label for="new_class_name_input">New Class Name</label>
+                                        <input type="text" id="new_class_name_input" name="new_class_name" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-rounded" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn de-class">Rename</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+
+
+    <!-- remove all std modal -->
+    <form   role="form" action="{% url 'classes:delete_class'%}" method="post">
+        {% csrf_token %}
+
+        <input type="hidden" name="subject" id="subject" value="{{ class_name }}">
+        <input type="hidden" name="class_id" id="class_id" value="{{ class_id }}">
+
+
+        <div class="modal fade" id="removecls" tabindex="-1" aria-labelledby="removeclsLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="removeclsLabel">Delete Class</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="inner-content">
+                            <div class="contact-form-area">
+                                <p>Are you sure you want to delete "{{ class_name }}" class? This is an irreversible action</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-rounded" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn de-class">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+
+
+    <!-- remove student modal -->
+    <form class="form-horizontal" role="form" action="{% url 'classes:remove_student'%}" method="post">
+        {% csrf_token %}
+
+        <input type="hidden" name="student_id" id="student_id">
+        <input type="hidden" name="class_id" id="student_remove_class_id">
+
+
+        <button id="remove_student_button" type="button" class="close " aria-label="Close" data-toggle="modal"
+            data-target="#remove-student"></button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="remove-student" tabindex="-1" aria-labelledby="removestdLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="removestdLabel">Remove Student</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="inner-content">
+                            <div class="contact-form-area">
+                                <p>Are you sure you want to remove this student? you can reinsert him/her later.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-rounded" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn de-class">Remove</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+
+
+
+
+
+
+    <!-- jequery plugins -->
+    <script src="{% static 'classes/js/jquery.js' %}"></script> 
+
+    <script src="{% static 'classes/js/owl.js' %}"></script>
+    <script src="{% static 'classes/js/wow.js' %}"></script>
+    <script src="{% static 'classes/js/validation.js' %}"></script>
+    <script src="{% static 'classes/js/jquery.fancybox.js' %}"></script>
+    <script src="{% static 'classes/js/appear.js' %}"></script>
+    <script src="{% static 'classes/js/aos.js' %}"></script>
+    <script src="{% static 'classes/js/jquery.mCustomScrollbar.concat.min.js' %}"></script>
+    <script src="{% static 'classes/js/jquery.paroller.min.js' %}"></script>
+    <script src="{% static 'classes/js/jquery.datetimepicker.full.min.js' %}"></script>
+    <script src="{% static 'classes/js/script.js' %}"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip()
+            })
+    </script>
+
+
+    <script>
+        $(document).ready(function(){
+            $("#picker1").datetimepicker({
+                timepicker: true,
+                datepicker: true,
+                format: "Y-m-d H:i",
+                step: 15,
+                onShow: function (ct) {
+                    this.setOptions({
+                        maxDate: $("#picker2").val()
+                            ? $("#picker2").val()
+                            : false,
+                    });
+                },
+            });
+            $("#picker2").datetimepicker({
+                timepicker: true,
+                datepicker: true,
+                format: "Y-m-d H:i",
+                step: 15,
+                onShow: function (ct) {
+                    this.setOptions({
+                        minDate: $("#picker1").val()
+                            ? $("#picker1").val()
+                            : false,
+                    });
+                },
+            });
+        });
+    </script>
+
+    <script>
+
+        let startEventTime = 0;
+        let endEventTime = 0;
+        let eventTimeDuration = 0;
+        let startTimer = document.getElementById("picker1");
+        startTimer.addEventListener('focusout',
+            function () {
+                console.log(startTimer.value);
+                let stringsFromAPI = startTimer.value;
+                if (!isNaN(Date.parse(stringsFromAPI))) {
+                    console.log(new Date(stringsFromAPI));
+                    startEventTime = new Date(stringsFromAPI);
+                    let timeEnd = document.getElementById("picker2").value;
+                    if (!isNaN(Date.parse(timeEnd))) {
+                        console.log(new Date(timeEnd));
+                        endEventTime = new Date(timeEnd);
+                        console.log((endEventTime - startEventTime) / 60000);
+                        eventTimeDuration = (endEventTime - startEventTime) / 60000;
+                        if (eventTimeDuration < 0){
+                            eventTimeDuration = 0;
+                        }
+                        let examDurationField = document.getElementById("exam_duration");
+                        let examDurationLabel = document.getElementById("exam_duration_label");
+                        let newMessage = "Event Duration (can not be more than " + eventTimeDuration.toString() + "  min)." ;
+                        console.log(newMessage);
+                        examDurationLabel.innerText = newMessage;
+                        examDurationField.max = eventTimeDuration;
+                        console.log(eventTimeDuration);
+                    }
+
+                }
+
+            }
+        );
+
+        let endTimer = document.getElementById("picker2");
+        endTimer.addEventListener('focusout',
+            function () {
+                console.log(endTimer.value);
+                let stringsFromAPI = endTimer.value;
+                if (!isNaN(Date.parse(stringsFromAPI))) {
+                    console.log(new Date(stringsFromAPI));
+                    endEventTime = new Date(stringsFromAPI);
+                    let startEnd = document.getElementById("picker1").value;
+                    if (!isNaN(Date.parse(startEnd))) {
+                        console.log(new Date(startEnd));
+                        startEventTime = new Date(startEnd);
+                        console.log((endEventTime - startEventTime) / 60000);
+                        eventTimeDuration = (endEventTime - startEventTime) / 60000;
+                        if (eventTimeDuration < 0){
+                            eventTimeDuration = 0;
+                        }
+                        let examDurationField = document.getElementById("exam_duration");
+                        let examDurationLabel = document.getElementById("exam_duration_label");
+                        let newMessage = "Event Duration (can not be more than " + eventTimeDuration.toString() + "  min)." ;
+                        console.log(newMessage);
+                        examDurationLabel.innerText = newMessage;
+                        examDurationField.max = eventTimeDuration;
+                        console.log(eventTimeDuration);
+                    }
+                }
+            }
+        );
+        let examDurationField = document.getElementById("exam_duration");
+        examDurationField.addEventListener('focusout',
+            function () {
+                  let examDuration = examDurationField.value;
+                  if(examDuration > eventTimeDuration)
+                  {
+                      examDurationField.value = eventTimeDuration;
+                  }
+            }
+        );
+
+        function removeStudent(e, a) {
+            console.log(e);
+            console.log(a);
+            document.getElementById('student_id').value = e;
+            document.getElementById('student_remove_class_id').value = a;
+            document.getElementById("remove_student_button").click(); // Click on the checkbox
+        }
+    </script>
+       
+
+</body><!-- End of .page_wrapper -->
+
+</html>

@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="shortcut icon" href="{% static 'fav_icon.png' %}">
+
+    <title>AI Proctor</title>
+
+    <!-- Stylesheets -->
+    <link href="{% static 'classes/css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'classes/css/responsive.css' %}" rel="stylesheet">
+    {#<link rel="icon" href="#" type="image/x-icon">#}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script>
+    <script src="{% static 'template/html2canvas.min.js' %}"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+
+</head>
+
+<!-- page wrapper -->
+<body class="boxed_wrapper">
+
+
+
+
+    <!-- main header -->
+    <header class="main-header">
+
+        <!-- Header upper -->
+        <div class="header-upper">
+            <div class="container">
+                <div class="outer-box clearfix">
+                    <div class="float-left">
+                        <figure class="logo-box"><a href="{% url 'home:home' %}"><img src="{% static 'classes/images/logo.png' %}" alt="" title=""></a></figure>
+                    </div>
+                    <div class="float-right upper-right clearfix">
+                        <div class="nav-outer clearfix">
+                            <nav class="main-menu navbar-expand-lg">
+                                <div class="navbar-header">
+                                    <!-- Toggle Button -->      
+                                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    </button>
+                                </div>
+                                <div class="navbar-collapse collapse clearfix" id="navbarSupportedContent">
+                                    <ul class="navigation clearfix">
+                                        <li><a href="{% url 'home:home' %}">Home</a></li>
+                                        <li><a href="{% url 'download:home' %}">Download</a></li>
+                                        {% if user.is_authenticated %}
+                                            <li class="current"><a href="{% url 'classes:classes' %}">Classes</a></li>
+                                            <li><a href="{% url 'dashboard:dashboard' %}">Account</a></li>
+                                            <li class="log-btns"><a href="{% url 'users:logout' %}">Logout</a></li>
+                                        {% else %}
+                                            <li class="log-btns"><a href="{% url 'users:login' %}">Login</a></li>
+                                            <li class="log-btns"><a href="{% url 'users:register' %}">Sign Up</a></li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                            </nav><!-- Main Menu End-->            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--End Header Upper-->
+
+        <!--Sticky Header-->
+        <div class="sticky-header">
+            <div class="container">
+                <div class="clearfix">
+                    <!--Logo-->
+                    <div class="logo float-left">
+                        <a href="{% url 'home:home' %}" class="img-responsive"><img src="{% static 'classes/images/logo.png' %}" alt="" title=""></a>
+                    </div>
+                    
+                    <!--Right Col-->
+                    <div class="right-col float-right">
+                        <!-- Main Menu -->
+                        <nav class="main-menu navbar-expand-lg">
+                            <div class="navbar-collapse collapse clearfix">
+                            	<ul class="navigation clearfix">
+                            	    <li><a href="{% url 'home:home' %}">Home</a></li>
+                                        <li><a href="{% url 'download:home' %}">Download</a></li>
+                                        {% if user.is_authenticated %}
+                                            <li class="current"><a href="{% url 'classes:classes' %}">Classes</a></li>
+                                            <li><a href="{% url 'dashboard:dashboard' %}">Account</a></li>
+                                            <li class="log-btns"><a href="{% url 'users:logout' %}">Logout</a></li>
+                                        {% else %}
+                                            <li class="log-btns"><a href="{% url 'users:login' %}">Login</a></li>
+                                            <li class="log-btns"><a href="{% url 'users:register' %}">Sign Up</a></li>
+                                        {% endif %}
+                            	</ul>
+                            </div>
+                        </nav><!-- Main Menu End-->
+                    </div>
+                </div>
+                    
+                
+            </div>
+        </div>
+        <!--End Sticky Header-->
+    </header>
+
+    <!--Form Back Drop-->
+    <div class="form-back-drop"></div>
+ 
+	 <!-- page-title -->
+    <section class="page-title centred inner-head event-head" style="background-image: url({% static 'classes/images/login-head-bg.jpg' %})">
+        <div class="container">
+            <div class="content-box">
+                <h1>Report</h1>
+            </div>
+        </div>
+    </section>
+    <!-- page-title end -->
+
+    <section class="classes-head">
+        <div class="container">
+			<div class="row justify-content-between">
+			    <div class="col-lg-12 class-tab">
+                    <div class="class-tab-wrap">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-6 text-md-left">
+                                <form method="post" enctype="multipart/form-data" action="{% url 'classes:show_single_events'%}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="event_id" id="event_id" value="{{ event_id }}">
+                                    <input type="hidden" name="class_id" id="class_id" value="{{ class_id }}">
+                                    <a href="#"  onclick='this.parentNode.submit(); return false;'>
+            
+                                            <h5><i class="fas fa-angle-double-left"></i> Back to event</h5>
+            
+                                    </a>
+                                </form>
+            
+                            </div>
+                        </div>
+                        <div class="row">
+                            
+
+                            <div>
+                                <form class="form-horizontal" role="form" action="{% url 'classes:download_full_reports'%}" method="post">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <input type="hidden" name="class_id" id="class_id" value="{{ class_id }}">
+                                        <input type="hidden" name="event_id" id="event_id" value="{{ event_id }}">
+                                    </div>
+                                    <div class="form-group ">
+                                        <!-- <button type="submit"  class="btn  btn-lg alert-danger "data-toggle="modal"  data-target="#exampleModal">Delete Class</button> -->
+
+                                        <div class=" fm mt-3 mx-3">
+                                            <button type="submit" class="btn-style-five" >
+                                                Download All
+                                            </button>
+
+                                        </div>
+
+                                    </div>
+                                </form>
+                            </div>
+                            <div>
+                                <form class="form-horizontal" role="form" action="{% url 'classes:download_only_report'%}" method="post">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <input type="hidden" name="class_id" id="class_id" value="{{ class_id }}">
+                                        <input type="hidden" name="event_id" id="event_id" value="{{ event_id }}">
+                                    </div>
+                                    <div class="form-group ">
+                                        <!-- <button type="submit"  class="btn  btn-lg alert-danger "data-toggle="modal"  data-target="#exampleModal">Delete Class</button> -->
+
+                                        <div class=" fm mt-3 mx-3">
+                                            <button type="submit" class="btn-style-five" >
+                                                Download All Reports
+                                            </button>
+
+                                        </div>
+
+                                    </div>
+                                </form>
+                            </div>
+                            <div>
+                                <form class="form-horizontal" role="form" action="{% url 'classes:download_only_records'%}" method="post">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <input type="hidden" name="class_id" id="class_id" value="{{ class_id }}">
+                                        <input type="hidden" name="event_id" id="event_id" value="{{ event_id }}">
+                                    </div>
+                                    <div class="form-group ">
+                                        <!-- <button type="submit"  class="btn  btn-lg alert-danger "data-toggle="modal"  data-target="#exampleModal">Delete Class</button> -->
+
+                                        <div class=" fm mt-3 mx-3">
+                                            <button type="submit" class="btn-style-five" >
+                                                Download All Records
+                                            </button>
+
+                                        </div>
+
+                                    </div>
+                                </form>
+                            </div>
+                            <div class=" fm mt-3 mx-3">
+                                <button class="btn-style-five" onclick="download_selected()">
+                                    Download selected
+                                </button>
+
+                            </div>
+
+
+                        </div>
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                      <th class="text-center" scope="col">#</th>
+                                      <th class="text-center" scope="col">Select</th>
+                                      <th class="text-center" scope="col">Student name</th>
+                                      <th class="text-center" scope="col">number of cheat attempts</th>
+                                      <th class="text-center" scope="col">total cheat durations</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for eve in student_info_list %}
+                                    <tr>
+                                        <th  class="text-center" scope="row">{{ eve.4 }}</th>
+{#                                        <th  class="text-center" scope="row"><input id="student_{{ eve.4 }}" type="checkbox" value="{{ eve.0 }}"></th>#}
+                                        <th  class="text-center" scope="row">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="student_{{ eve.4 }}" id="1student_{{ eve.4 }}" value="1">
+                                                <label class="form-check-label" for="1student_{{ eve.4 }}">All</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="student_{{ eve.4 }}" id="2student_{{ eve.4 }}" value="2">
+                                                <label class="form-check-label" for="2student_{{ eve.4 }}">Reports</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="student_{{ eve.4 }}" id="3student_{{ eve.4 }}" value="3">
+                                                <label class="form-check-label" for="3student_{{ eve.4 }}">Records</label>
+                                            </div>
+                                        </th>
+                                        <td class="text-center"  >{{ eve.0 }}</td>
+                                        <td class="text-center">{{ eve.1 }}</td>
+                                        <td class="text-center">{{ eve.2 }}</td>
+
+                                        <td class="text-center">
+
+                                            <form class="form-horizontal" role="form" action="{% url 'classes:download_single_reports'%}" method="post">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="class_id" value="{{ class_id }}">
+                                                <input type="hidden" name="event_id"  value="{{ event_id }}">
+                                                <input type="hidden" name="student_name"  value="{{ eve.0 }}">
+                                                <button  class="btn btn-outline-info btn-sm" type="submit">
+                                                    Download
+                                                </button>
+
+                                            </form>
+
+                                        </td>
+
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                        <div >
+                            <form class="form-horizontal" role="form" action="{% url 'classes:download_selected'%}" method="post">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <input type="hidden" name="class_id"   value="{{ class_id }}">
+                                    <input type="hidden" name="event_id"   value="{{ event_id }}">
+                                    <input type="hidden" name="student_list" id="student_list"  >
+                                </div>
+                                <div class="form-group ">
+                                    <!-- <button type="submit"  class="btn  btn-lg alert-danger "data-toggle="modal"  data-target="#exampleModal">Delete Class</button> -->
+
+                                    <div class=" fm mt-3 mx-3">
+                                        <button type="submit" id="submit_form" class="btn-style-five" style="display: none" >
+                                            Download Reports
+                                        </button>
+
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+	
+
+
+<!-- jequery plugins -->
+<script src="{% static 'classes/js/jquery.js' %}"></script>
+<script src="{% static 'classes/js/popper.min.js' %}"></script>
+<script src="{% static 'classes/js/bootstrap.min.js' %}"></script>
+
+<script src="{% static 'classes/js/owl.js' %}"></script>
+<script src="{% static 'classes/js/wow.js' %}"></script>
+<script src="{% static 'classes/js/validation.js' %}"></script>
+<script src="{% static 'classes/js/jquery.fancybox.js' %}"></script>
+<script src="{% static 'classes/js/appear.js' %}"></script>
+<script src="{% static 'classes/js/aos.js' %}"></script>
+<script src="{% static 'classes/js/jquery.mCustomScrollbar.concat.min.js' %}"></script>
+<script src="{% static 'classes/js/jquery.paroller.min.js' %}"></script>
+<script src="{% static 'classes/js/jquery.datetimepicker.full.min.js' %}"></script>
+<!-- main-js -->
+<script src="{% static 'classes/js/script.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+
+
+<script>
+
+
+    function download_selected() {
+        let student_list = [];
+        let radios;
+        {#let check_box;#}
+        {% for eve in student_info_list %}
+            {#check_box = document.getElementById("student_{{ eve.4 }}");#}
+            radios = document.getElementsByName("student_{{ eve.4 }}");
+            for (let i = 0; i < radios.length; i++) {
+                if (radios[i].checked) {
+                    student_list.push("{{ eve.0 }}" + ":#:" + radios[i].value);
+                    break;
+                }
+            }
+        {% endfor %}
+        let st_li_ele = document.getElementById("student_list");
+        let submit_ele = document.getElementById("submit_form");
+        st_li_ele.value = student_list;
+        console.log("inside function");
+        submit_ele.click();
+    }
+
+    {#function download_selected() {#}
+    {#    let student_list = [];#}
+    {#    let check_box;#}
+    {#    {% for eve in student_info_list %}#}
+    {#        check_box = document.getElementById("student_{{ eve.4 }}");#}
+    {#        if (check_box.checked === true){#}
+    {#            student_list.push(check_box.value);#}
+    {#        }#}
+    {#    {% endfor %}#}
+    {#    let st_li_ele = document.getElementById("student_list");#}
+    {#    let submit_ele = document.getElementById("submit_form");#}
+    {#    st_li_ele.value = student_list;#}
+    {#    submit_ele.click();#}
+
+{#    #}
+{#        if (student_list.length>0){#}
+{#            let csrf_t = '{{csrf_token}}';#}
+{#            let stream_http = new XMLHttpRequest();#}
+{#            stream_http.open("POST", "{% url 'classes:download_selected'%}", true);#}
+{#            stream_http.setRequestHeader("X-CSRFToken", csrf_t);#}
+{#            stream_http.setRequestHeader("Content-Type", "application/json");#}
+{#            stream_http.onloadend = function (e) {#}
+{#                console.log(e);#}
+{#                console.log(stream_http);#}
+{#            };#}
+{#            stream_http.onerror = function (e) {#}
+{#                console.log(e);#}
+{#            };#}
+{#            stream_http.send(#}
+{#                JSON.stringify({#}
+{#                    class_id: "{{ class_id }}",#}
+{#                    event_code: "{{ event_id }}",#}
+{#                    student_list: student_list,#}
+{#                })#}
+{#            );#}
+{#        }#}
+{#        #}
+
+{# } #}
+
+</script>
+
+</body><!-- End of .page_wrapper -->
+
+</html>

@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% load static %}
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<link rel="shortcut icon" href="{% static 'fav_icon.png' %}">
+
+<title>AI Proctor</title>
+
+<!-- Stylesheets -->
+<link href="{% static 'classes/css/style.css' %}" rel="stylesheet">
+<link href="{% static 'classes/css/responsive.css' %}" rel="stylesheet">
+{#<link rel="icon" href="#" type="image/x-icon">#}
+    <style>
+        #exam_duration {
+            width: 100px;
+            height: 42px;
+            line-height: 1.65;
+            float: left;
+            display: block;
+            padding: 0;
+            margin: 0;
+            padding-left: 20px;
+            border: 1px solid #b8bbbb;
+        }
+    </style>
+</head>
+
+<!-- page wrapper -->
+<body class="boxed_wrapper">
+ 
+    <!-- main header -->
+    <header class="main-header">
+
+        <!-- Header upper -->
+        <div class="header-upper">
+            <div class="container">
+                <div class="outer-box clearfix">
+                    <div class="float-left">
+                        <figure class="logo-box"><a href="{% url 'home:home' %}"><img src="{% static 'classes/images/logo.png' %}" alt="" title=""></a></figure>
+                    </div>
+                    <div class="float-right upper-right clearfix">
+                        <div class="nav-outer clearfix">
+                            <nav class="main-menu navbar-expand-lg">
+                                <div class="navbar-header">
+                                    <!-- Toggle Button -->      
+                                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    </button>
+                                </div>
+                                <div class="navbar-collapse collapse clearfix" id="navbarSupportedContent">
+                                    <ul class="navigation clearfix">
+                                        <li><a href="{% url 'home:home' %}">Home</a></li>
+                                        <li><a href="{% url 'download:home' %}">Download</a></li>
+                                        {% if user.is_authenticated %}
+                                            <li class="current"><a href="{% url 'classes:classes' %}">Classes</a></li>
+                                            <li><a href="{% url 'dashboard:dashboard' %}">Account</a></li>
+                                            <li class="log-btns"><a href="{% url 'users:logout' %}">Logout</a></li>
+                                        {% else %}
+                                            <li class="log-btns"><a href="{% url 'users:login' %}">Login</a></li>
+                                            <li class="log-btns"><a href="{% url 'users:register' %}">Sign Up</a></li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                            </nav><!-- Main Menu End-->         
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--End Header Upper-->
+
+        <!--Sticky Header-->
+        <div class="sticky-header">
+            <div class="container">
+                <div class="clearfix">
+                    <!--Logo-->
+                    <div class="logo float-left">
+                        <a href="{% url 'home:home' %}" class="img-responsive"><img src="{% static 'classes/images/logo.png' %}" alt="" title=""></a>
+                    </div>
+                    
+                    <!--Right Col-->
+                    <div class="right-col float-right">
+                        <!-- Main Menu -->
+                        <nav class="main-menu navbar-expand-lg">
+                            <div class="navbar-collapse collapse clearfix">
+                                <ul class="navigation clearfix">
+                                    <li><a href="{% url 'home:home' %}">Home</a></li>
+                                    <li><a href="{% url 'download:home' %}">Download</a></li>
+                                    {% if user.is_authenticated %}
+                                        <li class="current"><a href="{% url 'classes:classes' %}">Classes</a></li>
+                                        <li><a href="{% url 'dashboard:dashboard' %}">Account</a></li>
+                                        <li class="log-btns"><a href="{% url 'users:logout' %}">Logout</a></li>
+                                    {% else %}
+                                        <li class="log-btns"><a href="{% url 'users:login' %}">Login</a></li>
+                                        <li class="log-btns"><a href="{% url 'users:register' %}">Sign Up</a></li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </nav><!-- Main Menu End-->
+                    </div>
+                </div>
+                    
+                
+            </div>
+        </div>
+        <!--End Sticky Header-->
+    </header>
+
+    <!--Form Back Drop-->
+    <div class="form-back-drop"></div>
+ 
+	 <!-- page-title -->
+    <section class="page-title centred inner-head" style="background-image: url({% static 'classes/images/login-head-bg.jpg' %})">
+        <div class="container">
+            <div class="content-box">
+                <h1>{{ event_name }}</h1>
+            </div>
+        </div>
+    </section>
+    <!-- page-title end -->
+	
+	 
+   <section class="contact-section">
+        <div class="container">
+            <div class="inner-content">
+				<div class="row">
+
+                    <div class="col-lg-6 col-md-6 col-6 text-md-left">
+                        <form method="post" enctype="multipart/form-data" action="{% url 'classes:show_events'%}" >
+                            {% csrf_token %}
+                            <div class="form-group d-inline">
+                                <input type="hidden" name="class_id" id="class_id" value="{{ class_id }}" />
+                            </div>
+                            <a href="#" onclick='this.parentNode.submit(); return false;'>
+                                <h5><i class="fas fa-angle-double-left"></i> Back to class</h5>
+                            </a>
+                        </form>
+                    </div>
+					<div class="col-lg-6 col-md-6 col-6 text-md-right">
+                		<a href="#editEvent" data-toggle="modal" class="btn-style-five pull-right">Modify the Event</a>
+                	</div>
+					<div class="col-lg-12 single-event-wrap">
+
+						<div class="contact-form-area">
+                            {% if have_students_limit %}
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <strong>Note:</strong> You Have '{{ proctoring_hours }}' proctoring hours, and you can only invite '{{ students_limit }}' students to the new created event.
+                                        
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            {% endif %}
+
+                            {% if failed_to_send_emial %}
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <strong>Error:</strong> Some thing wrong went while sending to these emails please recheck and try again.
+
+                                        {% for em in failed_emial %}
+                                            {{ em }}
+                                            <br>
+                                        {% endfor %}
+
+
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            {% endif %}
+                            {% if send_emial %}
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <strong>Note:</strong> Emails where sent to the emails listed in the execl file.
+
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            {% endif %}
+
+                            <h4>{{ event_name }}</h4>
+                            <br>
+                            {% if invitation_needed %}                                
+                                <h5>Use this code to invite participants: <strong><u>{{ event_code }}</u> </strong> </h5>
+                            {% endif %}
+                            <br>
+                            <p>{{ event_disc }}</p>
+                            <hr>
+                            <p>URL:<a href="{{ url }}">{{ url }}</a></p>
+                            <br>
+                            <p>Invitation URL:<a href="{{ social }}">{{ social }}</a></p>
+
+                            <hr>
+                            {% if is_exam %}
+                            <p>Event Type: Exam</p>
+                            {% else %}
+                            <p>Event Type: Lecture</p>
+                            {% endif %}
+                            <br>     
+                            <p>Monitor Option: {{ is_monitor_text }}</p>
+                            <br>     
+                            <p>Record type: {{ recording_type_text }}</p>
+                            <br>                   
+                            <p>Microphone useage: {{ microphone_check_text }}</p>
+                            <br>                   
+                            <p>Face Recognation: {{ face_rec_check_text }}</p>
+                            <br>            
+                            {% if word_file_checked %}                            
+                                <p>Requires Word File</p>
+                                <br>            
+                            {% endif %}
+                            
+                            {% if excel_file_checked %}                            
+                                <p>Requires Excel File</p>
+                                <br>            
+                            {% endif %}
+                            
+                            {% if scanning_checked %}                            
+                                <p>Requires Paper Scanning</p>
+                                <br>            
+                            {% endif %}
+                            
+                                    
+                            
+                            
+                            
+                            <div class="login-form">
+                                <form>
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <h6 class="mb-2">Event schedule:</h6>
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <p class="mb-3"><b>Start Time:</b> {{ start_time }}</p>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <p class="mb-3"><b>End Time:</b> {{ end_time }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12">
+                                            <h6 class="mb-2">Event Duration: {{ exam_duration }} Minutes.</h6>
+
+                                        </div>
+                                    <br>
+                                    <br>
+                                        {% if  w_pages%}
+                                            <div class="col-lg-12 mb-3">
+                                                <h6 class="mb-2">Allowed Websites:</h6>
+                                                <ul class="list-unstyled">
+                                                    {% for web in w_pages %}
+                                                        <li>{{ web }}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                        {% endif %}
+
+                                        {% if  w_programs%}
+                                            <div class="col-lg-12 mb-3">
+                                                <h6 class="mb-2">Allowed Programs:</h6>
+                                                <ul class="list-unstyled">
+                                                    {% for web in w_programs %}
+                                                        <li>{{ web }}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </form>
+                                <div class="clearfix"></div>
+                                <div class="row">
+
+                                    <div class="col-lg-4 col-md-5 col-sm-12 fm mt-3">
+                                        <form  action="{% url 'classes:start_event'%}" method="post" enctype="multipart/form-data">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="class_id" id="class_id" value="{{ class_id }}">
+                                            <input type="hidden" name="event_id" id="event_id" value="{{ event_id }}">
+                                            <input type="hidden" name="event_code" id="event_code" value="{{ event_code }}">
+                                            <button class="btn-style-five" type="submit" > Proctor The Event </button>
+                                        </form>
+                                    </div>
+                                    {% if is_monitor_yes %}
+                                        <div class="col-lg-4 col-md-5 col-sm-12 fm mt-3">
+                                            <form  action="{% url 'classes:monitor_eve'%}" method="post" enctype="multipart/form-data">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="class_id" id="class_id" value="{{ class_id }}">
+                                                <input type="hidden" name="event_id" id="event_id" value="{{ event_id }}">
+                                                <input type="hidden" name="event_code" id="event_code" value="{{ event_code }}">
+                                                <button class="btn-style-five" type="submit" > Monitor students </button>
+                                            </form>
+                                        </div>
+                                    {% endif %}
+                                    
+                                    <div class="col-lg-4 col-md-5 col-sm-12 fm mt-3">
+                                        <form  action="{% url 'classes:show_requests'%}" method="post" enctype="multipart/form-data">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="class_id" id="class_id" value="{{ class_id }}">
+                                            <input type="hidden" name="event_id" id="event_id" value="{{ event_id }}">
+                                            <input type="hidden" name="event_code" id="event_code" value="{{ event_code }}">
+                                            <button class="btn-style-five" type="submit" > Students requests </button>
+                                        </form>
+                                    </div>
+
+                                    <div class="col-lg-4 col-md-5 col-sm-12 fm mt-3">
+                                        <form  action="{% url 'classes:open_chat_room'%}" method="post" enctype="multipart/form-data">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="class_id" id="class_id" value="{{ class_id }}">
+                                            <input type="hidden" name="event_id" id="event_id" value="{{ event_id }}">
+                                            <input type="hidden" name="event_code" id="event_code" value="{{ event_code }}">
+                                            <button class="btn-style-five" type="submit" > Chat Room </button>
+                                        </form>
+                                    </div>
+
+                                    {% if invitation_needed %}
+                                        <div class="col-lg-4 col-md-5 col-sm-12 fm mt-3">
+                                            <form  action="{% url 'classes:students_identification'%}" method="post" enctype="multipart/form-data">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="class_id" id="class_id" value="{{ class_id }}">
+                                                <input type="hidden" name="event_id" id="event_id" value="{{ event_id }}">
+                                                <input type="hidden" name="event_code" id="event_code" value="{{ event_code }}">
+                                                <button class="btn-style-five" type="submit" > Students Identification </button>
+                                            </form>
+                                        </div>  
+                                    {% endif %}
+                                    
+
+                                    <!-- <div class="col-lg-4 col-md-5 col-sm-12 fm mt-3">
+                                        <form  action="{% url 'classes:stream'%}" method="post" enctype="multipart/form-data">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="class_id" id="class_id" value="{{ class_id }}">
+                                            <input type="hidden" name="event_id" id="event_id" value="{{ event_id }}">
+                                            <input type="hidden" name="event_code" id="event_code" value="{{ event_code }}">
+                                            <button class="btn-style-five" type="submit" > Stream Page </button>
+                                        </form>
+                                    </div> -->
+                                    <div class="col-lg-4 col-md-6 col-sm-12 fm mt-3">
+                                        <button type="button" class="btn de-class btn-rounded" data-toggle="modal" data-target="#delete-event">Delete Event</button>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    {% if have_report %}
+                                        <div >
+                                            <form class="form-horizontal" role="form" action="{% url 'classes:reports'%}" method="post">
+                                                {% csrf_token %}
+                                                <div class="form-group">
+                                                    <input type="hidden" name="class_id" id="class_id" value="{{ class_id }}">
+                                                    <input type="hidden" name="event_id" id="event_id" value="{{ event_id }}">
+
+                                                </div>
+
+                                                <div class="form-group ">
+                                                    <!-- <button type="submit"  class="btn  btn-lg alert-danger "data-toggle="modal"  data-target="#exampleModal">Delete Class</button> -->
+                                                    <br>
+                                                    <br>
+                                                    <div class="col-lg-12 col-md-12 col-sm-12 fm mt-3">
+                                                        <button type="submit" class="btn-style-five" >
+                                                            Reports
+                                                        </button>
+    
+                                                    </div>
+                                                    
+                                                </div>
+
+
+                                            </form>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                {% if invitation_needed %}
+                                    <br>
+                                    <br>
+                                    <div class="row">
+                                        <div class="row">
+                                            <form method="post"  action="{% url 'classes:send_inv_code'%}" enctype="multipart/form-data">
+                                                {% csrf_token %}
+                                                <div class="row">
+                                                    <div class="form-group">
+                                                        <input type="hidden" name="class_id" value="{{ class_id }}">
+                                                        <input type="hidden" name="event_id" value="{{ event_id }}">
+                                                        <input type="hidden" name="inv_code" value="{{ event_code }}">
+
+                                                    </div>
+                                                    <div class="form-group mb-3 col-lg-12">
+                                                        <label for="validatedCustomFile">Upload The Excel File To Send The Invitation Code To Students:</label>
+                                                        <input type="file"  name="excel" class="form-control" id="excel" required>
+                                                    </div>
+                                                    <div class="col-lg-12 col-md-12 col-sm-12 form-group message-btn wow slideInUp" data-wow-delay="100ms" data-wow-duration="1500ms">
+                                                        <button type="submit" class="btn-style-five" name="submit-form">Send Invitation Code To Students</button>
+                                                    </div>
+
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                {% endif %}
+ 						    </div>
+               			</div>
+					</div>
+				</div>
+            </div>
+        </div>
+    </section>
+	
+<div class="modal fade" id="editEvent" tabindex="-1" aria-labelledby="editEventLabel" aria-hidden="true">
+    <div class="modal-lg modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editEventLabel">Modify the Event</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="inner-content">
+                    <div class="contact-form-area">
+                        <div class="login-form add-event-form modify-event">
+                            <form role="form" action="{% url 'classes:modify_event'%}" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                                        <label for="">Event Name <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top" title="Edit the event name"></i></label>
+                                        <input type="text" name="event_name" value="{{ event_name }}" required>
+                                    </div>
+                                    <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+								         <label for="">Event Info <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top" title="Edit event info"></i></label>
+                                        <input type="text" name="event_info" required value="{{ event_disc }}">
+                                    </div>
+                                    {% if allow_add_student %}
+                                        <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                                            <label for="">Event URL <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top" title="Edit event URL"></i></label>
+                                            <input type="text" name="event_url" required value="{{ url }}">
+                                        </div>
+                                    {% endif %}
+                                    </div>
+                                    {% if invitation_needed %}
+                                        <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                                            <label for="">Event URL <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top" title="Edit event URL"></i></label>
+                                            <input type="text" name="event_url" required value="{{ url }}">
+                                        </div>
+                                    {% endif %}
+                                    <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                                        <label for="">invitation URL <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top" title="Edit invitation URL"></i></label>
+                                        <input type="text" name="social" value="{{ social }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="hidden" name="class_id" id="class_id" value="{{ class_id }}">
+                                        <input type="hidden" name="event_id" id="event_id" value="{{ event_id }}">
+                                        <input type="hidden" name="event_code" id="event_code" value="{{ event_code }}">
+                                    </div>
+                                    <div class="col-lg-12 form-group">
+                                        Event Type
+                                        <div class="form-check">
+                                          <input class="form-check-input" type="radio" name="is_exam" id="exampleRadios1" value="yes" checked>
+                                          <label class="form-check-label" for="exampleRadios1">
+                                            Exam
+                                          </label>
+                                        </div>
+                                        <div class="form-check">
+                                          <input class="form-check-input" type="radio" name="is_exam" id="exampleRadios2" value="no" >
+                                          <label class="form-check-label" for="exampleRadios2">
+                                            Lecture
+                                          </label>
+                                        </div>
+                                    </div>
+                                    {% if allow_add_student %}
+                                        <div class="col-lg-12">
+                                            <h6>Event schedule:</h6>
+                                            <div class="row">
+                                                <div class="form-group col-lg-6">
+                                                    <label>From</label>
+                                                    <input type="text" id="picker1" class="form-control" name="picker1" placeholder="{{ start_time }}" autocomplete="off" required/>
+                                                </div>
+                                                <div class="form-group col-lg-6">
+                                                    <label>To</label>
+                                                    <input type="text" id="picker2" class="form-control" name="picker2" placeholder="{{ end_time }}" autocomplete="off" required/>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    <div class="col-lg-12 col-md-12 col-sm-12 form-group has-icon">
+                                        <div class="row mx-2">
+                                            <label class="form-check-label" for="exam_duration" id="exam_duration_label">
+                                                Event Duration (can not be more than 0 min).
+                                            </label>
+                                        </div>
+
+                                        <input type="number"   name="exam_duration" id="exam_duration"  min="0" max="0" value="0">
+
+                                        <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top" title="Input event duration if the exam is a portion od the 'Event schedule' time."></i>
+                                    </div>
+                                    <br>
+                                    <br>
+                                {% endif %}
+
+                                     
+                                {% if invitation_needed %}
+                                    <div class="col-lg-12">
+                                        <h6>Event schedule:</h6>
+                                        <div class="row">
+                                            <div class="form-group col-lg-6">
+                                                <label>From</label>
+                                                <input type="text" id="picker1" class="form-control" name="picker1" placeholder="{{ start_time }}" autocomplete="off" required/>
+                                            </div>
+                                            <div class="form-group col-lg-6">
+                                                <label>To</label>
+                                                <input type="text" id="picker2" class="form-control" name="picker2" placeholder="{{ end_time }}" autocomplete="off" required/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-lg-12 col-md-12 col-sm-12 form-group has-icon">
+                                        <div class="row mx-2">
+                                            <label class="form-check-label" for="exam_duration" id="exam_duration_label">
+                                                Event Duration (can not be more than 0 min).
+                                            </label>
+                                        </div>
+
+                                        <input type="number"   name="exam_duration" id="exam_duration"  min="0" max="0" value="0">
+
+                                        <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top" title="Input event duration if the exam is a portion od the 'Event schedule' time."></i>
+                                    </div>
+                                    <br>
+                                    <br>
+                                {% endif %}
+
+
+                                        
+                                <div class="col-lg-12">
+                                    <h6>Microphone useage:</h6>
+                                    <div class="row">
+                                        <div class="col-lg-6 form-group">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="microphone" id="microphone1" value="0" {% if yes_mic %}checked{% endif %}>
+                                                <label class="form-check-label" for="microphone1">
+                                                    Use microphone.
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="microphone" id="microphone2" value="1"  {% if no_mic %}checked{% endif %}>
+                                                <label class="form-check-label" for="microphone2">
+                                                    Don't use microphone.
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-lg-12">
+                                    <h6>Face Recognation:</h6>
+                                    <div class="row">
+                                        <div class="col-lg-6 form-group">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="face_rec" id="face_rec1" value="0" {% if yes_face %}checked{% endif %}>
+                                                <label class="form-check-label" for="face_rec1">
+                                                    Use Face Recognation
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="face_rec" id="face_rec2" value="1"  {% if no_face %}checked{% endif %}>
+                                                <label class="form-check-label" for="face_rec2">
+                                                    Don't use Face Recognation
+                                                </label>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-lg-12">
+                                    <h6>Monitor Option:</h6>
+                                    <div class="row">
+                                        <div class="col-lg-6 form-group">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="is_monitor" id="is_monitor1" value="0" {% if is_monitor_yes %}checked{% endif %}>
+                                                <label class="form-check-label" for="is_monitor1">
+                                                    Use Monitor
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="is_monitor" id="is_monitor2" value="1"  {% if is_monitor_no %}checked{% endif %}>
+                                                <label class="form-check-label" for="is_monitor2">
+                                                    Don't Use Monitor
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-lg-12">
+                                    <h6>Record type:</h6>
+                                    <div class="row">
+                                        <div class="col-lg-6 form-group">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="recording_type" id="recording_type1" value="0" {% if recording_type_no %}checked{% endif %}>
+                                                <label class="form-check-label" for="recording_type1">
+                                                    No record
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="recording_type" id="recording_type2" value="1"  {% if recording_type_5 %}checked{% endif %}>
+                                                <label class="form-check-label" for="recording_type2">
+                                                    Record only last 5 Min.
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="recording_type" id="recording_type2" value="2"  {% if recording_type_full %}checked{% endif %}>
+                                                <label class="form-check-label" for="recording_type2">
+                                                    Full recording
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                    
+
+                                    
+                                <div class="col-lg-12">
+                                    <h6>Answer Tools:</h6>
+                                    <div class="row">
+                                        <div class="col-lg-6 form-group my-0">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="True" id="word_file" name="word_file" {% if word_file_checked %}checked{% endif %}>
+                                                <label class="form-check-label" for="word_file">
+                                                    Word File.
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6 form-group my-0">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="True" id="excel_file" name="excel_file" {% if excel_file_checked %}checked{% endif %}>
+                                                <label class="form-check-label" for="excel_file">
+                                                    Excel File.
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6 form-group  ">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="True" id="scanning" name="scanning" {% if scanning_checked %}checked{% endif %}>
+                                                <label class="form-check-label" for="scanning">
+                                                    Document Scanning.
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+                                <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                                   <label for="allowed_pages"> Allowed Websites<i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top" title="Edit allowed websites"></i></label>
+                                   <textarea id="allowed_pages" class="form-control" name="allowed_pages" rows="3"  >{% for web in w_pages %}
+{{ web }}{% endfor %}</textarea>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                                    <label for="allowed_programs">Allowed Programs <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top" title="Edit allowed programs"></i></label>
+                                    <textarea id="allowed_programs" class="form-control" rows="3"  name="allowed_programs" >{% for web in w_programs %}
+{{ web }}{% endfor %}</textarea>
+                                </div>
+                                <div class="col-lg-6 col-md-12 col-sm-12 wow slideInUp" data-wow-delay="100ms" data-wow-duration="1500ms">
+                                    <button type="submit" class="btn-style-five">Modify</button>
+                                </div>
+                            </form>
+				        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form   role="form" action="{% url 'classes:delete_event'%}" method="post">
+    {% csrf_token %}
+        <input type="hidden" name="class_id" id="class_id" value="{{ class_id }}">
+        <input type="hidden" name="event_id" id="event_id" value="{{ event_id }}">
+
+    <!-- remove all std modal -->
+    <div class="modal fade" id="delete-event" tabindex="-1" aria-labelledby="delete-eventLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="delete-eventLabel">Delete Event</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="inner-content">
+                        <div class="contact-form-area">
+                            <p>Are you sure you want to delete this event? This is an irreversible action</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-rounded" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn de-class">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<!-- jequery plugins -->
+<script src="{% static 'classes/js/jquery.js' %}"></script>
+<script src="{% static 'classes/js/popper.min.js' %}"></script>
+<script src="{% static 'classes/js/bootstrap.min.js' %}"></script>
+
+<script src="{% static 'classes/js/owl.js' %}"></script>
+<script src="{% static 'classes/js/wow.js' %}"></script>
+<script src="{% static 'classes/js/validation.js' %}"></script>
+<script src="{% static 'classes/js/jquery.fancybox.js' %}"></script>
+<script src="{% static 'classes/js/appear.js' %}"></script>
+<script src="{% static 'classes/js/aos.js' %}"></script>
+<script src="{% static 'classes/js/jquery.mCustomScrollbar.concat.min.js' %}"></script>
+<script src="{% static 'classes/js/jquery.paroller.min.js' %}"></script>
+<script src="{% static 'classes/js/jquery.datetimepicker.full.min.js' %}"></script>
+<!-- main-js -->
+<script src="{% static 'home/js/script.js' %}"></script>
+	
+  	<script type="text/javascript">
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+</script>
+    <script>
+       
+         $("#picker1").datetimepicker({
+            timepicker: true,
+            datepicker: true,
+            format: "Y-m-d H:i",
+            step: 15,
+            onShow: function (ct) {
+                this.setOptions({
+                    maxDate: $("#picker2").val()
+                        ? $("#picker2").val()
+                        : false,
+                });
+            },
+        });
+        $("#picker2").datetimepicker({
+            timepicker: true,
+            datepicker: true,
+            format: "Y-m-d H:i",
+            step: 15,
+            onShow: function (ct) {
+                this.setOptions({
+                    minDate: $("#picker1").val()
+                        ? $("#picker1").val()
+                        : false,
+                });
+            },
+        });
+
+
+
+    </script>   
+
+    <script>
+
+        let startEventTime = 0;
+        let endEventTime = 0;
+        let eventTimeDuration = 0;
+        let startTimer = document.getElementById("picker1");
+        startTimer.addEventListener('focusout',
+            function () {
+                console.log(startTimer.value);
+                let stringsFromAPI = startTimer.value;
+                if (!isNaN(Date.parse(stringsFromAPI))) {
+                    console.log(new Date(stringsFromAPI));
+                    startEventTime = new Date(stringsFromAPI);
+                    let timeEnd = document.getElementById("picker2").value;
+                    if (!isNaN(Date.parse(timeEnd))) {
+                        console.log(new Date(timeEnd));
+                        endEventTime = new Date(timeEnd);
+                        console.log((endEventTime - startEventTime) / 60000);
+                        eventTimeDuration = (endEventTime - startEventTime) / 60000;
+                        if (eventTimeDuration < 0){
+                            eventTimeDuration = 0;
+                        }
+                        let examDurationField = document.getElementById("exam_duration");
+                        let examDurationLabel = document.getElementById("exam_duration_label");
+                        let newMessage = "Event Duration (can not be more than " + eventTimeDuration.toString() + "  min)." ;
+                        console.log(newMessage);
+                        examDurationLabel.innerText = newMessage;
+                        examDurationField.max = eventTimeDuration;
+                        console.log(eventTimeDuration);
+                    }
+
+                }
+
+            }
+        );
+
+        let endTimer = document.getElementById("picker2");
+        endTimer.addEventListener('focusout',
+            function () {
+                console.log(endTimer.value);
+                let stringsFromAPI = endTimer.value;
+                if (!isNaN(Date.parse(stringsFromAPI))) {
+                    console.log(new Date(stringsFromAPI));
+                    endEventTime = new Date(stringsFromAPI);
+                    let startEnd = document.getElementById("picker1").value;
+                    if (!isNaN(Date.parse(startEnd))) {
+                        console.log(new Date(startEnd));
+                        startEventTime = new Date(startEnd);
+                        console.log((endEventTime - startEventTime) / 60000);
+                        eventTimeDuration = (endEventTime - startEventTime) / 60000;
+                        if (eventTimeDuration < 0){
+                            eventTimeDuration = 0;
+                        }
+                        let examDurationField = document.getElementById("exam_duration");
+                        let examDurationLabel = document.getElementById("exam_duration_label");
+                        let newMessage = "Event Duration (can not be more than " + eventTimeDuration.toString() + "  min)." ;
+                        console.log(newMessage);
+                        examDurationLabel.innerText = newMessage;
+                        examDurationField.max = eventTimeDuration;
+                        console.log(eventTimeDuration);
+                    }
+                }
+            }
+        );
+        let examDurationField = document.getElementById("exam_duration");
+        examDurationField.addEventListener('focusout',
+            function () {
+                  let examDuration = examDurationField.value;
+                  if(examDuration > eventTimeDuration)
+                  {
+                      examDurationField.value = eventTimeDuration;
+                  }
+            }
+        );
+
+    </script>
+</body><!-- End of .page_wrapper -->
+
+</html>

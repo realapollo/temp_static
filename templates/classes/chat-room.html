@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="shortcut icon" href="{% static 'fav_icon.png' %}">
+
+    <title>AI Proctor</title>
+
+    <!-- Stylesheets -->
+    <link href="{% static 'classes/css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'classes/css/responsive.css' %}" rel="stylesheet">
+    {#<link rel="icon" href="#" type="image/x-icon">#}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script>
+    <script src="{% static 'template/html2canvas.min.js' %}"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+
+
+
+
+    <style>
+        body,
+        html {
+            height: 100%;
+            margin: 0;
+            background: #7f7fd5;
+            background: -webkit-linear-gradient(
+                to right,
+                #91eae4,
+                #86a8e7,
+                #7f7fd5
+            );
+            background: linear-gradient(
+                to right,
+                #91eae4,
+                #86a8e7,
+                #7f7fd5
+            );
+        }
+
+        .chat {
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+        .card {
+            height: 500px;
+            border-radius: 15px !important;
+            background-color: rgba(0, 0, 0, 0.4) !important;
+        }
+        .contacts_body {
+            padding: 0.75rem 0 !important;
+            overflow-y: auto;
+            white-space: nowrap;
+        }
+        .msg_card_body {
+            overflow-y: auto;
+        }
+        .card-header {
+            border-radius: 15px 15px 0 0 !important;
+            border-bottom: 0 !important;
+        }
+        .card-footer {
+            border-radius: 0 0 15px 15px !important;
+            border-top: 0 !important;
+        }
+        .container {
+            align-content: center;
+        }
+        .search {
+            border-radius: 15px 0 0 15px !important;
+            background-color: rgba(0, 0, 0, 0.3) !important;
+            border: 0 !important;
+            color: white !important;
+        }
+        .search:focus {
+            box-shadow: none !important;
+            outline: 0px !important;
+        }
+        .type_msg {
+            background-color: rgba(0, 0, 0, 0.3) !important;
+            border: 0 !important;
+            color: white !important;
+            height: 60px !important;
+            overflow-y: auto;
+        }
+        .type_msg:focus {
+            box-shadow: none !important;
+            outline: 0px !important;
+        }
+        .attach_btn {
+            border-radius: 15px 0 0 15px !important;
+            background-color: rgba(0, 0, 0, 0.3) !important;
+            border: 0 !important;
+            color: white !important;
+            cursor: pointer;
+        }
+        .send_btn {
+            border-radius: 0 15px 15px 0 !important;
+            background-color: rgba(0, 0, 0, 0.3) !important;
+            border: 0 !important;
+            color: white !important;
+            cursor: pointer;
+        }
+        .search_btn {
+            border-radius: 0 15px 15px 0 !important;
+            background-color: rgba(0, 0, 0, 0.3) !important;
+            border: 0 !important;
+            color: white !important;
+            cursor: pointer;
+        }
+        .contacts {
+            list-style: none;
+            padding: 0;
+        }
+        .contacts li {
+            width: 100% !important;
+            padding: 5px 10px;
+            margin-bottom: 15px !important;
+        }
+        .active {
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+        .user_img {
+            height: 70px;
+            width: 70px;
+            border: 1.5px solid #f5f6fa;
+        }
+        .user_img_msg {
+            height: 40px;
+            width: 40px;
+            border: 1.5px solid #f5f6fa;
+        }
+        .img_cont {
+            position: relative;
+            height: 70px;
+            width: 70px;
+        }
+        .img_cont_msg {
+            height: 40px;
+            width: 40px;
+        }
+        .online_icon {
+            position: absolute;
+            height: 15px;
+            width: 15px;
+            background-color: #4cd137;
+            border-radius: 50%;
+            bottom: 0.2em;
+            right: 0.4em;
+            border: 1.5px solid white;
+        }
+        .offline {
+            background-color: #c23616 !important;
+        }
+        .user_info {
+            margin-top: auto;
+            margin-bottom: auto;
+            margin-left: 15px;
+        }
+        .user_info span {
+            font-size: 20px;
+            color: white;
+        }
+        .user_info p {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .video_cam {
+            margin-left: 50px;
+            margin-top: 5px;
+        }
+        .video_cam span {
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            margin-right: 20px;
+        }
+        .msg_cotainer {
+            margin-top: auto;
+            margin-bottom: auto;
+            margin-left: 10px;
+            border-radius: 25px;
+            background-color: #82ccdd;
+            padding: 10px;
+            position: relative;
+        }
+        .msg_cotainer_send {
+            margin-top: auto;
+            margin-bottom: auto;
+            margin-right: 10px;
+            border-radius: 25px;
+            background-color: #78e08f;
+            padding: 10px;
+            position: relative;
+        }
+        .msg_time {
+            position: absolute;
+            left: 0;
+            bottom: -15px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 10px;
+        }
+        .msg_time_send {
+            position: absolute;
+            right: 0;
+            bottom: -15px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 10px;
+        }
+        .msg_head {
+            position: relative;
+        }
+        #action_menu_btn {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            color: white;
+            cursor: pointer;
+            font-size: 20px;
+        }
+        .action_menu {
+            z-index: 1;
+            position: absolute;
+            padding: 15px 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border-radius: 15px;
+            top: 30px;
+            right: 15px;
+            display: none;
+        }
+        .action_menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .action_menu ul li {
+            width: 100%;
+            padding: 10px 15px;
+            margin-bottom: 5px;
+        }
+        .action_menu ul li i {
+            padding-right: 10px;
+        }
+        .action_menu ul li:hover {
+            cursor: pointer;
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+        @media (max-width: 576px) {
+            .contacts_card {
+                margin-bottom: 15px !important;
+            }
+        }
+    </style>
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.13/jquery.mousewheel.min.js"></script>
+
+
+
+
+
+
+
+
+
+</head>
+
+<!-- page wrapper -->
+<body class="boxed_wrapper">
+
+    <!-- main header -->
+    <header class="main-header">
+
+        <!-- Header upper -->
+        <div class="header-upper">
+            <div class="container">
+                <div class="outer-box clearfix">
+                    <div class="float-left">
+                        <figure class="logo-box"><a href="{% url 'home:home' %}"><img src="{% static 'classes/images/logo.png' %}" alt="" title=""></a></figure>
+                    </div>
+                    <div class="float-right upper-right clearfix">
+                        <div class="nav-outer clearfix">
+                            <nav class="main-menu navbar-expand-lg">
+                                <div class="navbar-header">
+                                    <!-- Toggle Button -->
+                                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    </button>
+                                </div>
+                                <div class="navbar-collapse collapse clearfix" id="navbarSupportedContent">
+                                    <ul class="navigation clearfix">
+                                        <li><a href="{% url 'home:home' %}">Home</a></li>
+                                        <li><a href="{% url 'download:home' %}">Download</a></li>
+                                        {% if user.is_authenticated %}
+                                            <li class="current"><a href="{% url 'classes:classes' %}">Classes</a></li>
+                                            <li><a href="{% url 'dashboard:dashboard' %}">Account</a></li>
+                                            <li class="log-btns"><a href="{% url 'users:logout' %}">Logout</a></li>
+                                        {% else %}
+                                            <li class="log-btns"><a href="{% url 'users:login' %}">Login</a></li>
+                                            <li class="log-btns"><a href="{% url 'users:register' %}">Sign Up</a></li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                            </nav><!-- Main Menu End-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--End Header Upper-->
+
+        <!--Sticky Header-->
+        <div class="sticky-header">
+            <div class="container">
+                <div class="clearfix">
+                    <!--Logo-->
+                    <div class="logo float-left">
+                        <a href="{% url 'home:home' %}" class="img-responsive"><img src="{% static 'classes/images/logo.png' %}" alt="" title=""></a>
+                    </div>
+
+                    <!--Right Col-->
+                    <div class="right-col float-right">
+                        <!-- Main Menu -->
+                        <nav class="main-menu navbar-expand-lg">
+                            <div class="navbar-collapse collapse clearfix">
+                            	<ul class="navigation clearfix">
+                            	    <li><a href="{% url 'home:home' %}">Home</a></li>
+                                    <li><a href="{% url 'download:home' %}">Download</a></li>
+                                        {% if user.is_authenticated %}
+                                            <li class="current"><a href="{% url 'classes:classes' %}">Classes</a></li>
+                                            <li><a href="{% url 'dashboard:dashboard' %}">Account</a></li>
+                                            <li class="log-btns"><a href="{% url 'users:logout' %}">Logout</a></li>
+                                        {% else %}
+                                            <li class="log-btns"><a href="{% url 'users:login' %}">Login</a></li>
+                                            <li class="log-btns"><a href="{% url 'users:register' %}">Sign Up</a></li>
+                                        {% endif %}
+                            	</ul>
+                            </div>
+                        </nav><!-- Main Menu End-->
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <!--End Sticky Header-->
+    </header>
+
+    <!--Form Back Drop-->
+    <div class="form-back-drop"></div>
+
+	 <!-- page-title -->
+    <section class="page-title centred inner-head event-head" style="background-image: url({% static 'classes/images/login-head-bg.jpg' %})">
+        <div class="container">
+            <div class="content-box">
+                <h1>Chat Room</h1>
+            </div>
+        </div>
+    </section>
+    <!-- page-title end -->
+
+
+   <section class="contact-section">
+        <div class="container">
+		    <div class="row">
+                <div class="col-lg-6 col-md-6 col-6 text-md-left">
+                    <form method="post" enctype="multipart/form-data" action="{% url 'classes:show_single_events'%}">
+                        {% csrf_token %}
+                        <input type="hidden" name="event_id" id="event_id" value="{{ event_id }}">
+                        <input type="hidden" name="class_id" id="class_id" value="{{ class_id }}">
+                        <a href="#"  onclick='this.parentNode.submit(); return false;'>
+
+                                <h5 style="color: #000000; font-size: x-large"><i class="fas fa-angle-double-left"></i> Back to event</h5>
+
+                        </a>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+		    <div class="row">
+ 		        <div class="col-lg-12">
+		            <div class="event-wrapper">
+		                <div class="row">
+
+
+
+
+                            <link
+                                rel="stylesheet"
+                                href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+                                integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+                                crossorigin="anonymous"
+                            />
+                            <link
+                                rel="stylesheet"
+                                href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+                                integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
+                                crossorigin="anonymous"
+                            />
+                            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+                            <link
+                                rel="stylesheet"
+                                type="text/css"
+                                href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css"
+                            />
+                            <script
+                                type="text/javascript"
+                                src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.js"
+                            ></script>
+
+
+
+                            <div class="container-fluid h-100">
+                                <div class="row justify-content-center h-100">
+
+                                    <!-- Student list Part Start-->
+
+                                    <div class="col-md-4 col-xl-3 chat">
+                                        <div class="card mb-sm-3 mb-md-0 contacts_card">
+                                            <div class="card-header">
+                                                <div class="user_info">
+                                                    <p class="fs-3">List of Students</p>
+                                                </div>
+                                            </div>
+                                            <div class="card-body contacts_body">
+                                                <ul class="contacts">
+
+
+{#                                                    <li class="active" id="online_lst" style="display: none">#}
+                                                    <li id="online_lst" style="display: none">
+                                                        <div class="d-flex bd-highlight">
+                                                            <div class="img_cont">
+                                                                <img class="rounded-circle user_img online_image"/>
+                                                                <span class="online_icon"></span>
+                                                            </div>
+                                                            <div class="user_info">
+                                                                <div class="row">
+                                                                    <div class="col-10 online_name"></div>
+                                                                    <div class="col-2 badge badge-success have_chat  p-1" style="display: none"><i class="fas fa-comment"></i></div>
+                                                                    <div></div>
+                                                                </div>
+                                                                <!-- <span class="online_name"></span> -->
+                                                            </div>
+                                                        </div>
+                                                    </li>
+
+
+                                                    <li id="offline_lst" style="display: none">
+                                                        <div class="d-flex bd-highlight">
+                                                            <div class="img_cont">
+                                                                <img class="rounded-circle user_img offline_image"/>
+                                                                <span class="online_icon offline" ></span>
+                                                            </div>
+                                                            <div class="user_info">
+                                                                <div class="row">
+                                                                    <div class="col-10 offline_name"></div>
+                                                                    <div class="col-2 badge badge-success have_chat p-1" style="display: none"><i class="fas fa-comment"></i></div>
+                                                                    <div></div>
+                                                                </div>
+                                                                <!-- <span class="offline_name"></span> -->
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="card-footer"></div>
+                                        </div>
+                                    </div>
+                                    <!-- Student list Part End-->
+
+                                    <!-- Chat Part Start -->
+
+                                    <div class="col-md-8 col-xl-6 chat">
+                                        <div class="card">
+                                            <!-- Name to chat with Part Start -->
+                                            <div class="card-header msg_head">
+                                                <div class="d-flex bd-highlight">
+
+                                                    <div class="user_info">
+                                                        <span>Chat with <span id="name_to_chat_with"></span></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Name to chat with Part End -->
+
+                                            <div class="card-body msg_card_body">
+
+                                                <div class="d-flex justify-content-start mb-4 instructor_msg" id="student_msg" style="display: none">
+                                                    <div class="msg_cotainer text-break" style="display: none"></div>
+                                                </div>
+
+                                                <div class="d-flex justify-content-end mb-4 student_msg" id="instructor_msg" style="display: none">
+                                                    <div class="msg_cotainer_send text-break"  style="display: none">
+                                                        <div class="row">
+                                                            <div class="text_part col-12"></div>
+                                                            <div class="marker_part d-flex  justify-content-end col-12"><i class="far fa-paper-plane"></i></div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                                <div id="chat_container">
+
+                                                    <div class="last_item">
+
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="input-group">
+                                                    <!-- <div class="input-group-append">
+                                                        <span class="input-group-text attach_btn file-upload">
+                                                            <i class="fas fa-paperclip"> 
+
+                                                            </i>
+                                                        </span>
+                                                    </div> -->
+                                                    <!-- <div class="file-upload-wrapper">
+                                                        <input type="file" id="input-file-now" class="file-upload" />
+                                                    </div> -->
+                                                    <textarea name="" class="form-control type_msg" placeholder="Type your message..." id="text_area_send"></textarea>
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text send_btn" onclick="send_message()">
+                                                            <i class="fas fa-location-arrow"></i>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+		            </div>
+		        </div>
+		    </div>
+        </div>
+    </section>
+
+
+
+<!-- jequery plugins -->
+<script src="{% static 'classes/js/jquery.js' %}"></script>
+<script src="{% static 'classes/js/popper.min.js' %}"></script>
+<script src="{% static 'classes/js/bootstrap.min.js' %}"></script>
+
+<script src="{% static 'classes/js/owl.js' %}"></script>
+<script src="{% static 'classes/js/wow.js' %}"></script>
+<script src="{% static 'classes/js/validation.js' %}"></script>
+<script src="{% static 'classes/js/jquery.fancybox.js' %}"></script>
+<script src="{% static 'classes/js/appear.js' %}"></script>
+<script src="{% static 'classes/js/aos.js' %}"></script>
+<script src="{% static 'classes/js/jquery.mCustomScrollbar.concat.min.js' %}"></script>
+<script src="{% static 'classes/js/jquery.paroller.min.js' %}"></script>
+<script src="{% static 'classes/js/jquery.datetimepicker.full.min.js' %}"></script>
+<!-- main-js -->
+<script src="{% static 'classes/js/script.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+
+
+
+<script>
+    // $('.file-upload').file_upload();
+    let ind = 0;
+    let stream_v = null;
+    let stream_stu_email = "";
+    let statusThread = null;
+    let e_id = "";
+    let student_lst_cod = [];
+
+    window.onload = function() {
+        let text_area_send = document.getElementById("text_area_send");
+        text_area_send.disabled = true;
+        student_status();
+        setInterval(student_status, 5000);
+    };
+
+    function clear_active() {
+        let li_eles = document.getElementsByClassName("contacts")[0].getElementsByClassName("active");
+        for (let z = 0; z < li_eles.length; z++) {
+            li_eles[z].classList.remove("active");
+        }
+    }
+
+    function clear_chat() {
+        let int_chat = document.getElementById("chat_container").getElementsByClassName("instructor_msg");
+        let stu_chat = document.getElementById("chat_container").getElementsByClassName("student_msg");
+        let loop_length = int_chat.length;
+        for (let f = 0; f < loop_length; f++) {
+            int_chat[0].parentNode.removeChild(int_chat[0]);
+        }
+        let loop_length2 = stu_chat.length;
+        for (let n = 0; n < loop_length2; n++) {
+            stu_chat[0].parentNode.removeChild(stu_chat[0]);
+        }
+    }
+
+    function student_status() {
+        let csrf_t = '{{csrf_token}}';
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "{% url 'classes:chat_students_state'%}", true);
+        xhr.setRequestHeader("X-CSRFToken", csrf_t);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onloadend = function () {
+            if (xhr.status === 200) {
+                let resp = JSON.parse(xhr.responseText);
+                let onliners = resp.online;
+                let offliners = resp.offline;
+
+                for (let i = 0; i < offliners.length; i++) {
+                    let stu_name = offliners[i][0];
+                    let stu_code = offliners[i][1];
+                    let stu_img = offliners[i][2];
+                    let have_chat = offliners[i][4];
+
+                    if (student_lst_cod.includes(stu_code)){
+
+                        let stu_info_item = document.getElementById(stu_code);
+                        const onlineicon = stu_info_item.querySelector('.online_icon');
+                        if (!onlineicon.classList.contains('offline')){
+                            onlineicon.classList.add("offline");
+                        }
+                        if(have_chat){
+                            if(stu_info_item.getElementsByClassName("have_chat")[0].style.display === "none"){
+                                if (! stu_info_item.classList.contains('active')){
+                                    stu_info_item.getElementsByClassName("have_chat")[0].style.display = "block";
+                                    let last_item = document.getElementById("offline_lst");
+                                    last_item.after(stu_info_item);
+                                }
+                            }
+                        }
+
+                    }else {
+
+                        let orig_item = document.getElementById("offline_lst");
+                        let last_item = document.getElementById("offline_lst");
+                        let cloned_item = orig_item.cloneNode(true);
+
+                        cloned_item.style.display = "block";
+
+                        student_lst_cod.push(stu_code);
+
+                        let stu_name_ele = cloned_item.getElementsByClassName("offline_name")[0];
+                        let stu_img_ele = cloned_item.getElementsByClassName("offline_image")[0];
+
+                        cloned_item.setAttribute("id", stu_code);
+                        stu_img_ele.setAttribute("src", stu_img);
+                        stu_name_ele.innerHTML = stu_name;
+                        if(have_chat){
+                            cloned_item.getElementsByClassName("have_chat")[0].style.display = "block";
+                        }
+                        cloned_item.addEventListener('click', function () {
+                            if (stu_code !== e_id){
+
+                                clearInterval(statusThread);
+
+                                e_id = stu_code;
+                                let text_area_send = document.getElementById("text_area_send");
+                                text_area_send.disabled = true;
+
+                                clear_active();
+                                clear_chat();
+                                cloned_item.classList.add("active");
+                                let have_chat = cloned_item.getElementsByClassName("have_chat")[0];
+                                have_chat.style.display = "none";
+                                let chat_head_name = document.getElementById("name_to_chat_with");
+                                chat_head_name.innerHTML = stu_name;
+                                text_area_send.disabled = false;
+
+                                get_chat_history();
+                                statusThread = setInterval(check_stu_chat, 3000);
+                            }
+
+                        });
+
+
+                        last_item.after(cloned_item);
+                    }
+                }
+            
+                
+                for (let i = 0; i < onliners.length; i++) {
+                    let stu_name = onliners[i][0];
+                    let stu_code = onliners[i][1];
+                    let stu_img = onliners[i][2];
+                    let have_chat = onliners[i][4];
+
+                    if (student_lst_cod.includes(stu_code)){
+
+                        let stu_info_item = document.getElementById(stu_code);
+                        const onlineicon = stu_info_item.querySelector('.online_icon');
+                        if (onlineicon.classList.contains('offline')){
+                            onlineicon.classList.remove("offline");
+                        }
+                        if(have_chat){
+                            if(stu_info_item.getElementsByClassName("have_chat")[0].style.display === "none"){
+                                if (! stu_info_item.classList.contains('active')){
+                                    stu_info_item.getElementsByClassName("have_chat")[0].style.display = "block";
+                                    let last_item = document.getElementById("offline_lst");
+                                    last_item.after(stu_info_item);                            
+
+                                }
+                            }
+                        }
+
+                    }else {
+
+                        let orig_item = document.getElementById("online_lst");
+                        let last_item = document.getElementById("offline_lst");
+                        let cloned_item = orig_item.cloneNode(true);
+
+                        cloned_item.style.display = "block";
+
+                        student_lst_cod.push(stu_code);
+
+                        let stu_name_ele = cloned_item.getElementsByClassName("online_name")[0];
+                        let stu_img_ele = cloned_item.getElementsByClassName("online_image")[0];
+
+                        cloned_item.setAttribute("id", stu_code);
+                        stu_img_ele.setAttribute("src", stu_img);
+                        stu_name_ele.innerHTML = stu_name;
+                        if(have_chat){
+                            cloned_item.getElementsByClassName("have_chat")[0].style.display = "block";
+                        }
+
+                        cloned_item.addEventListener('click', function () {
+                            if (stu_code !== e_id){
+                                clearInterval(statusThread);
+                                e_id = stu_code;
+                                let text_area_send = document.getElementById("text_area_send");
+                                text_area_send.disabled = true;
+
+                                clear_active();
+                                clear_chat();
+                                cloned_item.classList.add("active");
+                                let have_chat = cloned_item.getElementsByClassName("have_chat")[0];
+                                have_chat.style.display = "none";
+                                let chat_head_name = document.getElementById("name_to_chat_with");
+                                chat_head_name.innerHTML = stu_name;
+                                text_area_send.disabled = false;
+
+                                get_chat_history();
+                                statusThread = setInterval(check_stu_chat, 3000);
+                            }
+
+                        });
+
+                        last_item.after(cloned_item);
+                    }
+                }
+
+            } else {
+                 console.log("ERROR RESPONSE");
+            }
+        };
+        xhr.onerror = function (e) {
+            console.log(e);
+        };
+
+
+        xhr.send(
+            JSON.stringify({
+                event_id: e_id,
+                class_id: "{{ class_id }}",
+                event_code: "{{ event_code }}",
+            })
+        );
+
+
+    }
+
+    function send_message() {
+        let text_area_send = document.getElementById("text_area_send");
+        let message_to_send = text_area_send.value;
+        text_area_send.value = "";
+        if (message_to_send.replace(/^\s+|\s+$/g,"") !== ""){
+            let inst_message_instance = document.getElementById("instructor_msg");
+            let last_element = document.getElementById("chat_container").getElementsByClassName("last_item")[0];
+            let cloned_inst_message = inst_message_instance.cloneNode(true);
+            cloned_inst_message.style.display = "block";
+            cloned_inst_message.getElementsByClassName("msg_cotainer_send")[0].style.display = "block";
+            cloned_inst_message.getElementsByClassName('msg_cotainer_send')[0].getElementsByClassName('text_part')[0].innerHTML = message_to_send.replace(/\n/g, "<br />");
+            last_element.parentNode.insertBefore(cloned_inst_message, last_element);
+            let objDiv = document.getElementsByClassName("msg_card_body")[0];
+            objDiv.scrollTop = objDiv.scrollHeight;
+            send_chat(message_to_send, function(results) {
+                console.log(results);
+                if(results){
+                    cloned_inst_message.getElementsByClassName("msg_cotainer_send")[0].getElementsByClassName("marker_part")[0].style.color = "green";
+                }else {
+                    cloned_inst_message.getElementsByClassName("msg_cotainer_send")[0].getElementsByClassName("marker_part")[0].style.color = "red";
+                }
+            });
+
+
+
+        }
+
+    }
+
+
+
+
+    function send_chat (chatText, callback) {
+        let csrf_t = '{{csrf_token}}';
+        let xhr55 = new XMLHttpRequest();
+        xhr55.open("POST", "{% url 'classes:send_individual_chat'%}", true);
+        xhr55.setRequestHeader("X-CSRFToken", csrf_t);
+        xhr55.setRequestHeader("Content-Type", "application/json");
+        xhr55.onloadend = function () {
+            if (xhr55.status === 200) {
+                callback(true);
+            }
+        };
+        xhr55.onerror = function (e) {
+            console.log(e);
+            callback(false);
+        };
+        xhr55.send(
+            JSON.stringify({
+                event_id: e_id,
+                event_code: "{{ event_code }}",
+                chat_text: chatText,
+                class_id: "{{ class_id }}",
+            })
+        );
+    }
+
+
+    function check_stu_chat() {
+        let csrf_t = '{{csrf_token}}';
+        let stream_http = new XMLHttpRequest();
+        stream_http.open("POST", "{% url 'classes:get_student_chat'%}", true);
+        stream_http.setRequestHeader("X-CSRFToken", csrf_t);
+        stream_http.setRequestHeader("Content-Type", "application/json");
+        stream_http.onloadend = function () {
+            if (stream_http.status === 200) {
+                let resp = JSON.parse(stream_http.responseText);
+                let c_type = resp.stats;
+                if(c_type === 1){
+                    let all_chat = resp.chat;
+                    for (let i = 0; i < all_chat.length; i++){
+                        let message = all_chat[i][0];
+                        let message_id = all_chat[i][1];
+                        let inst_message_instance = document.getElementById("student_msg");
+                        let last_element = document.getElementById("chat_container").getElementsByClassName("last_item")[0];
+                        let cloned_inst_message = inst_message_instance.cloneNode(true);
+                        cloned_inst_message.style.display = "block";
+                        cloned_inst_message.getElementsByClassName("msg_cotainer")[0].style.display = "block";
+                        cloned_inst_message.getElementsByClassName('msg_cotainer')[0].innerHTML = message.replace(/\n/g, "<br />");
+                        last_element.parentNode.insertBefore(cloned_inst_message, last_element);
+                        let objDiv = document.getElementsByClassName("msg_card_body")[0];
+                        objDiv.scrollTop = objDiv.scrollHeight;
+
+                    }
+                }
+
+            }
+        };
+
+        stream_http.onerror = function (e) {
+            console.log(e);
+        };
+
+
+        stream_http.send(
+            JSON.stringify({
+                event_id: e_id,
+                event_code: "{{ event_code }}",
+                class_id: "{{ class_id }}",
+            })
+        );
+
+    }
+
+
+    function get_chat_history() {
+        let csrf_t = '{{csrf_token}}';
+        let stream_http = new XMLHttpRequest();
+        stream_http.open("POST", "{% url 'classes:get_chat_history'%}", true);
+        stream_http.setRequestHeader("X-CSRFToken", csrf_t);
+        stream_http.setRequestHeader("Content-Type", "application/json");
+        stream_http.onloadend = function () {
+            if (stream_http.status === 200) {
+                let resp = JSON.parse(stream_http.responseText);
+                let c_type = resp.stats;
+                if(c_type === 1){
+                    let all_chat = resp.chat;
+                    for (let i = 0; i < all_chat.length; i++){
+                        let message = all_chat[i][0];
+                        let message_id = all_chat[i][1];
+                        let from_ins = all_chat[i][2];
+                        if (from_ins){
+                            let inst_message_instance = document.getElementById("instructor_msg");
+                            let last_element = document.getElementById("chat_container").getElementsByClassName("last_item")[0];
+                            let cloned_inst_message = inst_message_instance.cloneNode(true);
+                            cloned_inst_message.style.display = "block";
+                            cloned_inst_message.getElementsByClassName("msg_cotainer_send")[0].style.display = "block";
+                            cloned_inst_message.getElementsByClassName('msg_cotainer_send')[0].getElementsByClassName('text_part')[0].innerHTML = message.replace(/\n/g, "<br />");
+                            last_element.parentNode.insertBefore(cloned_inst_message, last_element);
+                            let objDiv = document.getElementsByClassName("msg_card_body")[0];
+                            objDiv.scrollTop = objDiv.scrollHeight;
+                            cloned_inst_message.getElementsByClassName("msg_cotainer_send")[0].getElementsByClassName("marker_part")[0].style.color = "green";
+
+                        }else{
+                            let inst_message_instance = document.getElementById("student_msg");
+                            let last_element = document.getElementById("chat_container").getElementsByClassName("last_item")[0];
+                            let cloned_inst_message = inst_message_instance.cloneNode(true);
+                            cloned_inst_message.style.display = "block";
+                            cloned_inst_message.getElementsByClassName("msg_cotainer")[0].style.display = "block";
+                            cloned_inst_message.getElementsByClassName('msg_cotainer')[0].innerHTML = message.replace(/\n/g, "<br />");
+                            last_element.parentNode.insertBefore(cloned_inst_message, last_element);
+                            let objDiv = document.getElementsByClassName("msg_card_body")[0];
+                            objDiv.scrollTop = objDiv.scrollHeight;
+                        }
+
+
+                    }
+                }
+
+            }
+        };
+
+        stream_http.onerror = function (e) {
+            console.log(e);
+        };
+
+
+        stream_http.send(
+            JSON.stringify({
+                event_id: e_id,
+                event_code: "{{ event_code }}",
+                class_id: "{{ class_id }}",
+            })
+        );
+
+    }
+
+</script>
+
+
+</body><!-- End of .page_wrapper -->
+
+</html>
