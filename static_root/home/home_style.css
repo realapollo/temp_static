@@ -1,0 +1,49 @@
+body{
+    background: #f28f00;
+    color: #fff;
+    padding-top: 0;
+}
+
+.navbar{
+    border-bottom: #008ed6 3px solid;
+    opacity: 0.8;
+}
+
+#home-section{
+    background-size: cover;
+    background: url(../../static/home/images/home2.png) no-repeat ;
+    /*background-size: contain;*/
+    background-size: cover;
+    width: 100%;
+    /*min-width: 100%;*/
+    min-height: 800px;
+}
+
+#home-section .dark-overlay{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 800px;
+    /*background: rgba(0, 0, 0, 0.4);*/
+}
+
+#home-section .home-inner{
+    padding-top: 300px;
+
+}
+
+
+
+#about-head-section .lead{
+    color: #fff;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+#benefit-topic-head-section .fas{
+    background: #333;
+    color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+}

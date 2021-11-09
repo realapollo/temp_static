@@ -1,0 +1,84 @@
+body {
+    background: white url("images/background.png");    
+    padding-top: 80px;
+}
+
+.navbar {
+    border-radius: 0;
+}
+
+.navbar-brand {
+    font-family: 'Satisfy', cursive;
+}
+
+
+#head-shit{
+    font-weight: bold;
+    padding: 10px;
+    background-color: #152C3C;
+    color: white;
+    top: 50%;
+    left: 50%;
+}
+
+
+#head-shit2{
+    font-weight: bold;
+    padding: 10px;
+    background-color: #152C3C;
+    color: white;
+    top: 50%;
+    left: 50%;
+}
+#content-wrapper{
+    top: 20px;
+}
+
+#about-mcq2{
+    text-align: justify;
+    padding-left: 20px;
+    padding-right: 30px;
+}
+
+#about-mcq{
+    text-align: justify;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+
+
+#quill_image{
+    width: 40%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto
+}
+
+#exam_warning_area{
+    padding-top: 10% ;
+}
+#show_readings_table{
+    align-items: center;
+    align-content: center;
+}
+
+.form-group{
+    padding-left: 20px;
+}
+.tab1 { padding-left: 4em; }
+.tab2 { padding-left: 8em; }
+.tab3 { padding-left: 12em; }
+.tab4 { padding-left: 16em; }
+.tab5 { padding-left: 20em; }
+.tab6 { padding-left: 24em; }
+.tab7 { padding-left: 28em; }
+.tab8 { padding-left: 32em; }
+.tab9 { padding-left: 36em; }
+.tab10 { padding-left: 40em; }
+.tab11 { padding-left: 44em; }
+.tab12 { padding-left: 48em; }
+.tab13 { padding-left: 52em; }
+.tab14 { padding-left: 56em; }
+.tab15 { padding-left: 60em; }
+.tab16 { padding-left: 64em; }
